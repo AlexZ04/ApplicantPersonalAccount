@@ -5,27 +5,39 @@
     "description": "ASP.NET Core Application for Applicant Personal Account",
     "version": "1.0.0"
   },
+  
   "tags": [
     {
       "name": "Authorization",
       "description": "Authentification and Authorization"
     },
+    
     {
-      "name": "Staff",
-      "description": "Managers and administration"
+      "name": "User",
+      "description": "User info and editing"
     },
+    
     {
       "name": "Applicant",
       "description": "All actions with applicant"
+    },
+    
+    {
+      "name": "Staff",
+      "description": "Managers and administration"
     }
+    
   ],
+  
   "paths": {
+    
     "/auth/register": {
-      "post": {
+      "post" : {
         "tags": [
           "Authorization"
         ],
         "summary": "Register new user",
+        
         "requestBody": {
           "content": {
             "application/json": {
@@ -46,17 +58,22 @@
           },
           "required": true
         },
+        
         "security": [],
         "responses": {
-          "204": {
+          "200": {
             "description": "Success"
-          }
+          },
         }
       }
-    }
+    },
+    
+    
   },
+  
   "components": {
     "schemas": {
+      
       "UserRegisterModel": {
         "required": [
           "email",
@@ -86,7 +103,52 @@
           }
         },
         "additionalProperties": false
+      },
+      
+      "UserLoginModel": {
+        "required": [
+          "email",
+          "name",
+          "password",
+          "birthdate"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "TokenResponseModel": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+        },
+        "additionalProperties": false
       }
+      
     },
     "securitySchemes": {
       "Bearer": {
@@ -96,9 +158,54 @@
       }
     }
   },
+  
   "security": [
     {
-      "Bearer": []
+      "Bearer": [ ]
     }
   ]
 }
+
+# Авторизация:
+# - регистрация
+# - логин
+# - логаут
+
+# Пользователя:
+# - смена пароля
+# - смена личных данных
+# - смена почты (менеджер+)
+# - просмотр личного профиля
+
+# Персонал:
+# - взять поступление абитуриента
+# - отказаться от поступления абитуриента
+# - посмотреть заявки абитуриентов
+# - посмотреть личные данные абитуриента
+# - обновить личные данные абитуриента
+# - редактировать данные документа абитуриента
+# - удалить скан документа абитуриента
+# - загрузить новый скан документа абитуриента
+# - изменить приоритет программы
+# - удалить программу из выбранного списка
+# - изменить статус поступления
+
+# - посмотреть список менеджеров и главных менеджеров
+# - назначить менеджера на свободное поступление
+
+# - импортировать справочники
+# - посмотреть статус импорта справочников
+# - создать нового менеджера, главного менеджера
+
+
+# Абитуриент:
+# - просмотр документа
+# - скачать скан документа
+# - редактировать данные документа
+# - посмотреть список программ 
+# - добавить выбранную программу в список выбранных программ для обучения
+# - изменить приоритет программы
+# - удалить программу из выбранного списка 
+# - подписаться на уведомления об изменении статусе заявок
+
+# - изменить информацию для регистрации на мероприятия
