@@ -165,7 +165,7 @@
     },
     
     "/user/change-password": {
-      "put" : {
+      "patch" : {
         "tags": [
           "User"
         ],
@@ -211,7 +211,7 @@
     },
     
     "/user/change-email": {
-      "put" : {
+      "patch" : {
         "tags": [
           "User"
         ],
@@ -319,6 +319,231 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/applicant/document/download/{id}": {
+      "get" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Download document by id",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "document id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/applicant/document/{id}": {
+      "get" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Get access to document by id",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "document id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Delete document by id",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "document id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Edit document info",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "document id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentInfoEditModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentInfoEditModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentInfoEditModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+    },
+    
+    "/applicant/document": {
+      "post" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Upload new document",
+        
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        
+        
+        "responses": {
+          "200": {
+            "description": "Success",
           },
           "500": {
             "description": "InternalServerError",
@@ -572,6 +797,40 @@
         "additionalProperties": false
       },
       
+      "DocumentModel": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "updateDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "DocumentInfoEditModel": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "updateDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      
     },
     "securitySchemes": {
       "Bearer": {
@@ -622,9 +881,11 @@
 
 
 # Абитуриент:
-# - просмотр документа
-# - скачать скан документа
-# - редактировать данные документа
+# - просмотр документа +
+# - скачать скан документа +
+# - загрузить новый скан документа +
+# - удалить скан документа +
+# - редактировать данные документа +
 # - посмотреть список программ 
 # - добавить выбранную программу в список выбранных программ для обучения
 # - изменить приоритет программы
