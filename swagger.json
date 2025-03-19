@@ -62,12 +62,107 @@
         "security": [],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseModel"
+                }
+              }
+            }
           },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
         }
       }
     },
     
+    "/auth/login": {
+      "post" : {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Login to system",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/auth/logout": {
+      "post" : {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Logout from system",
+
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     
   },
   
@@ -78,8 +173,10 @@
         "required": [
           "email",
           "name",
-          "password",
-          "birthdate"
+          "phone",
+          "gender",
+          "birthdate",
+          "password"
         ],
         "type": "object",
         "properties": {
@@ -93,9 +190,24 @@
             "type": "string",
             "format": "email"
           },
+          "phone": {
+            "minLength": 1,
+            "type": "string",
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
           "birthdate": {
             "type": "string",
             "format": "date-time"
+          },
+          "citizenship": {
+            "minLength": 1,
+            "type": "string",
+          },
+          "address": {
+            "minLength": 1,
+            "type": "string",
           },
           "password": {
             "minLength": 1,
@@ -147,7 +259,105 @@
           },
         },
         "additionalProperties": false
-      }
+      },
+      
+      "PasswordEditModel": {
+        "required": [
+          "password",
+        ],
+        "type": "object",
+        "properties": {
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "EmailEditModel": {
+        "required": [
+          "email",
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ApplicantEditModel": {
+        "required": [
+          "email",
+          "name",
+          "phone",
+          "gender",
+          "birthdate"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "minLength": 1,
+            "type": "string",
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citizenship": {
+            "minLength": 1,
+            "type": "string",
+          },
+          "address": {
+            "minLength": 1,
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "Gender": {
+        "enum": [
+          "Male",
+          "Female"
+        ],
+        "type": "string"
+      },
+      
+      "ResponseModel": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       
     },
     "securitySchemes": {
@@ -167,9 +377,9 @@
 }
 
 # Авторизация:
-# - регистрация
-# - логин
-# - логаут
+# - регистрация +
+# - логин + 
+# - логаут +
 
 # Пользователя:
 # - смена пароля
