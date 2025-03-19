@@ -164,6 +164,176 @@
       }
     },
     
+    "/user/change-password": {
+      "put" : {
+        "tags": [
+          "User"
+        ],
+        "summary": "Change user password",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordEditModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordEditModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordEditModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/user/change-email": {
+      "put" : {
+        "tags": [
+          "User"
+        ],
+        "summary": "Change user email (only for manager+)",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailEditModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailEditModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailEditModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/user/edit-profile": {
+      "put" : {
+        "tags": [
+          "User"
+        ],
+        "summary": "Change user email (only for applicants)",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicantEditModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicantEditModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicantEditModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/user/profile": {
+      "get" : {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user profile",
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
   },
   
   "components": {
@@ -241,7 +411,7 @@
             "format": "date-time"
           },
           "password": {
-            "minLength": 1,
+            "minLength": 6,
             "type": "string"
           }
         },
@@ -268,7 +438,7 @@
         "type": "object",
         "properties": {
           "password": {
-            "minLength": 1,
+            "minLength": 6,
             "type": "string"
           }
         },
@@ -359,6 +529,49 @@
         "additionalProperties": false
       },
       
+      "Role": {
+        "enum": [
+          "Applicant",
+          "Manager",
+          "HeadManager",
+          "Admin"
+        ],
+        "type": "string"
+      },
+      
+      "UserProfileModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citizenship": {
+            "type": "string",
+          },
+          "address": {
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
     },
     "securitySchemes": {
       "Bearer": {
@@ -378,14 +591,14 @@
 
 # Авторизация:
 # - регистрация +
-# - логин + 
+# - логин +
 # - логаут +
 
 # Пользователя:
-# - смена пароля
-# - смена личных данных
-# - смена почты (менеджер+)
-# - просмотр личного профиля
+# - смена пароля +
+# - смена личных данных +
+# - смена почты (менеджер+) +
+# - просмотр личного профиля +
 
 # Персонал:
 # - взять поступление абитуриента
