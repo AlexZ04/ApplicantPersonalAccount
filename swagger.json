@@ -622,14 +622,41 @@
         "tags": [
           "Applicant"
         ],
-        "summary": "Get list of all programs with pagination",
+        "summary": "Get list of all programs with filtration and pagination",
         
         "parameters": [
+          {
+            "name": "faculty",
+            "in": "query",
+            "schema": {
+              "type": "string",
+            }
+          },
+          {
+            "name": "educationLevel",
+            "in": "query",
+            "schema": {
+              "type": "string",
+            }
+          },
+          {
+            "name": "educationForm",
+            "in": "query",
+            "schema": {
+              "type": "string",
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string",
+            }
+          },
           {
             "name": "page",
             "in": "query",
             "description": "page number",
-            "style": "form",
             "schema": {
               "maximum": 2147483647,
               "minimum": 1,
@@ -642,17 +669,16 @@
             "name": "size",
             "in": "query",
             "description": "required number of elements per page",
-            "style": "form",
             "schema": {
               "maximum": 2147483647,
               "minimum": 1,
               "type": "integer",
               "format": "int32",
-              "default": 10
+              "default": 5
             }
           }
         ],
-        
+
         "responses": {
           "200": {
             "description": "Success",
@@ -816,6 +842,82 @@
         "responses": {
           "200": {
             "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/applicant/info-for-events": {
+      "put" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Change info for events",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditApplicantInfoForEventsModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditApplicantInfoForEventsModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditApplicantInfoForEventsModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      
+      "get" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Get info for events (address is coming from user info)",
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantInfoForEventsModel"
+                }
+              }
+            }
           },
           "500": {
             "description": "InternalServerError",
@@ -1251,6 +1353,39 @@
         "additionalProperties": false
       },
       
+      "EditApplicantInfoForEventsModel": {
+        "required": [
+          "educationPlace",
+          "socialNetworks"
+        ],
+        "type": "object",
+        "properties": {
+          "educationPlace": {
+            "type": "string",
+          },
+          "socialNetworks": {
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ApplicantInfoForEventsModel": {
+        "type": "object",
+        "properties": {
+          "educationPlace": {
+            "type": "string",
+          },
+          "address": {
+            "type": "string",
+          },
+          "socialNetworks": {
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
     },
     "securitySchemes": {
       "Bearer": {
@@ -1308,10 +1443,11 @@
 # - редактировать данные документа +
 
 # Абитуриент:
-# - посмотреть список программ + (пока без фильтрации)
+# - посмотреть список программ +
 # - добавить выбранную программу в список выбранных программ для обучения +
 # - изменить приоритет программы + 
 # - удалить программу из выбранного списка +
 # - подписаться на уведомления об изменении статуса заявок +
 
-# - изменить информацию для регистрации на мероприятия
+# - изменить информацию для регистрации на мероприятия + 
+# - посмотреть информацию для регистрации на мероприятия +
