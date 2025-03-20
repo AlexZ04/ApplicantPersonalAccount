@@ -325,17 +325,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ApplicantEditModel"
+                "$ref": "#/components/schemas/UserEditModel"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ApplicantEditModel"
+                "$ref": "#/components/schemas/UserEditModel"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ApplicantEditModel"
+                "$ref": "#/components/schemas/UserEditModel"
               }
             }
           },
@@ -933,6 +933,719 @@
       }
     },
     
+    "/api/staff/take-application/{id}": {
+      "post" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Take applicant enterance by id (manager+)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "application id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      
+      "delete" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Refuse applicant enterance by id (manager+)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "application id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+    },
+    
+    "/api/staff/applications": {
+      "get" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Get list of all programs with filtration and pagination (manager+)",
+        
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+            }
+          },
+          {
+            "name": "program",
+            "in": "query",
+            "schema": {
+              "type": "string",
+            }
+          },
+          {
+            "name": "faculty",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/EnteranceStatus"
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page number",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "required number of elements per page",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 5
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationPagedListModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/staff/profile/{id}": {
+      "get" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Get applicant profile (manager+)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "education program id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      
+      "put" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Change applicant profile (manager+)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "user id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicantEditModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicantEditModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicantEditModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/staff/applicant/{id}": {
+      "get" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Get application info (manager+)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "application id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Edit application info (manager+)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "application id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationEditModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Delete application (manager+)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "application id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Update application status (manager+)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "application id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+                "$ref": "#/components/schemas/EnteranceStatus"
+              }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+    },
+    
+    "/api/staff/managers": {
+      "get" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Get list of staff (main manager+)",
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagerPagedListModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      
+      "post" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Attach manager to application (main manager+)",
+        
+        "parameters": [
+          {
+            "name": "managerId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "applicationId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagerPagedListModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/staff/directory": {
+      "post" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Import directory (admin)",
+
+        "parameters": [
+          {
+            "name": "managerId",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/DirectoryImportType"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/staff/directory/status": {
+      "get" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Get info about last import (admin)",
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentImportStatus"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/staff/manager/{id}": {
+      "post" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Make user admin (admin)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "user id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ManagerTypes"
+            }
+          },
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      
+      "put" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Edit manager info (admin)",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEditModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "user id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      
+      "delete" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Delete manager or main manager by id (admin)",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "user id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
   },
   
   "components": {
@@ -1058,7 +1771,7 @@
         "additionalProperties": false
       },
       
-      "ApplicantEditModel": {
+      "UserEditModel": {
         "required": [
           "email",
           "name",
@@ -1141,6 +1854,10 @@
       "UserProfileModel": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
           "name": {
             "type": "string"
           },
@@ -1196,10 +1913,6 @@
           "description": {
             "type": "string",
             "maxLength": 500
-          },
-          "updateDate": {
-            "type": "string",
-            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -1386,6 +2099,246 @@
         "additionalProperties": false
       },
       
+      "EnteranceStatus": {
+        "enum": [
+          "Created",
+          "UnderConsideration",
+          "Confirmed",
+          "Rejected",
+          "Closed"
+        ],
+        "type": "string"
+      },
+      
+      # !!!
+      "ApplicationModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citizenship": {
+            "type": "string",
+          },
+          "address": {
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ApplicationEditModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citizenship": {
+            "type": "string",
+          },
+          "address": {
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ApplicationPagedListModel": {
+        "type": "object",
+        "properties": {
+          "programs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationModel"
+            },
+            "nullable": true
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PageInfoModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ApplicantModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citizenship": {
+            "type": "string",
+          },
+          "address": {
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ApplicantEditModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citizenship": {
+            "type": "string",
+          },
+          "address": {
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ManagerModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ManagerPagedListModel": {
+        "type": "object",
+        "properties": {
+          "programs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManagerModel"
+            },
+            "nullable": true
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PageInfoModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "DirectoryImportType": {
+        "enum": [
+          "All",
+          "EducationLevels",
+          "DocumentTypes",
+          "Faculties",
+          "Programs"
+        ],
+        "type": "string"
+      },
+      
+      "CurrentImportStatus": {
+        "enum": [
+          "Started",
+          "In Progress",
+          "Saving",
+          "Finished"
+        ],
+        "type": "string"
+      },
+      
+      "ManagerTypes": {
+        "enum": [
+          "Manager",
+          "MainManager"
+        ],
+        "type": "string"
+      },
+      
     },
     "securitySchemes": {
       "Bearer": {
@@ -1416,24 +2369,26 @@
 # - просмотр личного профиля +
 
 # Персонал:
-# - взять поступление абитуриента
-# - отказаться от поступления абитуриента
-# - посмотреть заявки абитуриентов
-# - посмотреть личные данные абитуриента
-# - обновить личные данные абитуриента
-# - редактировать данные документа абитуриента
-# - удалить скан документа абитуриента
-# - загрузить новый скан документа абитуриента
-# - изменить приоритет программы
-# - удалить программу из выбранного списка
-# - изменить статус поступления
+# - взять поступление абитуриента +
+# - отказаться от поступления абитуриента +
+# - посмотреть заявки абитуриентов +
+# - посмотреть личные данные абитуриента +
+# - обновить личные данные абитуриента +
+# - редактировать данные документа абитуриента !!!
+# - удалить скан документа абитуриента !!!
+# - загрузить новый скан документа абитуриента !!!
+# - изменить приоритет программы +
+# - удалить программу из выбранного списка +
+# - изменить статус поступления +
 
-# - посмотреть список менеджеров и главных менеджеров
-# - назначить менеджера на свободное поступление
+# - посмотреть список менеджеров и главных менеджеров +
+# - назначить менеджера на свободное поступление +
 
-# - импортировать справочники
-# - посмотреть статус импорта справочников
-# - создать нового менеджера, главного менеджера
+# - импортировать справочники +
+# - посмотреть статус импорта справочников +
+# - создать нового менеджера, главного менеджера +
+# - отредачить менеджера +
+# - удалить менеджера, главного менеджера +
 
 # Файл:
 # - просмотр документа +
