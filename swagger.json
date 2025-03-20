@@ -19,7 +19,12 @@
     
     {
       "name": "Applicant",
-      "description": "All actions with applicant"
+      "description": "Actions with applicant enterance"
+    },
+    
+    {
+      "name": "File",
+      "description": "Actions with files"
     },
     
     {
@@ -31,7 +36,7 @@
   
   "paths": {
     
-    "/auth/register": {
+    "/api/auth/register": {
       "post" : {
         "tags": [
           "Authorization"
@@ -85,7 +90,7 @@
       }
     },
     
-    "/auth/login": {
+    "/api/auth/login": {
       "post" : {
         "tags": [
           "Authorization"
@@ -139,7 +144,7 @@
       }
     },
     
-    "/auth/logout": {
+    "/api/auth/logout": {
       "post" : {
         "tags": [
           "Authorization"
@@ -164,7 +169,60 @@
       }
     },
     
-    "/user/change-password": {
+    "/api/auth/login-refresh": {
+      "post" : {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Update access token with refresh token",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/user/change-password": {
       "patch" : {
         "tags": [
           "User"
@@ -210,7 +268,7 @@
       }
     },
     
-    "/user/change-email": {
+    "/api/user/change-email": {
       "patch" : {
         "tags": [
           "User"
@@ -256,7 +314,7 @@
       }
     },
     
-    "/user/edit-profile": {
+    "/api/user/edit-profile": {
       "put" : {
         "tags": [
           "User"
@@ -302,7 +360,7 @@
       }
     },
     
-    "/user/profile": {
+    "/api/user/profile": {
       "get" : {
         "tags": [
           "User"
@@ -334,10 +392,10 @@
       }
     },
     
-    "/applicant/document/download/{id}": {
+    "/api/file/download/{id}": {
       "get" : {
         "tags": [
-          "Applicant"
+          "File"
         ],
         "summary": "Download document by id",
         
@@ -380,10 +438,10 @@
       }
     },
     
-    "/applicant/document/{id}": {
+    "/api/file/{id}": {
       "get" : {
         "tags": [
-          "Applicant"
+          "File"
         ],
         "summary": "Get access to document by id",
         
@@ -425,7 +483,7 @@
       },
       "delete" : {
         "tags": [
-          "Applicant"
+          "File"
         ],
         "summary": "Delete document by id",
         
@@ -460,7 +518,7 @@
       },
       "put" : {
         "tags": [
-          "Applicant"
+          "File"
         ],
         "summary": "Edit document info",
         
@@ -515,10 +573,10 @@
       },
     },
     
-    "/applicant/document": {
+    "/api/file": {
       "post" : {
         "tags": [
-          "Applicant"
+          "File"
         ],
         "summary": "Upload new document",
         
@@ -544,6 +602,220 @@
         "responses": {
           "200": {
             "description": "Success",
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/applicant/programs": {
+      "get" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Get list of all programs with pagination",
+        
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page number",
+            "style": "form",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "required number of elements per page",
+            "style": "form",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramPagedListModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/applicant/notifications": {
+      "post" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Subscribe to notifications about applications updates",
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/applicant/program": {
+      "post" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Add program to applicant education program",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationProgramApplicationModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationProgramApplicationModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationProgramApplicationModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      
+      "put" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Change priority of program of applicant education program",
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationProgramApplicationModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationProgramApplicationModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationProgramApplicationModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/applicant/program/{id}": {
+      "delete" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Delete program from applicant education program",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "education program id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success"
           },
           "500": {
             "description": "InternalServerError",
@@ -831,6 +1103,154 @@
         "additionalProperties": false
       },
       
+      "PageInfoModel": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "current": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "FacultyModel": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "EducationLevelModel": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "EducationProgramModel": {
+        "required": [
+          "createTime",
+          "educationForm",
+          "educationLevel",
+          "faculty",
+          "language",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "educationForm": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "faculty": {
+            "$ref": "#/components/schemas/FacultyModel"
+          },
+          "educationLevel": {
+            "$ref": "#/components/schemas/EducationLevelModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "ProgramPagedListModel": {
+        "type": "object",
+        "properties": {
+          "programs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationProgramModel"
+            },
+            "nullable": true
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PageInfoModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "RefreshTokenModel": {
+        "required": [
+          "refreshToken"
+        ],
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "EducationProgramApplicationModel": {
+        "required": [
+          "programId",
+          "priority"
+        ],
+        "type": "object",
+        "properties": {
+          "programId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      
     },
     "securitySchemes": {
       "Bearer": {
@@ -852,6 +1272,7 @@
 # - регистрация +
 # - логин +
 # - логаут +
+# - обновление аксес токена через рефреш +
 
 # Пользователя:
 # - смена пароля +
@@ -879,17 +1300,18 @@
 # - посмотреть статус импорта справочников
 # - создать нового менеджера, главного менеджера
 
-
-# Абитуриент:
+# Файл:
 # - просмотр документа +
 # - скачать скан документа +
 # - загрузить новый скан документа +
 # - удалить скан документа +
 # - редактировать данные документа +
-# - посмотреть список программ 
-# - добавить выбранную программу в список выбранных программ для обучения
-# - изменить приоритет программы
-# - удалить программу из выбранного списка 
-# - подписаться на уведомления об изменении статусе заявок
+
+# Абитуриент:
+# - посмотреть список программ + (пока без фильтрации)
+# - добавить выбранную программу в список выбранных программ для обучения +
+# - изменить приоритет программы + 
+# - удалить программу из выбранного списка +
+# - подписаться на уведомления об изменении статуса заявок +
 
 # - изменить информацию для регистрации на мероприятия
