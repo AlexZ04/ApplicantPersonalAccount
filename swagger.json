@@ -2131,7 +2131,7 @@
         "additionalProperties": false
       },
       
-      "File": {
+      "FileModel": {
         "type": "object",
         "properties": {
           "id": {
@@ -2157,7 +2157,7 @@
           "files": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/File"
+              "$ref": "#/components/schemas/FileModel"
             },
             "nullable": true
           },
