@@ -2,7 +2,12 @@
   "openapi": "3.0.3",
   "info": {
     "title": "ApplicantPersonalAccount",
-    "description": "ASP.NET Core Application for Applicant Personal Account",
+    "description": "ASP.NET Core Application for Applicant Personal Account. 
+      \n\nSome endpoints have the required user role indicated in brackets.
+      If empty, the role is not required;
+      Manager+ - manager, main manager or administrator;
+      Main manager+ - main manager or administrator;
+      Admin - administrator only",
     "version": "1.0.0"
   },
   
@@ -485,7 +490,7 @@
         "tags": [
           "File"
         ],
-        "summary": "Delete document by id",
+        "summary": "Delete file by id",
         
         "parameters": [
           {
@@ -540,16 +545,6 @@
               "schema": {
                 "$ref": "#/components/schemas/DocumentInfoEditModel"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DocumentInfoEditModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DocumentInfoEditModel"
-              }
             }
           },
           "required": true
@@ -578,7 +573,7 @@
         "tags": [
           "File"
         ],
-        "summary": "Upload new document",
+        "summary": "Upload new file",
         
         "requestBody": {
           "required": true,
@@ -1051,6 +1046,27 @@
             }
           },
           {
+            "name": "hasManagerOnly",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+            }
+          },
+          {
+            "name": "attachedToManager",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+            }
+          },
+          {
+            "name": "sortedByUpdateDate",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortBy"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "description": "page number",
@@ -1203,7 +1219,146 @@
       }
     },
     
-    "/api/staff/applicant/{id}": {
+    "/api/staff/file": {
+      "post" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Upload new file",
+        
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        
+        "parameters": [
+          {
+            "name": "applicantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/staff/file/{id}": {
+      "delete" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Delete applicant's file",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "education program id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      
+      "put" : {
+        "tags": [
+          "Staff"
+        ],
+        "summary": "Edit applicant's file info",
+        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "education program id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentInfoEditModel"
+              }
+            }
+          },
+          "required": true
+        },
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/staff/application/{id}": {
       "get" : {
         "tags": [
           "Staff"
@@ -1888,17 +2043,53 @@
         "additionalProperties": false
       },
       
+      "File": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "integer32"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary"
+          },
+        },
+        "additionalProperties": false
+      },
+      
       "DocumentModel": {
         "type": "object",
         "properties": {
-          "file": {
+          "id": {
             "type": "string",
-            "format": "binary",
+            "format": "uuid",
           },
-          "description": {
-            "type": "string",
-            "maxLength": 500
+          
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/File"
+            },
+            "nullable": true
           },
+          
+          "type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PassportInfoModel"
+              },
+              
+              {
+                "$ref": "#/components/schemas/DocumentEducationInfoModel"
+              }
+            ]
+          },
+          
           "updateDate": {
             "type": "string",
             "format": "date-time"
@@ -1907,13 +2098,59 @@
         "additionalProperties": false
       },
       
+      "PassportInfoModel": {
+        "type": "object",
+        "properties": {
+          "series": {
+            "type": "string",
+          },
+          "number": {
+            "type": "string",
+          },
+          "birthPlace": {
+            "type": "string",
+          },
+          "whenIssued": {
+            "type": "string",
+          },
+          "byWhoIssued": {
+            "type": "string",
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "DocumentEducationInfoModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+          },
+          "type": {
+            "$ref": "#/components/schemas/DocumentEducationTypeModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      
       "DocumentInfoEditModel": {
         "type": "object",
         "properties": {
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          }
+          "type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PassportInfoModel"
+              },
+              
+              {
+                "$ref": "#/components/schemas/DocumentEducationInfoModel"
+              }
+            ]
+          },
         },
         "additionalProperties": false
       },
@@ -1932,6 +2169,16 @@
           "current": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "DocumentEducationTypeModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2110,39 +2357,18 @@
         "type": "string"
       },
       
-      # !!!
       "ApplicationModel": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
+          "applicant": {
+            "$ref": "#/components/schemas/UserProfileModel"
           },
-          "name": {
-            "type": "string"
+          "program": {
+            "$ref": "#/components/schemas/EducationProgramModel"
           },
-          "role": {
-            "$ref": "#/components/schemas/Role"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "phone": {
-            "type": "string",
-          },
-          "gender": {
-            "$ref": "#/components/schemas/Gender"
-          },
-          "birthdate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "citizenship": {
-            "type": "string",
-          },
-          "address": {
-            "type": "string",
+          "priority": {
+            "type": "integer",
+            "format": "integer32"
           }
         },
         "additionalProperties": false
@@ -2151,22 +2377,8 @@
       "ApplicationEditModel": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "name": {
             "type": "string"
-          },
-          "role": {
-            "$ref": "#/components/schemas/Role"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "phone": {
-            "type": "string",
           },
           "gender": {
             "$ref": "#/components/schemas/Gender"
@@ -2205,37 +2417,22 @@
       "ApplicantModel": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
+          "profile": {
+            "$ref": "#/components/schemas/UserProfileModel"
           },
-          "name": {
-            "type": "string"
+          "documents": {
+            "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DocumentModel"
+              }
+            },
+          "chosenProgram": {
+            "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/EducationProgramModel"
+              }
+            }
           },
-          "role": {
-            "$ref": "#/components/schemas/Role"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "phone": {
-            "type": "string",
-          },
-          "gender": {
-            "$ref": "#/components/schemas/Gender"
-          },
-          "birthdate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "citizenship": {
-            "type": "string",
-          },
-          "address": {
-            "type": "string",
-          }
-        },
         "additionalProperties": false
       },
       
@@ -2339,6 +2536,22 @@
         "type": "string"
       },
       
+      "SortBy": {
+        "enum": [
+          "Ascending",
+          "Descending"
+        ],
+        "type": "string"
+      },
+      
+      "DocumentType": {
+        "enum": [
+          "Passport",
+          "Educational"
+        ],
+        "type": "string"
+      }
+
     },
     "securitySchemes": {
       "Bearer": {
@@ -2374,9 +2587,9 @@
 # - посмотреть заявки абитуриентов +
 # - посмотреть личные данные абитуриента +
 # - обновить личные данные абитуриента +
-# - редактировать данные документа абитуриента !!!
-# - удалить скан документа абитуриента !!!
-# - загрузить новый скан документа абитуриента !!!
+# - редактировать данные документа абитуриента +
+# - удалить скан документа абитуриента +
+# - загрузить новый скан документа абитуриента +
 # - изменить приоритет программы +
 # - удалить программу из выбранного списка +
 # - изменить статус поступления +
