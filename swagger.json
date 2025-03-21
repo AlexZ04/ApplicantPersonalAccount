@@ -28,8 +28,8 @@
     },
     
     {
-      "name": "File",
-      "description": "Actions with files"
+      "name": "Document",
+      "description": "Actions with documents and files"
     },
     
     {
@@ -397,12 +397,55 @@
       }
     },
     
-    "/api/file/download/{id}": {
+    "/api/document": {
       "get" : {
         "tags": [
-          "File"
+          "Document"
         ],
-        "summary": "Download document by id",
+        "summary": "Get users documents",
+        
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/DocumentClassification"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentListModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/api/document/download/{id}": {
+      "get" : {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Download file by id",
         
         "parameters": [
           {
@@ -443,10 +486,10 @@
       }
     },
     
-    "/api/file/{id}": {
+    "/api/document/{id}": {
       "get" : {
         "tags": [
-          "File"
+          "Document"
         ],
         "summary": "Get access to document by id",
         
@@ -488,7 +531,7 @@
       },
       "delete" : {
         "tags": [
-          "File"
+          "Document"
         ],
         "summary": "Delete file by id",
         
@@ -523,7 +566,7 @@
       },
       "put" : {
         "tags": [
-          "File"
+          "Document"
         ],
         "summary": "Edit document info",
         
@@ -568,10 +611,10 @@
       },
     },
     
-    "/api/file": {
+    "/api/document/upload": {
       "post" : {
         "tags": [
-          "File"
+          "Document"
         ],
         "summary": "Upload new file",
         
@@ -649,6 +692,20 @@
             }
           },
           {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string",
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "description": "page number",
@@ -705,6 +762,28 @@
           "Applicant"
         ],
         "summary": "Subscribe to notifications about applications updates",
+        
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Unsubscribe to notifications about applications updates",
         
         "responses": {
           "200": {
@@ -1500,7 +1579,7 @@
             "in": "query",
             "required": true,
             "schema": {
-                "$ref": "#/components/schemas/EnteranceStatus"
+                "$ref": "#/components/schemas/EnteranceEditStatus"
               }
           }
         ],
@@ -1652,7 +1731,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentImportStatus"
+                  "$ref": "#/components/schemas/ImportStatusResponseModel"
                 }
               }
             }
@@ -2002,6 +2081,15 @@
           "Manager",
           "HeadManager",
           "Admin"
+        ],
+        "type": "string"
+      },
+      
+      "DocumentClassification": {
+        "enum": [
+          "Passport",
+          "Educational",
+          "Both"
         ],
         "type": "string"
       },
@@ -2473,6 +2561,16 @@
         "additionalProperties": false
       },
       
+      "EnteranceEditStatus": {
+        "enum": [
+          "UnderConsideration",
+          "Confirmed",
+          "Rejected",
+          "Closed"
+        ],
+        "type": "string"
+      },
+      
       "ManagerModel": {
         "type": "object",
         "properties": {
@@ -2550,7 +2648,35 @@
           "Educational"
         ],
         "type": "string"
-      }
+      },
+      
+      "ImportStatusResponseModel": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrentImportStatus"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      
+      "DocumentListModel": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
 
     },
     "securitySchemes": {
@@ -2569,53 +2695,3 @@
   ]
 }
 
-# Авторизация:
-# - регистрация +
-# - логин +
-# - логаут +
-# - обновление аксес токена через рефреш +
-
-# Пользователя:
-# - смена пароля +
-# - смена личных данных +
-# - смена почты (менеджер+) +
-# - просмотр личного профиля +
-
-# Персонал:
-# - взять поступление абитуриента +
-# - отказаться от поступления абитуриента +
-# - посмотреть заявки абитуриентов +
-# - посмотреть личные данные абитуриента +
-# - обновить личные данные абитуриента +
-# - редактировать данные документа абитуриента +
-# - удалить скан документа абитуриента +
-# - загрузить новый скан документа абитуриента +
-# - изменить приоритет программы +
-# - удалить программу из выбранного списка +
-# - изменить статус поступления +
-
-# - посмотреть список менеджеров и главных менеджеров +
-# - назначить менеджера на свободное поступление +
-
-# - импортировать справочники +
-# - посмотреть статус импорта справочников +
-# - создать нового менеджера, главного менеджера +
-# - отредачить менеджера +
-# - удалить менеджера, главного менеджера +
-
-# Файл:
-# - просмотр документа +
-# - скачать скан документа +
-# - загрузить новый скан документа +
-# - удалить скан документа +
-# - редактировать данные документа +
-
-# Абитуриент:
-# - посмотреть список программ +
-# - добавить выбранную программу в список выбранных программ для обучения +
-# - изменить приоритет программы + 
-# - удалить программу из выбранного списка +
-# - подписаться на уведомления об изменении статуса заявок +
-
-# - изменить информацию для регистрации на мероприятия + 
-# - посмотреть информацию для регистрации на мероприятия +
