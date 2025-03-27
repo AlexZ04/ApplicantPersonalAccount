@@ -1,0 +1,25 @@
+﻿using ApplicantPersonalAccount.Common.Enums;
+using System.ComponentModel.DataAnnotations;
+
+namespace ApplicantPersonalAccount.Common.Models
+{
+    public class UserRegisterModel
+    {
+        [Required, MinLength(1), MaxLength(1000)]
+        public string Name { get; set; } = string.Empty;
+        [Required, EmailAddress]
+        public string Email { get; set; } = string.Empty;
+        [Required, Phone]
+        public string Phone { get; set; } = string.Empty;
+        [Required]
+        public Gender Gender { get; set; } = Gender.Male;
+        [Required]
+        public DateTime Birthdate { get; set; } = DateTime.Now.ToUniversalTime();
+        [MinLength(1)]
+        public string Address { get; set; } = string.Empty;
+        [MinLength(1)]
+        public string Citizenship { get; set; } = string.Empty;
+        [Required, MinLength(1)]
+        public string Password { get; set; } = string.Empty;
+    }
+}
