@@ -1,4 +1,4 @@
-namespace ApplicantPersonalAccount
+namespace ApplicantPersonalAccount.API
 {
     public class WeatherForecast
     {

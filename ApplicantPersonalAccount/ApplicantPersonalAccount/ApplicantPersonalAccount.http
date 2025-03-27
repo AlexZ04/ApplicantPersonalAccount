@@ -1,6 +1,0 @@
-@ApplicantPersonalAccount_HostAddress = http://localhost:5294
-
-GET {{ApplicantPersonalAccount_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
