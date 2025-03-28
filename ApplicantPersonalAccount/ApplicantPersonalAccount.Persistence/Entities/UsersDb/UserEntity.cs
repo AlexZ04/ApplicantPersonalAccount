@@ -15,5 +15,6 @@ namespace ApplicantPersonalAccount.Persistence.Entities.UsersDb
         public string Password { get; set; } = string.Empty;
         public DateTime CreateTime { get; set; } = DateTime.Now.ToUniversalTime();
         public DateTime UpdateTime { get; set; } = DateTime.Now.ToUniversalTime();
+        public InfoForEventsEntity InfoForEvents { get; set; }
     }
 }
