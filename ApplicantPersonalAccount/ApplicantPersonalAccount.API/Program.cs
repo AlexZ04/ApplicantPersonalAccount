@@ -1,5 +1,6 @@
 using ApplicantPersonalAccount.Application;
 using ApplicantPersonalAccount.Application.Implementations;
+using ApplicantPersonalAccount.Persistence.Contextes;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -13,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 var usersConnection = builder.Configuration.GetConnectionString("UsersConnection");
 
-//builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connection));
+builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(usersConnection));
 builder.Services.AddTransient<IAuthorizationService, AuthorizationServiceImpl>();
 
 var app = builder.Build();
@@ -24,11 +25,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//using var serviceScope = app.Services.CreateScope();
+using var serviceScope = app.Services.CreateScope();
 
-//var context = serviceScope.ServiceProvider.GetService<DataContext>();
+var context = serviceScope.ServiceProvider.GetService<UserDataContext>();
 
-//context?.Database.Migrate();
+context?.Database.Migrate();
 
 app.UseHttpsRedirection();
 
