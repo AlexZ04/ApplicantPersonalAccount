@@ -1,3 +1,4 @@
+using ApplicantPersonalAccount.API;
 using ApplicantPersonalAccount.Application;
 using ApplicantPersonalAccount.Application.Implementations;
 using ApplicantPersonalAccount.Persistence.Contextes;
@@ -7,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -37,6 +41,8 @@ using var serviceScope = app.Services.CreateScope();
 var context = serviceScope.ServiceProvider.GetService<UserDataContext>();
 
 context?.Database.Migrate();
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

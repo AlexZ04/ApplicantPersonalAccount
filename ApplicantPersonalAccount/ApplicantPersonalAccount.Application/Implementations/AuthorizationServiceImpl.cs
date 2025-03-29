@@ -1,4 +1,6 @@
-﻿using ApplicantPersonalAccount.Common.Models;
+﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 
@@ -16,9 +18,7 @@ namespace ApplicantPersonalAccount.Application.Implementations
         public async Task<TokenResponseModel> RegisterUser(UserRegisterModel user)
         {
             if (!await _userRepository.EmailIsAvailable(user.Email))
-            {
-                // todo
-            }
+                throw new ImpossibleActionException(ErrorMessages.CANT_REGISTER_USER);
 
             UserEntity newUser = new UserEntity
             {
