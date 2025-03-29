@@ -18,6 +18,11 @@ namespace ApplicantPersonalAccount.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegisterModel user)
         {
+            var validationErrors = Validator.ValidateUserRegister(user);
+
+            if (validationErrors.Count() > 0)
+                return BadRequest(new { Errors = validationErrors});
+
             return Ok(await _authorizationService.RegisterUser(user));
         }
 
