@@ -24,6 +24,7 @@ builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(user
 
 // services
 builder.Services.AddTransient<IAuthorizationService, AuthorizationServiceImpl>();
+builder.Services.AddTransient<ITokenService, TokenServiceImpl>();
 
 // repositories
 builder.Services.AddScoped<IUserRepository, UserRepositoryImpl>();

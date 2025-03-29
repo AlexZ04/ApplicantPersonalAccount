@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ApplicantPersonalAccount.Common\ApplicantPersonalAccount.Common.csproj" />
   </ItemGroup>
 

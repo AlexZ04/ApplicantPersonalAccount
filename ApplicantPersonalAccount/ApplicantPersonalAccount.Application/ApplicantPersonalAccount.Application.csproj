@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ApplicantPersonalAccount.Common\ApplicantPersonalAccount.Common.csproj" />
     <ProjectReference Include="..\ApplicantPersonalAccount.Infrastructure\ApplicantPersonalAccount.Infrastructure.csproj" />
     <ProjectReference Include="..\ApplicantPersonalAccount.Persistence\ApplicantPersonalAccount.Persistence.csproj" />

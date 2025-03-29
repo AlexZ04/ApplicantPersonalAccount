@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Common.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ApplicantPersonalAccount.Common.Models
 {
@@ -15,9 +16,9 @@ namespace ApplicantPersonalAccount.Common.Models
         public Gender Gender { get; set; } = Gender.Male;
         [Required]
         public DateTime Birthdate { get; set; } = DateTime.Now.ToUniversalTime();
-        [MinLength(1)]
+        [AllowNull]
         public string Address { get; set; } = string.Empty;
-        [MinLength(1)]
+        [AllowNull]
         public string Citizenship { get; set; } = string.Empty;
         [Required, MinLength(1)]
         public string Password { get; set; } = string.Empty;

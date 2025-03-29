@@ -7,6 +7,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
     {
         public void AddUser(UserEntity user);
         public Task<bool> EmailIsAvailable(string email);
+        public void AddRefreshToken(RefreshTokenEntity refreshToken);
         public Task SaveChanges();
     }
 }

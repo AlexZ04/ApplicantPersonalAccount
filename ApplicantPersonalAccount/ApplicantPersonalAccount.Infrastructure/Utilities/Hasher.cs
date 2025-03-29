@@ -4,12 +4,12 @@ namespace ApplicantPersonalAccount.Infrastructure.Utilities
 {
     public class Hasher
     {
-        public string HashPassword(string password)
+        public static string HashPassword(string password)
         {
             return Crypto.HashPassword(password);
         }
 
-        public bool CheckPassword(string hashedPassword, string enteredPassword)
+        public static bool CheckPassword(string hashedPassword, string enteredPassword)
         {
             return Crypto.VerifyHashedPassword(hashedPassword, enteredPassword);
         }

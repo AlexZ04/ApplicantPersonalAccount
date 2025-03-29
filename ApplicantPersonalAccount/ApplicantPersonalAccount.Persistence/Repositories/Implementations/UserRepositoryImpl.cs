@@ -26,6 +26,11 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             return user == null;
         }
 
+        public void AddRefreshToken(RefreshTokenEntity refreshToken)
+        {
+            _userContext.RefreshTokens.Add(refreshToken);
+        }
+
         public async Task SaveChanges()
         {
             await _userContext.SaveChangesAsync();
