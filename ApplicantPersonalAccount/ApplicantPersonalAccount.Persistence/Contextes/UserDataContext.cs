@@ -9,6 +9,7 @@ namespace ApplicantPersonalAccount.Persistence.Contextes
     {
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<InfoForEventsEntity> InfoForEvents { get; set; }
+        public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
         public UserDataContext(DbContextOptions options) : base(options) { }
 
@@ -16,9 +17,9 @@ namespace ApplicantPersonalAccount.Persistence.Contextes
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new InfoForEventsConfiguration());
+            modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }

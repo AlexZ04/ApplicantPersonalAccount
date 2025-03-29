@@ -17,6 +17,9 @@ namespace ApplicantPersonalAccount.Persistence.Configurations.UserDb
             builder.Property(u => u.Email)
                 .IsRequired();
 
+            builder.HasIndex(u => u.Email)
+                .IsUnique();
+
             builder.Property(u => u.Phone)
                 .IsRequired();
 

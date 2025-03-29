@@ -1,6 +1,8 @@
 using ApplicantPersonalAccount.Application;
 using ApplicantPersonalAccount.Application.Implementations;
 using ApplicantPersonalAccount.Persistence.Contextes;
+using ApplicantPersonalAccount.Persistence.Repositories;
+using ApplicantPersonalAccount.Persistence.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -15,7 +17,12 @@ builder.Services.AddSwaggerGen();
 var usersConnection = builder.Configuration.GetConnectionString("UsersConnection");
 
 builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(usersConnection));
+
+// services
 builder.Services.AddTransient<IAuthorizationService, AuthorizationServiceImpl>();
+
+// repositories
+builder.Services.AddScoped<IUserRepository, UserRepositoryImpl>();
 
 var app = builder.Build();
 
