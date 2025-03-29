@@ -38,3 +38,4 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 *.leu
+ApplicantPersonalAccount/ApplicantPersonalAccount.Common/Constants/AuthOptions.cs
