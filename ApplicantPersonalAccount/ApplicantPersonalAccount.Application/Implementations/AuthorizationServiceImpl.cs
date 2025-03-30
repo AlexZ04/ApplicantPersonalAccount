@@ -1,6 +1,6 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.Exceptions;
-using ApplicantPersonalAccount.Common.Models;
+using ApplicantPersonalAccount.Common.Models.Authorization;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -48,10 +48,31 @@ namespace ApplicantPersonalAccount.Application.Implementations
             _userRepository.AddUser(newUser);
             newUser.InfoForEvents.User = newUser;
 
+            TokenResponseModel tokenResponseModel = GetTokenAndAddToDb(newUser);
+
+            await _userRepository.SaveChanges();
+
+            return tokenResponseModel;
+        }
+
+        public async Task<TokenResponseModel> LoginUser(UserLoginModel loginCredentials)
+        {
+            var user = await _userRepository.GetUsersByCredentials(
+                loginCredentials.Email, loginCredentials.Password);
+
+            TokenResponseModel refreshToken = GetTokenAndAddToDb(user);
+
+            await _userRepository.SaveChanges();
+
+            return refreshToken;
+        }
+
+        private TokenResponseModel GetTokenAndAddToDb(UserEntity user)
+        {
             RefreshTokenEntity refreshToken = new RefreshTokenEntity
             {
                 Id = Guid.NewGuid(),
-                User = newUser,
+                User = user,
                 Token = _tokenService.GenerateRefreshToken(),
                 Expires = DateTime.Now.AddHours(GeneralSettings.REFRESH_TOKEN_LIFETIME).ToUniversalTime()
             };
@@ -60,12 +81,10 @@ namespace ApplicantPersonalAccount.Application.Implementations
 
             TokenResponseModel tokenResponseModel = new TokenResponseModel
             {
-                AccessToken = _tokenService.GenerateAccessToken(newUser.Id),
+                AccessToken = _tokenService.GenerateAccessToken(user.Id),
                 RefreshToken = refreshToken.Token,
                 AccessExpireTime = DateTime.Now.AddMinutes(GeneralSettings.ACCESS_TOKEN_LIFETIME).ToUniversalTime()
             };
-
-            await _userRepository.SaveChanges();
 
             return tokenResponseModel;
         }

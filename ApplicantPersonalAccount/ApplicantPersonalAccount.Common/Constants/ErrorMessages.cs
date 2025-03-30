@@ -3,5 +3,6 @@
     public class ErrorMessages
     {
         public const string CANT_REGISTER_USER = "Can't register new user!";
+        public const string INVALID_CREDENTIALS = "Invalid credentials!";
     }
 }

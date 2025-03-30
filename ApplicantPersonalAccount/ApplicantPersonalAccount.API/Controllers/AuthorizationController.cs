@@ -1,5 +1,5 @@
 using ApplicantPersonalAccount.Application;
-using ApplicantPersonalAccount.Common.Models;
+using ApplicantPersonalAccount.Common.Models.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicantPersonalAccount.API.Controllers
@@ -24,6 +24,12 @@ namespace ApplicantPersonalAccount.API.Controllers
                 return BadRequest(new { Errors = validationErrors});
 
             return Ok(await _authorizationService.RegisterUser(user));
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser([FromBody] UserLoginModel loginCredentials)
+        {
+            return Ok(await _authorizationService.LoginUser(loginCredentials));
         }
 
     }

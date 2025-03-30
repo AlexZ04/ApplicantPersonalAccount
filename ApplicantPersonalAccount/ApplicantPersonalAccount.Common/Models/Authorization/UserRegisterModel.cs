@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ApplicantPersonalAccount.Common.Models
+namespace ApplicantPersonalAccount.Common.Models.Authorization
 {
     public class UserRegisterModel
     {

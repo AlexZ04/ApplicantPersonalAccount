@@ -1,4 +1,7 @@
-﻿using ApplicantPersonalAccount.Persistence.Contextes;
+﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
+using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +37,18 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
         public async Task SaveChanges()
         {
             await _userContext.SaveChangesAsync();
+        }
+
+        public async Task<UserEntity> GetUsersByCredentials(string email, string password)
+        {
+            var user = await _userContext.Users
+                .FirstOrDefaultAsync(u => u.Email == email &&
+                Hasher.CheckPassword(u.Password, password));
+
+            if (user == null)
+                throw new InvalidActionException(ErrorMessages.INVALID_CREDENTIALS);
+
+            return user;
         }
     }
 }

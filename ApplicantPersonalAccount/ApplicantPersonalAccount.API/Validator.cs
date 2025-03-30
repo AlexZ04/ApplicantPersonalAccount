@@ -1,5 +1,5 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
-using ApplicantPersonalAccount.Common.Models;
+using ApplicantPersonalAccount.Common.Models.Authorization;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApplicantPersonalAccount.API

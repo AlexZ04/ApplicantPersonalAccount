@@ -1,4 +1,4 @@
-﻿namespace ApplicantPersonalAccount.Common.Models
+﻿namespace ApplicantPersonalAccount.Common.Models.Authorization
 {
     public class TokenResponseModel
     {
