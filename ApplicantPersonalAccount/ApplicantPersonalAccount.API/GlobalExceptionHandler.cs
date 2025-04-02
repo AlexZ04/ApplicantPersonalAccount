@@ -34,6 +34,8 @@ namespace ApplicantPersonalAccount.API
                     Title = "Internal server error"
                 };
 
+            httpContext.Response.StatusCode = problemDetails.Status.Value;
+
             await httpContext.Response
                 .WriteAsJsonAsync(problemDetails, cancellationToken);
 
