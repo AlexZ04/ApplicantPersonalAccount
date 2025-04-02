@@ -18,12 +18,14 @@ namespace ApplicantPersonalAccount.Application.Implementations
             _userDataContext = userDataContext;
         }
 
-        public string GenerateAccessToken(Guid id)
+        public string GenerateAccessToken(Guid id, string role)
         {
             ClaimsIdentity claims = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, id.ToString()),
                 });
+
+            claims.AddClaim(new Claim(ClaimTypes.Role, role));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

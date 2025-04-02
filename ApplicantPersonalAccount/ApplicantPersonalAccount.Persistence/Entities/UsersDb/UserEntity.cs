@@ -13,6 +13,7 @@ namespace ApplicantPersonalAccount.Persistence.Entities.UsersDb
         public string Address { get; set; } = string.Empty;
         public string Citizenship { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public Role Role { get; set; } = Role.Applicant;
         public DateTime CreateTime { get; set; } = DateTime.Now.ToUniversalTime();
         public DateTime UpdateTime { get; set; } = DateTime.Now.ToUniversalTime();
         public InfoForEventsEntity InfoForEvents { get; set; }

@@ -33,6 +33,12 @@ namespace ApplicantPersonalAccount.API.Controllers
             return Ok(await _authorizationService.LoginUser(loginCredentials));
         }
 
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            return Ok("todo");
+        }
+
         [HttpPost("refresh")]
         [Authorize]
         public async Task<IActionResult> LoginRefresh([FromBody] RefreshTokenModel tokenModel)

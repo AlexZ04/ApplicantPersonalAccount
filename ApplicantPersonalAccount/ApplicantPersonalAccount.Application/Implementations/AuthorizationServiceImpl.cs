@@ -71,7 +71,7 @@ namespace ApplicantPersonalAccount.Application.Implementations
         {
             RefreshTokenEntity refreshToken = await _userRepository.GetRefreshToken(tokenModel.RefreshToken);
 
-            string accessToken = _tokenService.GenerateAccessToken(refreshToken.User.Id);
+            string accessToken = _tokenService.GenerateAccessToken(refreshToken.User.Id, refreshToken.User.Role.ToString());
 
             refreshToken.Token = _tokenService.GenerateRefreshToken();
             refreshToken.Expires = DateTime.Now.AddDays(GeneralSettings.REFRESH_TOKEN_LIFETIME)
@@ -103,7 +103,7 @@ namespace ApplicantPersonalAccount.Application.Implementations
 
             TokenResponseModel tokenResponseModel = new TokenResponseModel
             {
-                AccessToken = _tokenService.GenerateAccessToken(user.Id),
+                AccessToken = _tokenService.GenerateAccessToken(user.Id, user.Role.ToString()),
                 RefreshToken = refreshToken.Token,
                 AccessExpireTime = DateTime.Now.AddMinutes(GeneralSettings.ACCESS_TOKEN_LIFETIME).ToUniversalTime()
             };
