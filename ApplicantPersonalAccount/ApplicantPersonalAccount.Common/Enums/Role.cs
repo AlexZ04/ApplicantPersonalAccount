@@ -4,7 +4,7 @@
     {
         Applicant,
         Manager,
-        MainManager,
+        HeadManager,
         Admin
     }
 }

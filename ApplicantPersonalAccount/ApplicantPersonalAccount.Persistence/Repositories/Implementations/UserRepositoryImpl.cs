@@ -61,5 +61,13 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             return refreshToken;
         }
+
+        public async Task<UserEntity> GetUserById(Guid id)
+        {
+            UserEntity? user = await _userContext.Users
+                .FindAsync(id);
+
+            return user != null ? user : throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+        }
     }
 }

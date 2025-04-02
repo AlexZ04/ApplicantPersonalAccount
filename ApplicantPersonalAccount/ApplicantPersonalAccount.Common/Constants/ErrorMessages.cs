@@ -4,5 +4,6 @@
     {
         public const string CANT_REGISTER_USER = "Can't register new user!";
         public const string INVALID_CREDENTIALS = "Invalid credentials!";
+        public const string USER_NOT_FOUND = "User not found";
     }
 }

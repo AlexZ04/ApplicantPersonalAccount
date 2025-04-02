@@ -11,5 +11,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task SaveChanges();
         public Task<UserEntity> GetUsersByCredentials(string email, string password);
         public Task<RefreshTokenEntity> GetRefreshToken(string token);
+        public Task<UserEntity> GetUserById(Guid id);
     }
 }

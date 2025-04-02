@@ -25,7 +25,7 @@ namespace ApplicantPersonalAccount.API
                 {
                     Status = 401,
                     Title = "Unauthorized!",
-                    Detail = "Refresh token is not valid"
+                    Detail = "Refresh or access token is not valid"
                 };
             else
                 problemDetails = new ProblemDetails
