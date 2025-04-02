@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicantPersonalAccount.Common\ApplicantPersonalAccount.Common.csproj" />
+    <ProjectReference Include="..\ApplicantPersonalAccount.Infrastructure\ApplicantPersonalAccount.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

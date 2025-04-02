@@ -42,10 +42,9 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
         public async Task<UserEntity> GetUsersByCredentials(string email, string password)
         {
             var user = await _userContext.Users
-                .FirstOrDefaultAsync(u => u.Email == email &&
-                Hasher.CheckPassword(u.Password, password));
+                .FirstOrDefaultAsync(u => u.Email == email);
 
-            if (user == null)
+            if (user == null || !Hasher.CheckPassword(user.Password, password))
                 throw new InvalidActionException(ErrorMessages.INVALID_CREDENTIALS);
 
             return user;
