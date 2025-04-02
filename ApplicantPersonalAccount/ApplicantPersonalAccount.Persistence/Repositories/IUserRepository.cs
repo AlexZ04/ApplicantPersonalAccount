@@ -10,5 +10,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public void AddRefreshToken(RefreshTokenEntity refreshToken);
         public Task SaveChanges();
         public Task<UserEntity> GetUsersByCredentials(string email, string password);
+        public Task<RefreshTokenEntity> GetRefreshToken(string token);
     }
 }

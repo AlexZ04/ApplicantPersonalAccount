@@ -1,5 +1,6 @@
 using ApplicantPersonalAccount.Application;
 using ApplicantPersonalAccount.Common.Models.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicantPersonalAccount.API.Controllers
@@ -8,9 +9,9 @@ namespace ApplicantPersonalAccount.API.Controllers
     [Route("api/auth")]
     public class AuthorizationController : ControllerBase
     {
-        private readonly IAuthorizationService _authorizationService;
+        private readonly IAuthService _authorizationService;
 
-        public AuthorizationController(IAuthorizationService authorizationService)
+        public AuthorizationController(IAuthService authorizationService)
         {
             _authorizationService = authorizationService;
         }
@@ -32,5 +33,11 @@ namespace ApplicantPersonalAccount.API.Controllers
             return Ok(await _authorizationService.LoginUser(loginCredentials));
         }
 
+        [HttpPost("refresh")]
+        [Authorize]
+        public async Task<IActionResult> LoginRefresh([FromBody] RefreshTokenModel tokenModel)
+        {
+            return Ok(await _authorizationService.LoginRefresh(tokenModel));
+        }
     }
 }

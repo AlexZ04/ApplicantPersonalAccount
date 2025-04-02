@@ -2,9 +2,10 @@
 
 namespace ApplicantPersonalAccount.Application
 {
-    public interface IAuthorizationService
+    public interface IAuthService
     {
         public Task<TokenResponseModel> RegisterUser(UserRegisterModel user);
         public Task<TokenResponseModel> LoginUser(UserLoginModel loginCredentials);
+        public Task<TokenResponseModel> LoginRefresh(RefreshTokenModel tokenModel);
     }
 }

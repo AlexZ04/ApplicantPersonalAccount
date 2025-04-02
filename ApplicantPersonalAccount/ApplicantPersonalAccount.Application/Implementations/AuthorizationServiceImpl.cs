@@ -7,7 +7,7 @@ using ApplicantPersonalAccount.Persistence.Repositories;
 
 namespace ApplicantPersonalAccount.Application.Implementations
 {
-    public class AuthorizationServiceImpl : IAuthorizationService
+    public class AuthorizationServiceImpl : IAuthService
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
@@ -57,7 +57,7 @@ namespace ApplicantPersonalAccount.Application.Implementations
 
         public async Task<TokenResponseModel> LoginUser(UserLoginModel loginCredentials)
         {
-            var user = await _userRepository.GetUsersByCredentials(
+            UserEntity user = await _userRepository.GetUsersByCredentials(
                 loginCredentials.Email, loginCredentials.Password);
 
             TokenResponseModel refreshToken = GetTokenAndAddToDb(user);
@@ -65,6 +65,28 @@ namespace ApplicantPersonalAccount.Application.Implementations
             await _userRepository.SaveChanges();
 
             return refreshToken;
+        }
+
+        public async Task<TokenResponseModel> LoginRefresh(RefreshTokenModel tokenModel)
+        {
+            RefreshTokenEntity refreshToken = await _userRepository.GetRefreshToken(tokenModel.RefreshToken);
+
+            string accessToken = _tokenService.GenerateAccessToken(refreshToken.User.Id);
+
+            refreshToken.Token = _tokenService.GenerateRefreshToken();
+            refreshToken.Expires = DateTime.Now.AddDays(GeneralSettings.REFRESH_TOKEN_LIFETIME)
+                .ToUniversalTime();
+
+            await _tokenService.HandleTokens(refreshToken.User.Id, Guid.Empty);
+
+            await _userRepository.SaveChanges();
+
+            return new TokenResponseModel
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token,
+                AccessExpireTime = DateTime.UtcNow.AddMinutes(AuthOptions.LIFETIME_MINUTES)
+            };
         }
 
         private TokenResponseModel GetTokenAndAddToDb(UserEntity user)

@@ -20,6 +20,13 @@ namespace ApplicantPersonalAccount.API
                     Title = customException.Error,
                     Detail = customException.Message
                 };
+            else if (exception is UnauthorizedAccessException)
+                problemDetails = new ProblemDetails
+                {
+                    Status = 401,
+                    Title = "Unauthorized!",
+                    Detail = "Refresh token is not valid"
+                };
             else
                 problemDetails = new ProblemDetails
                 {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ApplicantPersonalAccount.API;
 using ApplicantPersonalAccount.Application;
 using ApplicantPersonalAccount.Application.Implementations;
@@ -6,7 +7,10 @@ using ApplicantPersonalAccount.Persistence.Repositories;
 using ApplicantPersonalAccount.Persistence.Repositories.Implementations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
+using ApplicantPersonalAccount.Common.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +21,37 @@ builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+});
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -29,11 +63,30 @@ var usersConnection = builder.Configuration.GetConnectionString("UsersConnection
 builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(usersConnection));
 
 // services
-builder.Services.AddTransient<IAuthorizationService, AuthorizationServiceImpl>();
+builder.Services.AddTransient<IAuthService, AuthorizationServiceImpl>();
 builder.Services.AddTransient<ITokenService, TokenServiceImpl>();
 
 // repositories
 builder.Services.AddScoped<IUserRepository, UserRepositoryImpl>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = AuthOptions.ISSUER,
+            ValidateAudience = true,
+            ValidAudience = AuthOptions.AUDIENCE,
+            ValidateLifetime = true,
+            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            ValidateIssuerSigningKey = true,
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -53,6 +106,7 @@ app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

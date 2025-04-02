@@ -23,7 +23,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
         public async Task<bool> EmailIsAvailable(string email)
         {
-            var user = await _userContext.Users
+            UserEntity? user = await _userContext.Users
                 .FirstOrDefaultAsync(x => x.Email == email);
 
             return user == null;
@@ -41,13 +41,25 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
         public async Task<UserEntity> GetUsersByCredentials(string email, string password)
         {
-            var user = await _userContext.Users
+            UserEntity? user = await _userContext.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null || !Hasher.CheckPassword(user.Password, password))
                 throw new InvalidActionException(ErrorMessages.INVALID_CREDENTIALS);
 
             return user;
+        }
+
+        public async Task<RefreshTokenEntity> GetRefreshToken(string token)
+        {
+            RefreshTokenEntity? refreshToken = await _userContext.RefreshTokens
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.Token == token);
+
+            if (refreshToken == null || refreshToken.Expires < DateTime.Now.ToUniversalTime())
+                throw new UnauthorizedAccessException();
+
+            return refreshToken;
         }
     }
 }
