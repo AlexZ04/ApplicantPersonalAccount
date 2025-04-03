@@ -1,4 +1,6 @@
-﻿using ApplicantPersonalAccount.Common.Models.User;
+﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models.User;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -33,6 +35,18 @@ namespace ApplicantPersonalAccount.Application.Implementations
             };
 
             return profile;
+        }
+
+        public async Task ChangePassword(PasswordEditModel passwordModel, ClaimsPrincipal user)
+        {
+            UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
+
+            if (!Hasher.CheckPassword(foundUser.Password, passwordModel.OldPassword))
+                throw new ImpossibleActionException(ErrorMessages.INVALID_PASSWORD);
+
+            foundUser.Password = Hasher.HashPassword(passwordModel.Password);
+
+            await _userRepository.SaveChanges();
         }
     }
 }

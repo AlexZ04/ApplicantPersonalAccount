@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Application;
+using ApplicantPersonalAccount.Common.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,14 @@ namespace ApplicantPersonalAccount.API.Controllers
         public UserController(IUserService userService)
         {
             _userService = userService;
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] PasswordEditModel passwordModel)
+        {
+            await _userService.ChangePassword(passwordModel, User);
+
+            return Ok();
         }
 
         [HttpGet("profile")]

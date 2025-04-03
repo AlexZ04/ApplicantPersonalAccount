@@ -6,5 +6,6 @@ namespace ApplicantPersonalAccount.Application
     public interface IUserService
     {
         public Task<UserProfileModel> GetProfile(ClaimsPrincipal user);
+        public Task ChangePassword(PasswordEditModel passwordModel, ClaimsPrincipal user);
     }
 }
