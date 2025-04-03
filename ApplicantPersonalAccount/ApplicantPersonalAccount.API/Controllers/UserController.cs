@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Application;
 using ApplicantPersonalAccount.Common.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace ApplicantPersonalAccount.API.Controllers
         }
 
         [HttpPatch("change-password")]
+        [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordEditModel passwordModel)
         {
             await _userService.ChangePassword(passwordModel, User);
@@ -25,9 +27,19 @@ namespace ApplicantPersonalAccount.API.Controllers
         }
 
         [HttpPatch("change-email")]
+        [Authorize(Roles = "Manager,HeadManager,Admin")]
         public async Task<IActionResult> ChangeEmail([FromBody] EmailEditModel emailModel)
         {
             await _userService.ChangeEmail(emailModel, User);
+
+            return Ok();
+        }
+
+        [HttpPut("edit-profile")]
+        [Authorize(Roles = "Applicant")]
+        public async Task<IActionResult> EditProfile([FromBody] UserEditModel userNewInfo)
+        {
+            await _userService.EditProfile(userNewInfo, User);
 
             return Ok();
         }

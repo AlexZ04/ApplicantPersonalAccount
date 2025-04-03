@@ -54,6 +54,24 @@ namespace ApplicantPersonalAccount.Application.Implementations
             UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
 
             foundUser.Email = passwordModel.Email;
+            foundUser.UpdateTime = DateTime.UtcNow.ToUniversalTime();
+
+            await _userRepository.SaveChanges();
+        }
+
+        public async Task EditProfile(UserEditModel userNewInfo, ClaimsPrincipal user)
+        {
+            UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
+
+            foundUser.Name = userNewInfo.Name;
+            foundUser.Email = userNewInfo.Email;
+            foundUser.Phone = userNewInfo.Phone;
+            foundUser.Gender = userNewInfo.Gender;
+            foundUser.Birthdate = userNewInfo.Birthdate;
+            foundUser.Citizenship = userNewInfo.Citizenship;
+            foundUser.Address = userNewInfo.Address;
+
+            foundUser.UpdateTime = DateTime.UtcNow.ToUniversalTime();
 
             await _userRepository.SaveChanges();
         }
