@@ -16,10 +16,18 @@ namespace ApplicantPersonalAccount.API.Controllers
             _userService = userService;
         }
 
-        [HttpPost("change-password")]
+        [HttpPatch("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordEditModel passwordModel)
         {
             await _userService.ChangePassword(passwordModel, User);
+
+            return Ok();
+        }
+
+        [HttpPatch("change-email")]
+        public async Task<IActionResult> ChangeEmail([FromBody] EmailEditModel emailModel)
+        {
+            await _userService.ChangeEmail(emailModel, User);
 
             return Ok();
         }

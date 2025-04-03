@@ -48,5 +48,14 @@ namespace ApplicantPersonalAccount.Application.Implementations
 
             await _userRepository.SaveChanges();
         }
+
+        public async Task ChangeEmail(EmailEditModel passwordModel, ClaimsPrincipal user)
+        {
+            UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
+
+            foundUser.Email = passwordModel.Email;
+
+            await _userRepository.SaveChanges();
+        }
     }
 }
