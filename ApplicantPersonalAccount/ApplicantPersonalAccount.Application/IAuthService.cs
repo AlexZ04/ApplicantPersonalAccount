@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Common.Models.Authorization;
+using System.Security.Claims;
 
 namespace ApplicantPersonalAccount.Application
 {
@@ -7,5 +8,6 @@ namespace ApplicantPersonalAccount.Application
         public Task<TokenResponseModel> RegisterUser(UserRegisterModel user);
         public Task<TokenResponseModel> LoginUser(UserLoginModel loginCredentials);
         public Task<TokenResponseModel> LoginRefresh(RefreshTokenModel tokenModel);
+        public Task Logout(string? token, ClaimsPrincipal user);
     }
 }

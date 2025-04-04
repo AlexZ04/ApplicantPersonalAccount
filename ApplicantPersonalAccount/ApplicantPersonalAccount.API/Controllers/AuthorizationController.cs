@@ -1,5 +1,6 @@
 using ApplicantPersonalAccount.Application;
 using ApplicantPersonalAccount.Common.Models.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace ApplicantPersonalAccount.API.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthService _authorizationService;
+        private readonly ITokenService _tokenService;
 
-        public AuthorizationController(IAuthService authorizationService)
+        public AuthorizationController(IAuthService authorizationService, ITokenService tokenService)
         {
             _authorizationService = authorizationService;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -36,7 +39,9 @@ namespace ApplicantPersonalAccount.API.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            return Ok("todo");
+            await _authorizationService.Logout(HttpContext.GetTokenAsync("access_token").Result, User);
+
+            return Ok();
         }
 
         [HttpPost("refresh")]

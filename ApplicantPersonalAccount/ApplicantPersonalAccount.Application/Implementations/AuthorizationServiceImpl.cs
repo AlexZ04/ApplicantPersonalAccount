@@ -4,6 +4,7 @@ using ApplicantPersonalAccount.Common.Models.Authorization;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
+using System.Security.Claims;
 
 namespace ApplicantPersonalAccount.Application.Implementations
 {
@@ -11,11 +12,13 @@ namespace ApplicantPersonalAccount.Application.Implementations
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
+        private readonly ITokenRepository _tokenRepository;
 
-        public AuthorizationServiceImpl(IUserRepository userRepository, ITokenService tokenService)
+        public AuthorizationServiceImpl(IUserRepository userRepository, ITokenService tokenService, ITokenRepository tokenRepository)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
+            _tokenRepository = tokenRepository;
         }
 
         public async Task<TokenResponseModel> RegisterUser(UserRegisterModel user)
@@ -50,6 +53,8 @@ namespace ApplicantPersonalAccount.Application.Implementations
 
             TokenResponseModel tokenResponseModel = GetTokenAndAddToDb(newUser);
 
+            await _tokenService.HandleTokens(newUser.Id, Guid.Empty);
+
             await _userRepository.SaveChanges();
 
             return tokenResponseModel;
@@ -61,6 +66,8 @@ namespace ApplicantPersonalAccount.Application.Implementations
                 loginCredentials.Email, loginCredentials.Password);
 
             TokenResponseModel refreshToken = GetTokenAndAddToDb(user);
+
+            await _tokenService.HandleTokens(user.Id, Guid.Empty);
 
             await _userRepository.SaveChanges();
 
@@ -87,6 +94,16 @@ namespace ApplicantPersonalAccount.Application.Implementations
                 RefreshToken = refreshToken.Token,
                 AccessExpireTime = DateTime.UtcNow.AddMinutes(AuthOptions.LIFETIME_MINUTES)
             };
+        }
+
+        public async Task Logout(string? token, ClaimsPrincipal user)
+        {
+            if (token == null)
+                throw new UnauthorizedAccessException();
+
+            RefreshTokenEntity refreshToken = await _tokenRepository.GetUserRefreshToken(UserDescriptor.GetUserId(user));
+
+            await _tokenService.CacheTokens(token, refreshToken.Token);
         }
 
         private TokenResponseModel GetTokenAndAddToDb(UserEntity user)

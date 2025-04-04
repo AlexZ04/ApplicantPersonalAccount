@@ -1,21 +1,23 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Persistence.Contextes;
+using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace ApplicantPersonalAccount.Application.Implementations
 {
     public class TokenServiceImpl : ITokenService
     {
         private JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-        private readonly UserDataContext _userDataContext;
+        private readonly ITokenRepository _tokenRepository;
 
-        public TokenServiceImpl(UserDataContext userDataContext)
+        public TokenServiceImpl(ITokenRepository tokenRepository)
         {
-            _userDataContext = userDataContext;
+            _tokenRepository = tokenRepository;
         }
 
         public string GenerateAccessToken(Guid id, string role)
@@ -48,10 +50,12 @@ namespace ApplicantPersonalAccount.Application.Implementations
 
         public async Task HandleTokens(Guid userId, Guid tokenId)
         {
-            await _userDataContext.RefreshTokens
-                .Include(t => t.User)
-                .Where(t => t.User.Id == userId && t.Id == tokenId)
-                .ExecuteDeleteAsync();
+            await _tokenRepository.HandleTokens(userId, tokenId);
+        }
+
+        public async Task CacheTokens(string accessToken, string refreshToken)
+        {
+            await _tokenRepository.CacheTokens(accessToken, refreshToken);
         }
     }
 }

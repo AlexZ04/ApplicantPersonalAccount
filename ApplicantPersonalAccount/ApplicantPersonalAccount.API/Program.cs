@@ -62,6 +62,11 @@ var usersConnection = builder.Configuration.GetConnectionString("UsersConnection
 
 builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(usersConnection));
 
+builder.Services.AddStackExchangeRedisCache(options => {
+    options.Configuration = "localhost";
+    options.InstanceName = "ApplicantAPI";
+});
+
 // services
 builder.Services.AddTransient<IAuthService, AuthorizationServiceImpl>();
 builder.Services.AddTransient<ITokenService, TokenServiceImpl>();
@@ -69,6 +74,7 @@ builder.Services.AddTransient<IUserService, UserServiseImpl>();
 
 // repositories
 builder.Services.AddScoped<IUserRepository, UserRepositoryImpl>();
+builder.Services.AddScoped<ITokenRepository, TokenRepositoryImpl>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
