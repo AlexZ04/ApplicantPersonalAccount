@@ -78,6 +78,9 @@ namespace ApplicantPersonalAccount.Application.Implementations
         {
             RefreshTokenEntity refreshToken = await _userRepository.GetRefreshToken(tokenModel.RefreshToken);
 
+            if (!await _tokenRepository.IsRefreshTokenValid(refreshToken.Token))
+                throw new UnauthorizedAccessException();
+
             string accessToken = _tokenService.GenerateAccessToken(refreshToken.User.Id, refreshToken.User.Role.ToString());
 
             refreshToken.Token = _tokenService.GenerateRefreshToken();

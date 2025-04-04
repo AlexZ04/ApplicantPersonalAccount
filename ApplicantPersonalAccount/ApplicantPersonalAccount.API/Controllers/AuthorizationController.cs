@@ -1,5 +1,6 @@
 using ApplicantPersonalAccount.Application;
 using ApplicantPersonalAccount.Common.Models.Authorization;
+using ApplicantPersonalAccount.Infrastructure.Filters;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,8 @@ namespace ApplicantPersonalAccount.API.Controllers
         }
 
         [HttpPost("logout")]
+        [Authorize]
+        [CheckToken]
         public async Task<IActionResult> Logout()
         {
             await _authorizationService.Logout(HttpContext.GetTokenAsync("access_token").Result, User);
@@ -46,6 +49,7 @@ namespace ApplicantPersonalAccount.API.Controllers
 
         [HttpPost("refresh")]
         [Authorize]
+        [CheckToken]
         public async Task<IActionResult> LoginRefresh([FromBody] RefreshTokenModel tokenModel)
         {
             return Ok(await _authorizationService.LoginRefresh(tokenModel));

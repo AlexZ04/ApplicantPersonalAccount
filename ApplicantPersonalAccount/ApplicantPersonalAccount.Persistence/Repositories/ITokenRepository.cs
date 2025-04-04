@@ -7,5 +7,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task HandleTokens(Guid userId, Guid tokenId);
         public Task CacheTokens(string accessToken, string refreshToken);
         public Task<RefreshTokenEntity> GetUserRefreshToken(Guid userId);
+        public Task<bool> IsRefreshTokenValid(string refreshToken);
     }
 }

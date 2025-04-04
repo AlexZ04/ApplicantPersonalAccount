@@ -22,7 +22,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
         {
             await _userContext.RefreshTokens
                 .Include(t => t.User)
-                .Where(t => t.User.Id == userId && t.Id == tokenId)
+                .Where(t => t.User.Id == userId && t.Id != tokenId)
                 .ExecuteDeleteAsync();
         }
 
@@ -49,6 +49,15 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
                 throw new UnauthorizedAccessException();
 
             return refreshToken;
+        }
+
+        public async Task<bool> IsRefreshTokenValid(string refreshToken)
+        {
+            string? isTokenCached = await _tokenCache.GetStringAsync($"blacklist:refresh:{refreshToken}");
+
+            if (isTokenCached == null)
+                return true;
+            return false;
         }
     }
 }
