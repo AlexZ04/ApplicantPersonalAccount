@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApplicantPersonalAccount.API
+namespace ApplicantPersonalAccount.API.ExceptionHandler
 {
     public class GlobalExceptionHandler : IExceptionHandler
     {

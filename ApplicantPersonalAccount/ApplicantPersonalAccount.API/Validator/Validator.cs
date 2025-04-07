@@ -2,9 +2,9 @@
 using ApplicantPersonalAccount.Common.Models.Authorization;
 using System.ComponentModel.DataAnnotations;
 
-namespace ApplicantPersonalAccount.API
+namespace ApplicantPersonalAccount.API.Validator
 {
-    public class Validator
+    public static class Validator
     {
         public static List<string?> ValidateUserRegister(UserRegisterModel model)
         {

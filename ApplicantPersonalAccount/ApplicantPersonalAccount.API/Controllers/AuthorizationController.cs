@@ -21,9 +21,10 @@ namespace ApplicantPersonalAccount.API.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegisterModel user)
         {
-            var validationErrors = Validator.ValidateUserRegister(user);
+            var validationErrors = Validator.Validator.ValidateUserRegister(user);
 
             if (validationErrors.Count() > 0)
                 return BadRequest(new { Errors = validationErrors});
@@ -32,6 +33,7 @@ namespace ApplicantPersonalAccount.API.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginModel loginCredentials)
         {
             return Ok(await _authorizationService.LoginUser(loginCredentials));
@@ -48,8 +50,7 @@ namespace ApplicantPersonalAccount.API.Controllers
         }
 
         [HttpPost("refresh")]
-        [Authorize]
-        [CheckToken]
+        [AllowAnonymous]
         public async Task<IActionResult> LoginRefresh([FromBody] RefreshTokenModel tokenModel)
         {
             return Ok(await _authorizationService.LoginRefresh(tokenModel));
