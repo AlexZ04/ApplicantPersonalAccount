@@ -1,7 +1,6 @@
 ﻿using ApplicantPersonalAccount.Application.ControllerServices;
 using ApplicantPersonalAccount.Application.OuterServices;
 using ApplicantPersonalAccount.Application.OuterServices.DTO;
-using System;
 
 namespace ApplicantPersonalAccount.Application.ControllerServices.Implementations
 {
