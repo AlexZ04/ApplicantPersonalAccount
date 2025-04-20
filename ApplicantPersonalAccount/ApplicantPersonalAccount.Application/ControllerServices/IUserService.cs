@@ -1,7 +1,7 @@
 ﻿using ApplicantPersonalAccount.Common.Models.User;
 using System.Security.Claims;
 
-namespace ApplicantPersonalAccount.Application
+namespace ApplicantPersonalAccount.Application.ControllerServices
 {
     public interface IUserService
     {

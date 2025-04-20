@@ -1,7 +1,7 @@
 ﻿using ApplicantPersonalAccount.Common.Models.Authorization;
 using System.Security.Claims;
 
-namespace ApplicantPersonalAccount.Application
+namespace ApplicantPersonalAccount.Application.ControllerServices
 {
     public interface IAuthService
     {

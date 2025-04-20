@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Common.Constants;
+﻿using ApplicantPersonalAccount.Application.ControllerServices;
+using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace ApplicantPersonalAccount.Application.Implementations
+namespace ApplicantPersonalAccount.Application.ControllerServices.Implementations
 {
     public class TokenServiceImpl : ITokenService
     {

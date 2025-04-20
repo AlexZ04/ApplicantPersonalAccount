@@ -1,5 +1,7 @@
-﻿using ApplicantPersonalAccount.Application.Implementations;
-using ApplicantPersonalAccount.Application;
+﻿using ApplicantPersonalAccount.Application.ControllerServices;
+using ApplicantPersonalAccount.Application.ControllerServices.Implementations;
+using ApplicantPersonalAccount.Application.OuterServices;
+using ApplicantPersonalAccount.Application.OuterServices.Implementations;
 
 namespace ApplicantPersonalAccount.API.Setup
 {
@@ -10,6 +12,8 @@ namespace ApplicantPersonalAccount.API.Setup
             services.AddTransient<IAuthService, AuthorizationServiceImpl>();
             services.AddTransient<ITokenService, TokenServiceImpl>();
             services.AddTransient<IUserService, UserServiseImpl>();
+            services.AddTransient<IApplicantService, ApplicantServiceImpl>();
+            services.AddHttpClient<IDirectoryService, DirectoryServiceImpl>();
         }
     }
 }

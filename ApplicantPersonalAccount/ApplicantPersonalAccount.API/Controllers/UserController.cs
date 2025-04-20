@@ -1,4 +1,4 @@
-﻿using ApplicantPersonalAccount.Application;
+﻿using ApplicantPersonalAccount.Application.ControllerServices;
 using ApplicantPersonalAccount.Common.Models.User;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using Microsoft.AspNetCore.Authorization;

@@ -39,3 +39,4 @@ msbuild.wrn
 .vs/
 *.leu
 ApplicantPersonalAccount/ApplicantPersonalAccount.Common/Constants/AuthOptions.cs
+ApplicantPersonalAccount/ApplicantPersonalAccount.Common/Constants/ServerURLs.cs

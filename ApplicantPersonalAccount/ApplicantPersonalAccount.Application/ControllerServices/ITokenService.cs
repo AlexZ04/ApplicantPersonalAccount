@@ -1,4 +1,4 @@
-﻿namespace ApplicantPersonalAccount.Application
+﻿namespace ApplicantPersonalAccount.Application.ControllerServices
 {
     public interface ITokenService
     {

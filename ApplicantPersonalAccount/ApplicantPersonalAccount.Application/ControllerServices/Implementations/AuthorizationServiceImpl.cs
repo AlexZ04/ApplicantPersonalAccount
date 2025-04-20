@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Common.Constants;
+﻿using ApplicantPersonalAccount.Application.ControllerServices;
+using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Authorization;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
@@ -6,7 +7,7 @@ using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using System.Security.Claims;
 
-namespace ApplicantPersonalAccount.Application.Implementations
+namespace ApplicantPersonalAccount.Application.ControllerServices.Implementations
 {
     public class AuthorizationServiceImpl : IAuthService
     {
