@@ -1,7 +1,6 @@
 ﻿using ApplicantPersonalAccount.Persistence.Configurations.UserDb;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace ApplicantPersonalAccount.Persistence.Contextes
 {
@@ -11,7 +10,7 @@ namespace ApplicantPersonalAccount.Persistence.Contextes
         public DbSet<InfoForEventsEntity> InfoForEvents { get; set; }
         public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
-        public UserDataContext(DbContextOptions options) : base(options) { }
+        public UserDataContext(DbContextOptions<UserDataContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

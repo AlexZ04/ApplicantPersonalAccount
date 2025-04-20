@@ -8,6 +8,7 @@ namespace ApplicantPersonalAccount.API.Setup
         public static void AddDatabases(WebApplicationBuilder builder)
         {
             AddUserDB(builder);
+            AddDirectoryDb(builder);
             AddRedis(builder);
         }
 
@@ -16,6 +17,13 @@ namespace ApplicantPersonalAccount.API.Setup
             var usersConnection = builder.Configuration.GetConnectionString("UsersConnection");
 
             builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(usersConnection));
+        }
+
+        public static void AddDirectoryDb(WebApplicationBuilder builder)
+        {
+            var directoryConnection = builder.Configuration.GetConnectionString("DirectoryConnection");
+
+            builder.Services.AddDbContext<DirectoryDataContext>(options => options.UseNpgsql(directoryConnection));
         }
 
         public static void AddRedis(WebApplicationBuilder builder)
@@ -30,9 +38,11 @@ namespace ApplicantPersonalAccount.API.Setup
         {
             using var serviceScope = app.Services.CreateScope();
 
-            var context = serviceScope.ServiceProvider.GetService<UserDataContext>();
+            var userContext = serviceScope.ServiceProvider.GetService<UserDataContext>();
+            var directoryContext = serviceScope.ServiceProvider.GetService<DirectoryDataContext>();
 
-            context?.Database.Migrate();
+            userContext?.Database.Migrate();
+            directoryContext?.Database.Migrate();
         }
     }
 }
