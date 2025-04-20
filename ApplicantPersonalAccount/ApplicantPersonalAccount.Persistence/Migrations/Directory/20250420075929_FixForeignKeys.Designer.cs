@@ -3,6 +3,7 @@ using System;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApplicantPersonalAccount.Persistence.Migrations.Directory
 {
     [DbContext(typeof(DirectoryDataContext))]
-    partial class DirectoryDataContextModelSnapshot : ModelSnapshot
+    [Migration("20250420075929_FixForeignKeys")]
+    partial class FixForeignKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,6 +28,7 @@ namespace ApplicantPersonalAccount.Persistence.Migrations.Directory
             modelBuilder.Entity("ApplicantPersonalAccount.Application.OuterServices.DTO.DocumentType", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateTime")
@@ -47,7 +51,10 @@ namespace ApplicantPersonalAccount.Persistence.Migrations.Directory
             modelBuilder.Entity("ApplicantPersonalAccount.Application.OuterServices.DTO.EducationLevel", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -61,6 +68,7 @@ namespace ApplicantPersonalAccount.Persistence.Migrations.Directory
             modelBuilder.Entity("ApplicantPersonalAccount.Application.OuterServices.DTO.EducationProgram", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Code")
@@ -100,6 +108,7 @@ namespace ApplicantPersonalAccount.Persistence.Migrations.Directory
             modelBuilder.Entity("ApplicantPersonalAccount.Application.OuterServices.DTO.Faculty", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateTime")

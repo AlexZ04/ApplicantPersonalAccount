@@ -9,6 +9,7 @@ namespace ApplicantPersonalAccount.Persistence.Configurations.DirectoryDb
         public void Configure(EntityTypeBuilder<Faculty> builder)
         {
             builder.HasKey(f => f.Id);
+            builder.Property(f => f.Id).ValueGeneratedNever();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task SetEducationLevels(List<EducationLevel> levels);
         public Task SetDocumentTypes(List<DocumentType> types);
         public Task SetFaculties(List<Faculty> faculties);
-        public Task ResetEducationPrograms();
+        public Task ResetAll();
         public Task AddEducationPrograms(List<EducationProgram> programs);
     }
 }

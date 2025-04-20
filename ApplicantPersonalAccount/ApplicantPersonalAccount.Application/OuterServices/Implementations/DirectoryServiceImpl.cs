@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
 using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Infrastructure.Converters;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -30,7 +31,8 @@ namespace ApplicantPersonalAccount.Application.OuterServices.Implementations
 
             var data = JsonSerializer.Deserialize<List<EducationLevel>>(stringResponse, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonTimeConverter() }
             });
 
             return data ?? new List<EducationLevel>();
@@ -45,7 +47,8 @@ namespace ApplicantPersonalAccount.Application.OuterServices.Implementations
 
             var data = JsonSerializer.Deserialize<List<DocumentType>>(stringResponse, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonTimeConverter() }
             });
 
             return data ?? new List<DocumentType>();
@@ -60,7 +63,8 @@ namespace ApplicantPersonalAccount.Application.OuterServices.Implementations
 
             var data = JsonSerializer.Deserialize<List<Faculty>>(stringResponse, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonTimeConverter() }
             });
 
             return data ?? new List<Faculty>();
@@ -75,7 +79,8 @@ namespace ApplicantPersonalAccount.Application.OuterServices.Implementations
 
             var data = JsonSerializer.Deserialize<ProgramPagedList>(stringResponse, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonTimeConverter() }
             });
 
             return data ?? new ProgramPagedList();
