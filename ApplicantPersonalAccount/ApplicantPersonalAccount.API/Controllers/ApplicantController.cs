@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Application.ControllerServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace ApplicantPersonalAccount.API.Controllers
         }
 
         [HttpGet("programs")]
+        [Authorize]
         public async Task<IActionResult> GetListOfPrograms(
             [FromQuery] string faculty, 
             [FromQuery] string educationForm,

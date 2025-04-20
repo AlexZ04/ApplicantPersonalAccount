@@ -26,6 +26,13 @@ namespace ApplicantPersonalAccount.API.Setup
             builder.Services.AddDbContext<DirectoryDataContext>(options => options.UseNpgsql(directoryConnection));
         }
 
+        public static void AddFilesDb(WebApplicationBuilder builder)
+        {
+            var filesConnection = builder.Configuration.GetConnectionString("FilesConnection");
+
+            builder.Services.AddDbContext<FilesDataContext>(options => options.UseNpgsql(filesConnection));
+        }
+
         public static void AddRedis(WebApplicationBuilder builder)
         {
             builder.Services.AddStackExchangeRedisCache(options => {
