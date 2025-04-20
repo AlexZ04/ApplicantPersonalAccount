@@ -21,5 +21,16 @@ namespace ApplicantPersonalAccount.API.Validator
 
             return errors;
         }
+
+        public static List<string?> ValidatePagination(int page, int size)
+        {
+            var errors = new List<string?>();
+            var results = new List<ValidationResult>();
+
+            if (page <= 0 || size <= 0)
+                errors.Add(ValidationErrors.INVALID_PAGINATION);
+
+            return errors;
+        }
     }
 }

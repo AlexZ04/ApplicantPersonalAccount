@@ -16,7 +16,7 @@ namespace ApplicantPersonalAccount.API.Setup
 
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
-                options.SuppressModelStateInvalidFilter = true;
+                //options.SuppressModelStateInvalidFilter = true;
             });
         }
 

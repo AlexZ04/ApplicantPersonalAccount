@@ -25,6 +25,11 @@ namespace ApplicantPersonalAccount.API.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int size = 5)
         {
+            var validationErrors = Validator.Validator.ValidatePagination(page, size);
+
+            if (validationErrors.Count() > 0)
+                return BadRequest(new { Errors = validationErrors });
+
             return Ok(await _applicantService.GetListOfPrograms(faculty, educationForm, language, code, name, page, size));
         }
     }
