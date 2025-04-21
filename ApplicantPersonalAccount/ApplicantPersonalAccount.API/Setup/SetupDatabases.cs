@@ -9,6 +9,7 @@ namespace ApplicantPersonalAccount.API.Setup
         {
             AddUserDB(builder);
             AddDirectoryDb(builder);
+            AddFilesDb(builder);
             AddRedis(builder);
         }
 
@@ -30,7 +31,7 @@ namespace ApplicantPersonalAccount.API.Setup
         {
             var filesConnection = builder.Configuration.GetConnectionString("FilesConnection");
 
-            builder.Services.AddDbContext<FilesDataContext>(options => options.UseNpgsql(filesConnection));
+            builder.Services.AddDbContext<FileDataContext>(options => options.UseNpgsql(filesConnection));
         }
 
         public static void AddRedis(WebApplicationBuilder builder)
@@ -47,9 +48,11 @@ namespace ApplicantPersonalAccount.API.Setup
 
             var userContext = serviceScope.ServiceProvider.GetService<UserDataContext>();
             var directoryContext = serviceScope.ServiceProvider.GetService<DirectoryDataContext>();
+            var fileContext = serviceScope.ServiceProvider.GetService<FileDataContext>();
 
             userContext?.Database.Migrate();
             directoryContext?.Database.Migrate();
+            fileContext?.Database.Migrate();
         }
     }
 }
