@@ -16,6 +16,7 @@ namespace ApplicantPersonalAccount.Persistence.Contextes
         {
             modelBuilder.ApplyConfiguration(new DocumentConfiguration());
             modelBuilder.ApplyConfiguration(new PassportConfiguration());
+            modelBuilder.ApplyConfiguration(new EducationInfoConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
