@@ -4,5 +4,6 @@
     {
         public const int ACCESS_TOKEN_LIFETIME = 10; // in minutes
         public const int REFRESH_TOKEN_LIFETIME = 24; // in hours
+        public static readonly List<string> ALLOWED_FILE_EXTENSIONS = new() { ".pdf", ".png", ".jpg" };
     }
 }

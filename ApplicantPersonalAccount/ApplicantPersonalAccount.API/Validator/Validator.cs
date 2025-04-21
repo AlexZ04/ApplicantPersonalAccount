@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.Models.Authorization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApplicantPersonalAccount.API.Validator
@@ -29,6 +30,22 @@ namespace ApplicantPersonalAccount.API.Validator
 
             if (page <= 0 || size <= 0)
                 errors.Add(ValidationErrors.INVALID_PAGINATION);
+
+            return errors;
+        }
+
+        public static List<string?> ValidateFile(IFormFile file)
+        {
+            var errors = new List<string?>();
+            var results = new List<ValidationResult>();
+
+            if (file == null || file.Length == 0)
+                errors.Add(ErrorMessages.INVALID_FILE);
+
+            var extension = Path.GetExtension(file?.FileName)?.ToLowerInvariant();
+            if (extension == null || extension.Length < 2 || 
+                !GeneralSettings.ALLOWED_FILE_EXTENSIONS.Contains(extension))
+                errors.Add(ErrorMessages.INVALID_FILE_EXTENSION);
 
             return errors;
         }
