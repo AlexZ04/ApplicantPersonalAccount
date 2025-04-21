@@ -3,6 +3,7 @@ using System;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApplicantPersonalAccount.Persistence.Migrations.Files
 {
     [DbContext(typeof(FileDataContext))]
-    partial class FileDataContextModelSnapshot : ModelSnapshot
+    [Migration("20250421182053_DocumentInfo")]
+    partial class DocumentInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
