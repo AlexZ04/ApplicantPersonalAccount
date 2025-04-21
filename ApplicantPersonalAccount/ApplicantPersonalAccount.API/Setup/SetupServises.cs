@@ -13,6 +13,7 @@ namespace ApplicantPersonalAccount.API.Setup
             services.AddTransient<ITokenService, TokenServiceImpl>();
             services.AddTransient<IUserService, UserServiseImpl>();
             services.AddTransient<IApplicantService, ApplicantServiceImpl>();
+            services.AddTransient<IFileService, FileServiceImpl>();
             services.AddHttpClient<IDirectoryService, DirectoryServiceImpl>();
         }
     }

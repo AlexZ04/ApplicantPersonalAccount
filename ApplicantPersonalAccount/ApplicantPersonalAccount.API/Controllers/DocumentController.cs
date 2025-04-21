@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ApplicantPersonalAccount.Application.ControllerServices;
+using ApplicantPersonalAccount.Common.Enums;
+using ApplicantPersonalAccount.Infrastructure.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApplicantPersonalAccount.API.Controllers
 {
@@ -8,16 +13,24 @@ namespace ApplicantPersonalAccount.API.Controllers
     [ApiController]
     public class DocumentController : ControllerBase
     {
+        private readonly IFileService _fileService;
 
-        public DocumentController() { }
+        public DocumentController(IFileService fileService)
+        {
+            _fileService = fileService;
+        }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> UploadFile([FromQuery, Required] FileDocumentType documentType, IFormFile file)
         {
             var validationErrors = Validator.Validator.ValidateFile(file);
 
             if (validationErrors.Count() > 0)
                 return BadRequest(new { Errors = validationErrors });
+
+            await _fileService.UploadFile(documentType, file, User);
 
             return Ok();
         }

@@ -13,5 +13,10 @@ namespace ApplicantPersonalAccount.Infrastructure.Utilities
         {
             return Crypto.VerifyHashedPassword(hashedPassword, enteredPassword);
         }
+
+        public static string HashFilename(string filename)
+        {
+            return filename;
+        }
     }
 }
