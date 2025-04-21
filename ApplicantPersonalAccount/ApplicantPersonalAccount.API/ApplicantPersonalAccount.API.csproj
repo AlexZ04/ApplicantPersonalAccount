@@ -27,4 +27,8 @@
     <ProjectReference Include="..\ApplicantPersonalAccount.Persistence\ApplicantPersonalAccount.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FileStorage\" />
+  </ItemGroup>
+
 </Project>
