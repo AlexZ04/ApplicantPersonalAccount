@@ -47,6 +47,9 @@ namespace ApplicantPersonalAccount.API.Validator
                 !GeneralSettings.ALLOWED_FILE_EXTENSIONS.Contains(extension))
                 errors.Add(ErrorMessages.INVALID_FILE_EXTENSION);
 
+            if (file?.Length > GeneralSettings.MAX_FILE_SIZE)
+                errors.Add(ErrorMessages.FILE_IS_TOO_BIG);
+
             return errors;
         }
     }
