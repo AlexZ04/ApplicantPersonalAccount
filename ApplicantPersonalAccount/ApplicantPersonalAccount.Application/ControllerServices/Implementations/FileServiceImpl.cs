@@ -6,6 +6,7 @@ using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
@@ -74,6 +75,21 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
                 Filename = document.Filename,
                 UploadTime = document.UploadTime,
                 DocumentType = document.DocumentType
+            };
+        }
+
+        public async Task<FileContentResult> GetFile(Guid id)
+        {
+            var document = await _documentRepository.GetDocumentInfoById(id);
+
+            if (!File.Exists(document.Path))
+                throw new NotFoundException(ErrorMessages.FILE_IS_NOT_ON_DISK);
+
+            var fileBytes = await File.ReadAllBytesAsync(document.Path);
+
+            return new FileContentResult(fileBytes, "application/octet-stream")
+            {
+                FileDownloadName = document.Filename
             };
         }
     }
