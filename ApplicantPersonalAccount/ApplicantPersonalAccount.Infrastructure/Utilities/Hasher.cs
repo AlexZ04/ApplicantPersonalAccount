@@ -1,4 +1,6 @@
-﻿using System.Web.Helpers;
+﻿using System.Security.Cryptography;
+using System.Text;
+using System.Web.Helpers;
 
 namespace ApplicantPersonalAccount.Infrastructure.Utilities
 {
@@ -16,7 +18,7 @@ namespace ApplicantPersonalAccount.Infrastructure.Utilities
 
         public static string HashFilename(string filename)
         {
-            return filename;
+            return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("Hash")));
         }
     }
 }
