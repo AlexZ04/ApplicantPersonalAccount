@@ -9,6 +9,8 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task AddFile(DocumentEntity file);
         public Task DeleteDocumentById(Guid id);
         public Task<DocumentEntity> GetDocumentInfoById(Guid id);
-        public Task<List<DocumentEntity>> GetUserDocuments(FileDocumentType documentType, Guid userId);
+        public Task<List<DocumentEntity>> GetUserDocuments(FileDocumentType documentType, 
+            Guid userId, 
+            bool importingAll = false);
     }
 }

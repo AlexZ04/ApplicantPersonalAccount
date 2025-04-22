@@ -93,9 +93,11 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             };
         }
 
-        public async Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType, Guid userId)
+        public async Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType,
+            Guid userId,
+            bool importingAll = false)
         {
-            var documents = await _documentRepository.GetUserDocuments(documentType, userId);
+            var documents = await _documentRepository.GetUserDocuments(documentType, userId, importingAll);
             
             var userDocuments = new List<DocumentModel>();
             foreach (var document in documents)

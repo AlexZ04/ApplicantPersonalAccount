@@ -41,10 +41,12 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             return file ?? throw new NotFoundException(ErrorMessages.FILE_NOT_FOUND);
         }
 
-        public async Task<List<DocumentEntity>> GetUserDocuments(FileDocumentType documentType, Guid userId)
+        public async Task<List<DocumentEntity>> GetUserDocuments(FileDocumentType documentType,
+            Guid userId,
+            bool importingAll = false)
         {
             var documents = await _fileDataContext.Documents
-                .Where(d => d.DocumentType == documentType && d.OwnerId == userId)
+                .Where(d => (d.DocumentType == documentType || importingAll) && d.OwnerId == userId)
                 .ToListAsync();
 
             return documents;
