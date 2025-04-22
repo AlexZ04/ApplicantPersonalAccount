@@ -1,6 +1,7 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models.Document;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -61,6 +62,19 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
                 File.Delete(pathToFile);
             
             await _documentRepository.DeleteDocumentById(id);
+        }
+
+        public async Task<DocumentModel> GetDocumentInfo(Guid id)
+        {
+            var document = await _documentRepository.GetDocumentInfoById(id);
+
+            return new DocumentModel
+            {
+                Id = document.Id,
+                Filename = document.Filename,
+                UploadTime = document.UploadTime,
+                DocumentType = document.DocumentType
+            };
         }
     }
 }

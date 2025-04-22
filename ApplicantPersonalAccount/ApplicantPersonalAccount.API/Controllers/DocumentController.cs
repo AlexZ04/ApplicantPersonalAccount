@@ -44,5 +44,13 @@ namespace ApplicantPersonalAccount.API.Controllers
 
             return Ok();
         }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> GetFileInfo([FromRoute] Guid id)
+        {
+            return Ok(await _fileService.GetDocumentInfo(id));
+        }
     }
 }
