@@ -10,5 +10,7 @@
         public const string INVALID_FILE = "Invalid file";
         public const string INVALID_FILE_EXTENSION = "Invalid file extension";
         public const string FILE_IS_TOO_BIG = "File is too big!";
+
+        public const string FILE_NOT_FOUND = "File not found";
     }
 }

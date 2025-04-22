@@ -10,6 +10,7 @@ namespace ApplicantPersonalAccount.API.Setup
             services.AddScoped<IUserRepository, UserRepositoryImpl>();
             services.AddScoped<ITokenRepository, TokenRepositoryImpl>();
             services.AddScoped<IDirectoryRepository, DirectoryRepositoryImpl>();
+            services.AddScoped<IDocumentRepository, DocumentRepositoryImpl>();
         }
     }
 }
