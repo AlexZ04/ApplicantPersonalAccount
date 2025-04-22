@@ -1,4 +1,6 @@
-﻿using ApplicantPersonalAccount.Common.Enums;
+﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Enums;
+using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -44,6 +46,21 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             };
 
             await _documentRepository.AddFile(newDocument);
+        }
+
+        public async Task DeleteFile(Guid id, ClaimsPrincipal user)
+        {
+            var document = await _documentRepository.GetDocumentInfoById(id);
+
+            if (document.OwnerId != UserDescriptor.GetUserId(user))
+                throw new UnaccessableAction(ErrorMessages.CANT_DELETE_THIS_FILE);
+
+            var pathToFile = Path.Combine(_pathToStorage, document.Filename);
+
+            if (File.Exists(pathToFile))
+                File.Delete(pathToFile);
+            
+            await _documentRepository.DeleteDocumentById(id);
         }
     }
 }

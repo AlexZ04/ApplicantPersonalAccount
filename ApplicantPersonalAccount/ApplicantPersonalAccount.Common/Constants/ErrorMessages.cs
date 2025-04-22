@@ -12,5 +12,6 @@
         public const string FILE_IS_TOO_BIG = "File is too big!";
 
         public const string FILE_NOT_FOUND = "File not found";
+        public const string CANT_DELETE_THIS_FILE = "You can't delete this file";
     }
 }

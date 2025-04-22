@@ -34,5 +34,15 @@ namespace ApplicantPersonalAccount.API.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> DeleteFile([FromRoute] Guid id)
+        {
+            await _fileService.DeleteFile(id, User);
+
+            return Ok();
+        }
     }
 }

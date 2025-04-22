@@ -7,5 +7,6 @@ namespace ApplicantPersonalAccount.Application.ControllerServices
     public interface IFileService
     {
         public Task UploadFile(FileDocumentType documentType, IFormFile file, ClaimsPrincipal user);
+        public Task DeleteFile(Guid id, ClaimsPrincipal user);
     }
 }

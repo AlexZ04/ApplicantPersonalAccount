@@ -21,6 +21,17 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             await _fileDataContext.SaveChangesAsync();
         }
 
+        public async Task DeleteDocumentById(Guid id)
+        {
+            var file = await _fileDataContext.Documents.FindAsync(id);
+
+            if (file == null)
+                throw new NotFoundException(ErrorMessages.FILE_NOT_FOUND);
+
+            _fileDataContext.Documents.Remove(file);
+            await _fileDataContext.SaveChangesAsync();
+        }
+
         public async Task<DocumentEntity> GetDocumentInfoById(Guid id)
         {
             var file = await _fileDataContext.Documents.FindAsync(id);
