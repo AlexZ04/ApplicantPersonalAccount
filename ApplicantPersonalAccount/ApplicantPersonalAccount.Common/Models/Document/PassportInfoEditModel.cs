@@ -1,6 +1,6 @@
 ﻿namespace ApplicantPersonalAccount.Common.Models.Document
 {
-    public class PassportInfoModel
+    public class PassportInfoEditModel
     {
         public string Series { get; set; }
         public string Number { get; set; }

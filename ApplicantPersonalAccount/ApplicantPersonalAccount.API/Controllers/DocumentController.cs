@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Application.ControllerServices;
 using ApplicantPersonalAccount.Common.Enums;
+using ApplicantPersonalAccount.Common.Models.Document;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -39,7 +40,7 @@ namespace ApplicantPersonalAccount.API.Controllers
             if (validationErrors.Count() > 0)
                 return BadRequest(new { Errors = validationErrors });
 
-            await _fileService.UploadFile(documentType, file, User);
+            await _fileService.UploadFile(documentType, file, UserDescriptor.GetUserId(User));
 
             return Ok();
         }
@@ -49,7 +50,7 @@ namespace ApplicantPersonalAccount.API.Controllers
         [CheckToken]
         public async Task<IActionResult> DeleteFile([FromRoute] Guid id)
         {
-            await _fileService.DeleteFile(id, User);
+            await _fileService.DeleteFile(id, UserDescriptor.GetUserId(User));
 
             return Ok();
         }
@@ -70,6 +71,25 @@ namespace ApplicantPersonalAccount.API.Controllers
             var fileInfo = await _fileService.GetFile(id);
 
             return File(fileInfo.FileContents, fileInfo.ContentType, fileInfo.FileDownloadName);
+        }
+
+        [HttpPut("passport")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> EditPassportInfo([FromBody] PassportInfoEditModel passport)
+        {
+            await _fileService.EditPassport(passport, UserDescriptor.GetUserId(User));
+
+            return Ok();
+        }
+
+        [HttpPut("education")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> EditEducationInfo([FromBody] EducationInfoModel education,
+            [FromQuery] Guid documentId)
+        {
+            return Ok();
         }
     }
 }

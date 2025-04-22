@@ -8,12 +8,13 @@ namespace ApplicantPersonalAccount.Application.ControllerServices
 {
     public interface IFileService
     {
-        public Task UploadFile(FileDocumentType documentType, IFormFile file, ClaimsPrincipal user);
-        public Task DeleteFile(Guid id, ClaimsPrincipal user);
+        public Task UploadFile(FileDocumentType documentType, IFormFile file, Guid userId);
+        public Task DeleteFile(Guid id, Guid userId);
         public Task<DocumentModel> GetDocumentInfo(Guid id);
         public Task<FileContentResult> GetFile(Guid id);
         public Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType, 
             Guid userId,
             bool importingAll = false);
+        public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId);
     }
 }

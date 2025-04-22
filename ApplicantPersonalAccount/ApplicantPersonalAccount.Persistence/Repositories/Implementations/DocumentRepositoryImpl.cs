@@ -20,6 +20,25 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
         public async Task AddFile(DocumentEntity file)
         {
             _fileDataContext.Documents.Add(file);
+
+            var newPassportField = new PassportInfoEntity
+            {
+                Id = Guid.NewGuid(),
+                Series = string.Empty,
+                Number = string.Empty,
+                BirthPlace = string.Empty,
+                WhenIssued = string.Empty,
+                ByWhoIssued = string.Empty,
+                UserId = file.OwnerId
+            };
+
+            _fileDataContext.PassportInfos.Add(newPassportField);
+
+            if (file.DocumentType == FileDocumentType.Educational)
+            {
+                // todo
+            }
+
             await _fileDataContext.SaveChangesAsync();
         }
 
@@ -50,6 +69,21 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
                 .ToListAsync();
 
             return documents;
+        }
+
+        public async Task EditPassport(PassportInfoEditModel editedPassport, Guid userId)
+        {
+            var passport = await _fileDataContext.PassportInfos
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (passport == null)
+                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+
+            passport.Series = editedPassport.Series;
+            passport.Number = editedPassport.Number;
+            passport.BirthPlace = editedPassport.BirthPlace;
+            passport.WhenIssued = editedPassport.WhenIssued;
+            passport.ByWhoIssued = editedPassport.ByWhoIssued;
         }
     }
 }

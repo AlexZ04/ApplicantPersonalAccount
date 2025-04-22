@@ -12,5 +12,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task<List<DocumentEntity>> GetUserDocuments(FileDocumentType documentType, 
             Guid userId, 
             bool importingAll = false);
+        public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId);
     }
 }

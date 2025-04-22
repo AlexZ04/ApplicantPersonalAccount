@@ -27,7 +27,7 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             _documentRepository = documentRepository;
         }
 
-        public async Task UploadFile(FileDocumentType documentType, IFormFile file, ClaimsPrincipal user)
+        public async Task UploadFile(FileDocumentType documentType, IFormFile file, Guid userId)
         {
             var fileName = Hasher.HashFilename(file.FileName) + Path.GetExtension(file.FileName);
             var pathToNewFile = Path.Combine(_pathToStorage, fileName);
@@ -44,17 +44,17 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
                 Path = pathToNewFile,
                 UploadTime = DateTime.Now.ToUniversalTime(),
                 DocumentType = documentType,
-                OwnerId = UserDescriptor.GetUserId(user)
+                OwnerId = userId
             };
 
             await _documentRepository.AddFile(newDocument);
         }
 
-        public async Task DeleteFile(Guid id, ClaimsPrincipal user)
+        public async Task DeleteFile(Guid id, Guid userId)
         {
             var document = await _documentRepository.GetDocumentInfoById(id);
 
-            if (document.OwnerId != UserDescriptor.GetUserId(user))
+            if (document.OwnerId != userId)
                 throw new UnaccessableAction(ErrorMessages.CANT_DELETE_THIS_FILE);
 
             var pathToFile = Path.Combine(_pathToStorage, document.Filename);
@@ -112,6 +112,11 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             }
 
             return userDocuments;
+        }
+
+        public async Task EditPassport(PassportInfoEditModel editedPassport, Guid userId)
+        {
+            await _documentRepository.EditPassport(editedPassport, userId);
         }
     }
 }
