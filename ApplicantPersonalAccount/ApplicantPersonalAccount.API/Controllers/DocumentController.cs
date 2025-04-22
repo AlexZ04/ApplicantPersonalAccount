@@ -1,6 +1,7 @@
 ﻿using ApplicantPersonalAccount.Application.ControllerServices;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Infrastructure.Filters;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,14 @@ namespace ApplicantPersonalAccount.API.Controllers
         public DocumentController(IFileService fileService)
         {
             _fileService = fileService;
+        }
+
+        [HttpGet]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> GetUserFiles([FromQuery, Required] FileDocumentType documentType)
+        {
+            return Ok(await _fileService.GetUserDocuments(documentType, UserDescriptor.GetUserId(User)));
         }
 
         [HttpPost("upload")]

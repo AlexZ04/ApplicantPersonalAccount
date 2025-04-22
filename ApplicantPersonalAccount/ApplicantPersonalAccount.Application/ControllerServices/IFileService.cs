@@ -12,5 +12,6 @@ namespace ApplicantPersonalAccount.Application.ControllerServices
         public Task DeleteFile(Guid id, ClaimsPrincipal user);
         public Task<DocumentModel> GetDocumentInfo(Guid id);
         public Task<FileContentResult> GetFile(Guid id);
+        public Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType, Guid userId);
     }
 }

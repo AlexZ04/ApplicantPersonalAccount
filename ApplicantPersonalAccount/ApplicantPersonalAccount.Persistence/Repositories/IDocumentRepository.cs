@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Common.Models.Document;
+﻿using ApplicantPersonalAccount.Common.Enums;
+using ApplicantPersonalAccount.Common.Models.Document;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories
@@ -8,5 +9,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task AddFile(DocumentEntity file);
         public Task DeleteDocumentById(Guid id);
         public Task<DocumentEntity> GetDocumentInfoById(Guid id);
+        public Task<List<DocumentEntity>> GetUserDocuments(FileDocumentType documentType, Guid userId);
     }
 }

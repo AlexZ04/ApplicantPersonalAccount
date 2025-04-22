@@ -92,5 +92,24 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
                 FileDownloadName = document.Filename
             };
         }
+
+        public async Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType, Guid userId)
+        {
+            var documents = await _documentRepository.GetUserDocuments(documentType, userId);
+            
+            var userDocuments = new List<DocumentModel>();
+            foreach (var document in documents)
+            {
+                userDocuments.Add(new DocumentModel
+                {
+                    Id = document.Id,
+                    Filename = document.Filename,
+                    UploadTime = document.UploadTime,
+                    DocumentType = document.DocumentType
+                });
+            }
+
+            return userDocuments;
+        }
     }
 }

@@ -40,3 +40,4 @@ msbuild.wrn
 *.leu
 ApplicantPersonalAccount/ApplicantPersonalAccount.Common/Constants/AuthOptions.cs
 ApplicantPersonalAccount/ApplicantPersonalAccount.Common/Constants/ServerURLs.cs
+/ApplicantPersonalAccount/ApplicantPersonalAccount.API/FileStorage

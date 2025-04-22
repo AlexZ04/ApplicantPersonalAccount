@@ -1,8 +1,10 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Document;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 {
@@ -37,6 +39,15 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             var file = await _fileDataContext.Documents.FindAsync(id);
 
             return file ?? throw new NotFoundException(ErrorMessages.FILE_NOT_FOUND);
+        }
+
+        public async Task<List<DocumentEntity>> GetUserDocuments(FileDocumentType documentType, Guid userId)
+        {
+            var documents = await _fileDataContext.Documents
+                .Where(d => d.DocumentType == documentType && d.OwnerId == userId)
+                .ToListAsync();
+
+            return documents;
         }
     }
 }
