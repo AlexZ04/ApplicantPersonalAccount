@@ -21,22 +21,36 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
         {
             _fileDataContext.Documents.Add(file);
 
-            var newPassportField = new PassportInfoEntity
+            if (file.DocumentType == FileDocumentType.Passport &&
+                await _fileDataContext.PassportInfos.FirstOrDefaultAsync(i => i.UserId == file.OwnerId) == null)
             {
-                Id = Guid.NewGuid(),
-                Series = string.Empty,
-                Number = string.Empty,
-                BirthPlace = string.Empty,
-                WhenIssued = string.Empty,
-                ByWhoIssued = string.Empty,
-                UserId = file.OwnerId
-            };
+                var newPassportField = new PassportInfoEntity
+                {
+                    Id = Guid.NewGuid(),
+                    Series = string.Empty,
+                    Number = string.Empty,
+                    BirthPlace = string.Empty,
+                    WhenIssued = string.Empty,
+                    ByWhoIssued = string.Empty,
+                    UserId = file.OwnerId
+                };
 
-            _fileDataContext.PassportInfos.Add(newPassportField);
+
+                _fileDataContext.PassportInfos.Add(newPassportField);
+            }
 
             if (file.DocumentType == FileDocumentType.Educational)
             {
-                // todo
+                var newEducationInfo = new EducationInfoEntity
+                {
+                    Id = Guid.NewGuid(),
+                    Name = string.Empty,
+                    Type = string.Empty,
+                    UserId= file.OwnerId,
+                    Document = file
+                };
+
+                _fileDataContext.EducationInfos.Add(newEducationInfo);
             }
 
             await _fileDataContext.SaveChangesAsync();
@@ -48,6 +62,30 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             if (file == null)
                 throw new NotFoundException(ErrorMessages.FILE_NOT_FOUND);
+
+            if (file.DocumentType == FileDocumentType.Educational)
+            {
+                var educationInfo = await _fileDataContext.EducationInfos
+                    .Include(i => i.Document)
+                    .FirstAsync(i => i.Document == file);
+
+                _fileDataContext.EducationInfos.Remove(educationInfo);
+            }
+            else
+            {
+                var anotherPassportInfo = await _fileDataContext.Documents
+                    .Where(d => d.OwnerId == file.OwnerId 
+                    && d.DocumentType == FileDocumentType.Passport)
+                    .CountAsync();
+
+                if (anotherPassportInfo <= 1)
+                {
+                    var passportInfo = await _fileDataContext.PassportInfos
+                        .FirstAsync(p => p.UserId == file.OwnerId);
+
+                    _fileDataContext.PassportInfos.Remove(passportInfo);
+                }
+            }
 
             _fileDataContext.Documents.Remove(file);
             await _fileDataContext.SaveChangesAsync();

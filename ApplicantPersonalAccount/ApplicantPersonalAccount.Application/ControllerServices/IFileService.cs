@@ -2,7 +2,6 @@
 using ApplicantPersonalAccount.Common.Models.Document;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace ApplicantPersonalAccount.Application.ControllerServices
 {
