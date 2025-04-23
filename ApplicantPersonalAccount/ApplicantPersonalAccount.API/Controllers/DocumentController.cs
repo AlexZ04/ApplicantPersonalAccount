@@ -86,9 +86,11 @@ namespace ApplicantPersonalAccount.API.Controllers
         [HttpPut("education")]
         [Authorize]
         [CheckToken]
-        public async Task<IActionResult> EditEducationInfo([FromBody] EducationInfoModel education,
+        public async Task<IActionResult> EditEducationInfo([FromBody] EducationInfoEditModel education,
             [FromQuery] Guid documentId)
         {
+            await _fileService.EditEducational(education, documentId, UserDescriptor.GetUserId(User));
+
             return Ok();
         }
     }

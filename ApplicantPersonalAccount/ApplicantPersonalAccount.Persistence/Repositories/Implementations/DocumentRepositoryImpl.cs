@@ -122,6 +122,23 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             passport.BirthPlace = editedPassport.BirthPlace;
             passport.WhenIssued = editedPassport.WhenIssued;
             passport.ByWhoIssued = editedPassport.ByWhoIssued;
+
+            await _fileDataContext.SaveChangesAsync();
+        }
+
+        public async Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId)
+        {
+            var education = await _fileDataContext.EducationInfos
+                .Include(i => i.Document)
+                .FirstOrDefaultAsync(i => i.UserId == userId && i.Document.Id == documentId);
+
+            if (education == null)
+                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+
+            education.Name = editedEducation.Name;
+            education.Type = editedEducation.Type;
+
+            await _fileDataContext.SaveChangesAsync();
         }
     }
 }

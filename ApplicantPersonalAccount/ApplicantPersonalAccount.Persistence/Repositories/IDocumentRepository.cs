@@ -13,5 +13,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
             Guid userId, 
             bool importingAll = false);
         public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId);
+        public Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId);
     }
 }

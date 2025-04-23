@@ -118,5 +118,10 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
         {
             await _documentRepository.EditPassport(editedPassport, userId);
         }
+
+        public async Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId)
+        {
+            await _documentRepository.EditEducational(editedEducation, documentId, userId);
+        }
     }
 }
