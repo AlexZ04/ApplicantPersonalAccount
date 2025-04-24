@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Application.ControllerServices;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -54,6 +55,16 @@ namespace ApplicantPersonalAccount.API.Controllers
         public async Task<IActionResult> UnsighFromNotifications()
         {
             await _applicantService.UnsignFromNotifications(UserDescriptor.GetUserId(User));
+
+            return Ok();
+        }
+
+        [HttpPut("info-for-events")]
+        [Authorize(Roles = "Applicant")]
+        [CheckToken]
+        public async Task<IActionResult> EditInfoForEvents([FromBody] EditApplicantInfoForEventsModel editedInfo)
+        {
+            await _applicantService.EditInfoForEvents(editedInfo, UserDescriptor.GetUserId(User));
 
             return Ok();
         }

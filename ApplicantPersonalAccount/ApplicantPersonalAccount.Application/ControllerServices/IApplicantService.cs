@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 
 namespace ApplicantPersonalAccount.Application.ControllerServices
 {
@@ -15,5 +16,6 @@ namespace ApplicantPersonalAccount.Application.ControllerServices
 
         public Task SignToNotifications(Guid userId);
         public Task UnsignFromNotifications(Guid userId);
+        public Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId);
     }
 }

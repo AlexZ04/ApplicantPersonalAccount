@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Common.Models;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories
@@ -12,5 +13,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task<UserEntity> GetUsersByCredentials(string email, string password);
         public Task<RefreshTokenEntity> GetRefreshToken(string token);
         public Task<UserEntity> GetUserById(Guid id);
+        public Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId);
     }
 }

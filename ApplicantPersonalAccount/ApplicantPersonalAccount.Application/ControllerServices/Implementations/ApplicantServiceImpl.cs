@@ -2,6 +2,7 @@
 using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -13,13 +14,16 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
     {
         private readonly DirectoryDataContext _directoryContext;
         private readonly IApplicationRepository _applicationRepository;
+        private readonly IUserRepository _userRepository;
 
         public ApplicantServiceImpl(
             DirectoryDataContext directoryContext,
-            IApplicationRepository applicationRepository)
+            IApplicationRepository applicationRepository,
+            IUserRepository userRepository)
         {
             _directoryContext = directoryContext;
             _applicationRepository = applicationRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<ProgramPagedList> GetListOfPrograms(
@@ -100,6 +104,11 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
                 throw new InvalidActionException(ErrorMessages.USER_IS_UNSIGNED);
 
             await _applicationRepository.UnsignUser(userId);
+        }
+
+        public async Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId)
+        {
+            await _userRepository.EditInfoForEvents(editedInfo, userId);
         }
     }
 }

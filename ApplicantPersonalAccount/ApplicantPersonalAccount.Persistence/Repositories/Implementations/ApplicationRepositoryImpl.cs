@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Persistence.Contextes;
+﻿using ApplicantPersonalAccount.Common.Models.Applicant;
+using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
+﻿using ApplicantPersonalAccount.Common.Models.Applicant;
+using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories
 {

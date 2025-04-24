@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
@@ -21,6 +22,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
         public void AddUser(UserEntity user)
         {
             _userContext.Users.Add(user);
+            _userContext.InfoForEvents.Add(user.InfoForEvents);
         }
 
         public async Task<bool> EmailIsAvailable(string email)
@@ -70,6 +72,21 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
                 .FindAsync(id);
 
             return user != null ? user : throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+        }
+
+        public async Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId)
+        {
+            var info = await _userContext.InfoForEvents
+                .Include(i => i.User)
+                .FirstOrDefaultAsync(i => i.User.Id == userId);
+
+            if (info == null)
+                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+
+            info.EducationPlace = editedInfo.EducationPlace;
+            info.SocialNetwork = editedInfo.SocialNetworks;
+
+            await _userContext.SaveChangesAsync();
         }
     }
 }
