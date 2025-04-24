@@ -1,6 +1,8 @@
 ﻿using ApplicantPersonalAccount.Application.ControllerServices;
 using ApplicantPersonalAccount.Application.OuterServices;
 using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -26,6 +28,9 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             int page = 1, 
             int size = 5)
         {
+            if (_directoryContext.EducationPrograms.FirstOrDefault(e => e.Name.Contains("")) == null)
+                throw new EarlyActionException(ErrorMessages.DICTIONARY_IS_NOT_LOADED);
+
             name = name ?? string.Empty;
             var programs = _directoryContext.EducationPrograms
                 .Include(p => p.EducationLevel)

@@ -4,9 +4,7 @@ using ApplicantPersonalAccount.Common.Models.Document;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApplicantPersonalAccount.API.Controllers

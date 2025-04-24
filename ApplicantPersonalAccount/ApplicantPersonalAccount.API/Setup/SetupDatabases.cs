@@ -34,6 +34,13 @@ namespace ApplicantPersonalAccount.API.Setup
             builder.Services.AddDbContext<FileDataContext>(options => options.UseNpgsql(filesConnection));
         }
 
+        public static void AddApplicationsDb(WebApplicationBuilder builder)
+        {
+            var applicationsConnection = builder.Configuration.GetConnectionString("ApplicationsConnection");
+
+            builder.Services.AddDbContext<ApplicationDataContext>(options => options.UseNpgsql(applicationsConnection));
+        }
+
         public static void AddRedis(WebApplicationBuilder builder)
         {
             builder.Services.AddStackExchangeRedisCache(options => {
@@ -49,10 +56,12 @@ namespace ApplicantPersonalAccount.API.Setup
             var userContext = serviceScope.ServiceProvider.GetService<UserDataContext>();
             var directoryContext = serviceScope.ServiceProvider.GetService<DirectoryDataContext>();
             var fileContext = serviceScope.ServiceProvider.GetService<FileDataContext>();
+            var applicationContext = serviceScope.ServiceProvider.GetService<ApplicationDataContext>();
 
             userContext?.Database.Migrate();
             directoryContext?.Database.Migrate();
             fileContext?.Database.Migrate();
+            applicationContext?.Database.Migrate();
         }
     }
 }

@@ -14,5 +14,7 @@
         public const string FILE_NOT_FOUND = "File not found";
         public const string CANT_DELETE_THIS_FILE = "You can't delete this file";
         public const string FILE_IS_NOT_ON_DISK = "Can't find file on disk";
+
+        public const string DICTIONARY_IS_NOT_LOADED = "Dictionary is not loaded!";
     }
 }
