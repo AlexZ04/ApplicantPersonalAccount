@@ -17,5 +17,6 @@ namespace ApplicantPersonalAccount.Application.ControllerServices
         public Task SignToNotifications(Guid userId);
         public Task UnsignFromNotifications(Guid userId);
         public Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId);
+        public Task<ApplicantInfoForEventsModel> GetInfoForEvents(Guid userId);
     }
 }

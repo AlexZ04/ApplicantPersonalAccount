@@ -68,5 +68,13 @@ namespace ApplicantPersonalAccount.API.Controllers
 
             return Ok();
         }
+
+        [HttpGet("info-for-events")]
+        [Authorize(Roles = "Applicant")]
+        [CheckToken]
+        public async Task<IActionResult> GetInfoForEvents()
+        {
+            return Ok(await _applicantService.GetInfoForEvents(UserDescriptor.GetUserId(User)));
+        }
     }
 }

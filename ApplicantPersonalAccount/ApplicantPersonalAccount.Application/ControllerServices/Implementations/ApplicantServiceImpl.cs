@@ -110,5 +110,20 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
         {
             await _userRepository.EditInfoForEvents(editedInfo, userId);
         }
+
+        public async Task<ApplicantInfoForEventsModel> GetInfoForEvents(Guid userId)
+        {
+            var infoForEvents = await _userRepository.GetInfoForEvents(userId);
+            var user = await _userRepository.GetUserById(userId);
+
+            var userInfo = new ApplicantInfoForEventsModel
+            {
+                EducationPlace = infoForEvents.EducationPlace,
+                SocialNetworks = infoForEvents.SocialNetwork,
+                Address = user.Address
+            };
+
+            return userInfo;
+        }
     }
 }

@@ -88,5 +88,14 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             await _userContext.SaveChangesAsync();
         }
+
+        public async Task<InfoForEventsEntity> GetInfoForEvents(Guid userId)
+        {
+            var info = await _userContext.InfoForEvents
+                .Include(i => i.User)
+                .FirstOrDefaultAsync(i => i.User.Id == userId);
+
+            return info ?? throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+        }
     }
 }

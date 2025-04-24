@@ -14,5 +14,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task<RefreshTokenEntity> GetRefreshToken(string token);
         public Task<UserEntity> GetUserById(Guid id);
         public Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId);
+        public Task<InfoForEventsEntity> GetInfoForEvents(Guid userId);
     }
 }
