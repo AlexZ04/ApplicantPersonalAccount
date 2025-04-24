@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Application.ControllerServices;
+using ApplicantPersonalAccount.Application.OuterServices;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
@@ -8,15 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicantPersonalAccount.API.Controllers
 {
-    [Route("api/appliant")]
+    [Route("api/applicant")]
     [ApiController]
     public class ApplicantController : ControllerBase
     {
         private readonly IApplicantService _applicantService;
+        private readonly IDirectoryService _directoryService;
 
-        public ApplicantController(IApplicantService applicantService)
+        public ApplicantController(IApplicantService applicantService, 
+            IDirectoryService directoryService)
         {
             _applicantService = applicantService;
+            _directoryService = directoryService;
         }
 
         [HttpGet("programs")]
@@ -106,6 +110,14 @@ namespace ApplicantPersonalAccount.API.Controllers
             await _applicantService.DeleteProgram(programId, UserDescriptor.GetUserId(User));
 
             return Ok();
+        }
+
+        [HttpGet("document-types")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> GetDocumentTypes()
+        {
+            return Ok(await _applicantService.GetDocumentTypes());
         }
     }
 }

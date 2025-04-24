@@ -21,5 +21,6 @@ namespace ApplicantPersonalAccount.Application.ControllerServices
         public Task AddProgram(EducationProgramApplicationModel program, Guid userId);
         public Task EditProgram(EducationProgramApplicationModel program, Guid programId, Guid userId);
         public Task DeleteProgram(Guid programId, Guid userId);
+        public Task<List<DocumentType>> GetDocumentTypes();
     }
 }
