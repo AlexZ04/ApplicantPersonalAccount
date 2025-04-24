@@ -2,7 +2,6 @@
 {
     public class EducationInfoEditModel
     {
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public Guid? DocumentTypeId { get; set; }
     }
 }

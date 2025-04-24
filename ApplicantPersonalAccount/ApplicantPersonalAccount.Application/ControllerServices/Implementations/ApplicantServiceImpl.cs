@@ -15,15 +15,18 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
         private readonly DirectoryDataContext _directoryContext;
         private readonly IApplicationRepository _applicationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ApplicationDataContext _applicationContext;
 
         public ApplicantServiceImpl(
             DirectoryDataContext directoryContext,
             IApplicationRepository applicationRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            ApplicationDataContext applicationContext)
         {
             _directoryContext = directoryContext;
             _applicationRepository = applicationRepository;
             _userRepository = userRepository;
+            _applicationContext = applicationContext;
         }
 
         public async Task<ProgramPagedList> GetListOfPrograms(
@@ -124,6 +127,21 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             };
 
             return userInfo;
+        }
+
+        public async Task AddProgram(EducationProgramApplicationModel program, Guid userId)
+        {
+
+        }
+
+        public async Task DeleteProgram(Guid programId, Guid userId)
+        {
+
+        }
+
+        public async Task EditProgram(EducationProgramApplicationModel program, Guid programId, Guid userId)
+        {
+
         }
     }
 }

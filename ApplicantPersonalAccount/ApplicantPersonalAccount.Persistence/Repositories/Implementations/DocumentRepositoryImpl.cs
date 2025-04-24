@@ -11,10 +11,13 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
     public class DocumentRepositoryImpl : IDocumentRepository
     {
         private readonly FileDataContext _fileDataContext;
+        private readonly DirectoryDataContext _directoryDataContext;
 
-        public DocumentRepositoryImpl(FileDataContext fileDataContext)
+        public DocumentRepositoryImpl(FileDataContext fileDataContext, 
+            DirectoryDataContext directoryDataContext)
         {
             _fileDataContext = fileDataContext;
+            _directoryDataContext = directoryDataContext;
         }
 
         public async Task AddFile(DocumentEntity file)
@@ -44,8 +47,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
                 var newEducationInfo = new EducationInfoEntity
                 {
                     Id = Guid.NewGuid(),
-                    Name = string.Empty,
-                    Type = string.Empty,
+                    DocumentTypeId = null,
                     UserId= file.OwnerId,
                     Document = file
                 };
@@ -135,8 +137,16 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             if (education == null)
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
-            education.Name = editedEducation.Name;
-            education.Type = editedEducation.Type;
+            if (editedEducation.DocumentTypeId != null)
+            {
+                var documentType = await _directoryDataContext.DocumentTypes
+                    .FirstOrDefaultAsync(t => t.Id == editedEducation.DocumentTypeId);
+
+                if (documentType == null)
+                    throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+            }
+
+            education.DocumentTypeId = editedEducation.DocumentTypeId;
 
             await _fileDataContext.SaveChangesAsync();
         }

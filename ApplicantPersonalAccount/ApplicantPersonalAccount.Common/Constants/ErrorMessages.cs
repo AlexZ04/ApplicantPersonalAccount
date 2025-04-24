@@ -19,5 +19,8 @@
 
         public const string USER_IS_SIGNED = "User is already signed to notifications";
         public const string USER_IS_UNSIGNED = "User is not signed to notifications";
+
+        public const string PROGRAM_IS_NOT_FOUND = "Program not found";
+        public const string DOCUMENT_TYPE_NOT_FOUND = "Document type not found";
     }
 }

@@ -76,5 +76,36 @@ namespace ApplicantPersonalAccount.API.Controllers
         {
             return Ok(await _applicantService.GetInfoForEvents(UserDescriptor.GetUserId(User)));
         }
+
+        [HttpPost("program")]
+        [Authorize(Roles = "Applicant")]
+        [CheckToken]
+        public async Task<IActionResult> AddProgram([FromBody] EducationProgramApplicationModel program)
+        {
+            await _applicantService.AddProgram(program, UserDescriptor.GetUserId(User));
+
+            return Ok();
+        }
+
+        [HttpPut("program/{programId}")]
+        [Authorize(Roles = "Applicant")]
+        [CheckToken]
+        public async Task<IActionResult> EditProgram([FromBody] EducationProgramApplicationModel program,
+            [FromRoute] Guid programId)
+        {
+            await _applicantService.EditProgram(program, programId, UserDescriptor.GetUserId(User));
+
+            return Ok();
+        }
+
+        [HttpDelete("program/{programId}")]
+        [Authorize(Roles = "Applicant")]
+        [CheckToken]
+        public async Task<IActionResult> DeleteProgram([FromRoute] Guid programId)
+        {
+            await _applicantService.DeleteProgram(programId, UserDescriptor.GetUserId(User));
+
+            return Ok();
+        }
     }
 }
