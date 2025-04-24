@@ -1,12 +1,16 @@
-﻿using ApplicantPersonalAccount.Common.Constants;
+﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Common.Models.Document;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
+using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
@@ -16,8 +20,10 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
     {
         private readonly string _pathToStorage;
         private readonly IDocumentRepository _documentRepository;
+        private readonly FileDataContext _fileContext;
+        private readonly DirectoryDataContext _directoryContext;
 
-        public FileServiceImpl(IDocumentRepository documentRepository)
+        public FileServiceImpl(IDocumentRepository documentRepository, FileDataContext fileContext)
         {
             _pathToStorage = Path.Combine(Directory.GetCurrentDirectory(), "FileStorage");
 
@@ -25,6 +31,7 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
                 Directory.CreateDirectory(_pathToStorage);
 
             _documentRepository = documentRepository;
+            _fileContext = fileContext;
         }
 
         public async Task UploadFile(FileDocumentType documentType, IFormFile file, Guid userId)
@@ -119,9 +126,50 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             await _documentRepository.EditPassport(editedPassport, userId);
         }
 
-        public async Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId)
+        public async Task EditEducational(EducationInfoEditModel editedEducation,
+            Guid documentId,
+            Guid userId)
         {
             await _documentRepository.EditEducational(editedEducation, documentId, userId);
+        }
+
+        public async Task<DocumentType> GetEducationDocumentInfo(Guid documentId)
+        {
+            var info = await _fileContext.EducationInfos
+                .Include(i => i.Document)
+                .FirstOrDefaultAsync(i => i.Document.Id == documentId);
+
+            if (info == null)
+                throw new NotFoundException(ErrorMessages.DOCUMENT_NOT_FOUND);
+
+            if (info.DocumentTypeId == null)
+                throw new NotFoundException(ErrorMessages.THERE_IS_NO_INFO_FOR_THIS_FILE);
+
+            var documentType = await _directoryContext.DocumentTypes
+                .FindAsync(info.DocumentTypeId);
+
+            if (documentType == null)
+                throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+
+            return documentType;
+        }
+
+        public async Task<PassportInfoModel> GetPassportInfo(Guid userId)
+        {
+            var info = await _fileContext.PassportInfos
+                .FirstOrDefaultAsync(i => i.UserId == userId);
+
+            if (info == null)
+                throw new NotFoundException(ErrorMessages.DOCUMENT_NOT_FOUND);
+
+            return new PassportInfoModel
+            {
+                Series = info.Series,
+                Number = info.Number,
+                BirthPlace = info.BirthPlace,
+                WhenIssued = info.WhenIssued,
+                ByWhoIssued = info.ByWhoIssued
+            };
         }
     }
 }

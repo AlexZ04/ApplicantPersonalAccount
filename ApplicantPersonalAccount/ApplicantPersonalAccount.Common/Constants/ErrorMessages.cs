@@ -22,5 +22,7 @@
 
         public const string PROGRAM_IS_NOT_FOUND = "Program not found";
         public const string DOCUMENT_TYPE_NOT_FOUND = "Document type not found";
+        public const string DOCUMENT_NOT_FOUND = "Document not found";
+        public const string THERE_IS_NO_INFO_FOR_THIS_FILE = "There is no info for this file";
     }
 }

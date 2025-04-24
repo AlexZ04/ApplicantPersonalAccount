@@ -128,7 +128,9 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             await _fileDataContext.SaveChangesAsync();
         }
 
-        public async Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId)
+        public async Task EditEducational(EducationInfoEditModel editedEducation, 
+            Guid documentId, 
+            Guid userId)
         {
             var education = await _fileDataContext.EducationInfos
                 .Include(i => i.Document)

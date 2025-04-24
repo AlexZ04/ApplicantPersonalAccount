@@ -61,6 +61,14 @@ namespace ApplicantPersonalAccount.API.Controllers
             return Ok(await _fileService.GetDocumentInfo(id));
         }
 
+        [HttpGet("education/{id}")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> GetEducationFileInfo([FromRoute] Guid id)
+        {
+            return Ok(await _fileService.GetEducationDocumentInfo(id));
+        }
+
         [HttpGet("download/{id}")]
         [Authorize]
         [CheckToken]

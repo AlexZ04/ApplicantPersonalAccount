@@ -1,4 +1,6 @@
-﻿using ApplicantPersonalAccount.Common.Enums;
+﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.Enums;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Common.Models.Document;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,5 +18,7 @@ namespace ApplicantPersonalAccount.Application.ControllerServices
             bool importingAll = false);
         public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId);
         public Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId);
+        public Task<DocumentType> GetEducationDocumentInfo(Guid documentId);
+        public Task<PassportInfoModel> GetPassportInfo(Guid userId);
     }
 }
