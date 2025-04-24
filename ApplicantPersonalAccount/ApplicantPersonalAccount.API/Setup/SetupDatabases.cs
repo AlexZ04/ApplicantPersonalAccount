@@ -10,6 +10,7 @@ namespace ApplicantPersonalAccount.API.Setup
             AddUserDB(builder);
             AddDirectoryDb(builder);
             AddFilesDb(builder);
+            AddApplicationsDb(builder);
             AddRedis(builder);
         }
 

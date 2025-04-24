@@ -12,5 +12,8 @@ namespace ApplicantPersonalAccount.Application.ControllerServices
             string name,
             int page = 1,
             int size = 5);
+
+        public Task SignToNotifications(Guid userId);
+        public Task UnsignFromNotifications(Guid userId);
     }
 }

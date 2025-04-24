@@ -11,6 +11,7 @@ namespace ApplicantPersonalAccount.API.Setup
             services.AddScoped<ITokenRepository, TokenRepositoryImpl>();
             services.AddScoped<IDirectoryRepository, DirectoryRepositoryImpl>();
             services.AddScoped<IDocumentRepository, DocumentRepositoryImpl>();
+            services.AddScoped<IApplicationRepository, ApplicationRepositoryImpl>();
         }
     }
 }

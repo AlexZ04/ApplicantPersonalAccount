@@ -16,5 +16,8 @@
         public const string FILE_IS_NOT_ON_DISK = "Can't find file on disk";
 
         public const string DICTIONARY_IS_NOT_LOADED = "Dictionary is not loaded!";
+
+        public const string USER_IS_SIGNED = "User is already signed to notifications";
+        public const string USER_IS_UNSIGNED = "User is not signed to notifications";
     }
 }

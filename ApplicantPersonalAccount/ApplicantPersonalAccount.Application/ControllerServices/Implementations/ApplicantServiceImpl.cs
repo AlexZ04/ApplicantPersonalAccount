@@ -1,10 +1,9 @@
-﻿using ApplicantPersonalAccount.Application.ControllerServices;
-using ApplicantPersonalAccount.Application.OuterServices;
-using ApplicantPersonalAccount.Application.OuterServices.DTO;
+﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
 using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models;
 using ApplicantPersonalAccount.Persistence.Contextes;
+using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +12,14 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
     public class ApplicantServiceImpl : IApplicantService
     {
         private readonly DirectoryDataContext _directoryContext;
+        private readonly IApplicationRepository _applicationRepository;
 
-        public ApplicantServiceImpl(DirectoryDataContext directoryContext)
+        public ApplicantServiceImpl(
+            DirectoryDataContext directoryContext,
+            IApplicationRepository applicationRepository)
         {
             _directoryContext = directoryContext;
+            _applicationRepository = applicationRepository;
         }
 
         public async Task<ProgramPagedList> GetListOfPrograms(
@@ -35,6 +38,7 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             var programs = _directoryContext.EducationPrograms
                 .Include(p => p.EducationLevel)
                 .Include(p => p.Faculty)
+                .AsNoTracking()
                 .Where(p => p.Name.Contains(name));
 
             if (faculty != null)
@@ -69,6 +73,33 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             };
 
             return result;
+        }
+
+        public async Task SignToNotifications(Guid userId)
+        {
+            var isSigned = await _applicationRepository.IsUserSigned(userId);
+
+            if (isSigned)
+                throw new InvalidActionException(ErrorMessages.USER_IS_SIGNED);
+
+            var signingInfo = new SignedToNotificationsEntity
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                SigningTime = DateTime.UtcNow.ToUniversalTime()
+            };
+
+            await _applicationRepository.SignUser(signingInfo);
+        }
+
+        public async Task UnsignFromNotifications(Guid userId)
+        {
+            var isSigned = await _applicationRepository.IsUserSigned(userId);
+
+            if (!isSigned)
+                throw new InvalidActionException(ErrorMessages.USER_IS_UNSIGNED);
+
+            await _applicationRepository.UnsignUser(userId);
         }
     }
 }
