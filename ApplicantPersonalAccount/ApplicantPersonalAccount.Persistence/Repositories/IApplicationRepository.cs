@@ -8,5 +8,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task<bool> IsUserSigned(Guid userId);
         public Task SignUser(SignedToNotificationsEntity signingInfo);
         public Task UnsignUser(Guid userId);
+        public Task DeleteProgram(Guid programId, Guid userId);
     }
 }
