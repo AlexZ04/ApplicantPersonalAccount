@@ -24,5 +24,9 @@
         public const string DOCUMENT_TYPE_NOT_FOUND = "Document type not found";
         public const string DOCUMENT_NOT_FOUND = "Document not found";
         public const string THERE_IS_NO_INFO_FOR_THIS_FILE = "There is no info for this file";
+
+        public const string HAVE_MAX_PROGRAMS = "User already chose max amount of programs";
+        public const string CANT_HAVE_THIS_EDUCATION_LEVEL = "Can't have this education level";
+        public const string INVALID_PRIORITY = "Invalid program priority";
     }
 }

@@ -52,5 +52,16 @@ namespace ApplicantPersonalAccount.API.Validator
 
             return errors;
         }
+
+        public static List<string?> ValidateEnterancePriority(int priority)
+        {
+            var errors = new List<string?>();
+            var results = new List<ValidationResult>();
+
+            if (priority <= 0)
+                errors.Add(ErrorMessages.INVALID_PRIORITY);
+
+            return errors;
+        }
     }
 }

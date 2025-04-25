@@ -1,5 +1,4 @@
-﻿using ApplicantPersonalAccount.Common.Models.Applicant;
-using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
+﻿using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories
 {
@@ -9,5 +8,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task SignUser(SignedToNotificationsEntity signingInfo);
         public Task UnsignUser(Guid userId);
         public Task DeleteProgram(Guid programId, Guid userId);
+        public Task<EnteranceEntity> GetUserEnterance(Guid userId);
+        public Task AddProgramToEnterance(EnteranceProgramEntity program, EnteranceEntity enterance);
     }
 }

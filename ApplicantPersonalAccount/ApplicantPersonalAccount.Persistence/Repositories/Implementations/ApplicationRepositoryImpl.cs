@@ -54,5 +54,22 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             await _applicationContext.SaveChangesAsync();
         }
+
+        public async Task<EnteranceEntity> GetUserEnterance(Guid userId)
+        {
+            var enterance = await _applicationContext.Enterances
+                .Include(p => p.Programs)
+                .FirstOrDefaultAsync(e => e.ApplicantId == userId);
+
+            return enterance ?? throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+        }
+
+        public async Task AddProgramToEnterance(EnteranceProgramEntity program, EnteranceEntity enterance)
+        {
+            enterance.Programs.Add(program);
+            _applicationContext.EnterancePrograms.Add(program);
+
+            await _applicationContext.SaveChangesAsync();
+        }
     }
 }

@@ -15,15 +15,18 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
         private readonly DirectoryDataContext _directoryContext;
         private readonly IApplicationRepository _applicationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ApplicationDataContext _applicationContext;
 
         public ApplicantServiceImpl(
             DirectoryDataContext directoryContext,
             IApplicationRepository applicationRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            ApplicationDataContext applicationContext)
         {
             _directoryContext = directoryContext;
             _applicationRepository = applicationRepository;
             _userRepository = userRepository;
+            _applicationContext = applicationContext;
         }
 
         public async Task<ProgramPagedList> GetListOfPrograms(
@@ -128,15 +131,57 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
 
         public async Task AddProgram(EducationProgramApplicationModel program, Guid userId)
         {
+            var enterance = await _applicationRepository.GetUserEnterance(userId);
 
+            var educationProgram = await _directoryContext.EducationPrograms
+                .Include(p => p.Faculty)
+                .Include(p => p.EducationLevel)
+                .FirstOrDefaultAsync(p => p.Id == program.ProgramId);
+
+            if (educationProgram == null)
+                throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+
+            if (enterance.Programs.Count > GeneralSettings.MAX_CHOSEN_PROGRAMS)
+                throw new InvalidActionException(ErrorMessages.HAVE_MAX_PROGRAMS);
+
+            var selectedEducationLevelName = educationProgram.EducationLevel.Name;
+
+            if (enterance.Programs.Count() > 0)
+            {
+                var selectedProgram = await _directoryContext.EducationPrograms
+                    .Include(p => p.Faculty)
+                    .Include(p => p.EducationLevel)
+                    .FirstOrDefaultAsync(l => l.Id == enterance.Programs[0].ProgramId);
+
+                if (selectedProgram == null)
+                    throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+
+                var educationLevelName = selectedProgram.EducationLevel.Name;
+
+                if (educationLevelName != selectedEducationLevelName
+                    && ((educationLevelName == "Специалитет" && selectedEducationLevelName == "Бакалавриат") ||
+                    (educationLevelName == "Бакалавриат" && selectedEducationLevelName == "Специалитет")))
+                    throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
+            }
+
+            var newProgram = new EnteranceProgramEntity
+            {
+                Id = Guid.NewGuid(),
+                ProgramId = program.ProgramId,
+                Priority = program.Priority,
+                Enterance = enterance,
+                CreateTime = DateTime.UtcNow.ToUniversalTime()
+            };
+
+            await _applicationRepository.AddProgramToEnterance(newProgram, enterance);
         }
 
         public async Task DeleteProgram(Guid programId, Guid userId)
         {
-            
+            await _applicationRepository.DeleteProgram(programId, userId);
         }
 
-        public async Task EditProgram(EducationProgramApplicationModel program, Guid programId, Guid userId)
+        public async Task EditProgram(EducationProgramApplicationEditModel program, Guid programId, Guid userId)
         {
 
         }

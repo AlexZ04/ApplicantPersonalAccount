@@ -86,6 +86,11 @@ namespace ApplicantPersonalAccount.API.Controllers
         [CheckToken]
         public async Task<IActionResult> AddProgram([FromBody] EducationProgramApplicationModel program)
         {
+            var validationErrors = Validator.Validator.ValidateEnterancePriority(program.Priority);
+
+            if (validationErrors.Count() > 0)
+                return BadRequest(new { Errors = validationErrors });
+
             await _applicantService.AddProgram(program, UserDescriptor.GetUserId(User));
 
             return Ok();
@@ -94,9 +99,14 @@ namespace ApplicantPersonalAccount.API.Controllers
         [HttpPut("program/{programId}")]
         [Authorize(Roles = "Applicant")]
         [CheckToken]
-        public async Task<IActionResult> EditProgram([FromBody] EducationProgramApplicationModel program,
+        public async Task<IActionResult> EditProgram([FromBody] EducationProgramApplicationEditModel program,
             [FromRoute] Guid programId)
         {
+            var validationErrors = Validator.Validator.ValidateEnterancePriority(program.Priority);
+
+            if (validationErrors.Count() > 0)
+                return BadRequest(new { Errors = validationErrors });
+
             await _applicantService.EditProgram(program, programId, UserDescriptor.GetUserId(User));
 
             return Ok();
@@ -117,7 +127,7 @@ namespace ApplicantPersonalAccount.API.Controllers
         [CheckToken]
         public async Task<IActionResult> GetDocumentTypes()
         {
-            return Ok(await _applicantService.GetDocumentTypes());
+            return Ok(await _directoryService.GetDocumentTypes());
         }
     }
 }
