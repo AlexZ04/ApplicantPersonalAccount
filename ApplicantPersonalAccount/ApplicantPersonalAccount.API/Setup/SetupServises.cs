@@ -2,6 +2,7 @@
 using ApplicantPersonalAccount.Application.ControllerServices.Implementations;
 using ApplicantPersonalAccount.Application.OuterServices;
 using ApplicantPersonalAccount.Application.OuterServices.Implementations;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.Connection;
 
 namespace ApplicantPersonalAccount.API.Setup
 {
@@ -15,6 +16,8 @@ namespace ApplicantPersonalAccount.API.Setup
             services.AddTransient<IApplicantService, ApplicantServiceImpl>();
             services.AddTransient<IFileService, FileServiceImpl>();
             services.AddHttpClient<IDirectoryService, DirectoryServiceImpl>();
+
+            services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
         }
     }
 }

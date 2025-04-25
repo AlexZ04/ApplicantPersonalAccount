@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
 using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models;
 using ApplicantPersonalAccount.Common.Models.Applicant;
@@ -16,17 +17,20 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
         private readonly IApplicationRepository _applicationRepository;
         private readonly IUserRepository _userRepository;
         private readonly ApplicationDataContext _applicationContext;
+        private readonly IDocumentRepository _documentRepository;
 
         public ApplicantServiceImpl(
             DirectoryDataContext directoryContext,
             IApplicationRepository applicationRepository,
             IUserRepository userRepository,
-            ApplicationDataContext applicationContext)
+            ApplicationDataContext applicationContext,
+            IDocumentRepository documentRepository)
         {
             _directoryContext = directoryContext;
             _applicationRepository = applicationRepository;
             _userRepository = userRepository;
             _applicationContext = applicationContext;
+            _documentRepository = documentRepository;
         }
 
         public async Task<ProgramPagedList> GetListOfPrograms(
@@ -147,22 +151,10 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             var selectedEducationLevelName = educationProgram.EducationLevel.Name;
 
             if (enterance.Programs.Count() > 0)
-            {
-                var selectedProgram = await _directoryContext.EducationPrograms
-                    .Include(p => p.Faculty)
-                    .Include(p => p.EducationLevel)
-                    .FirstOrDefaultAsync(l => l.Id == enterance.Programs[0].ProgramId);
+                await CheckEducationLevel(enterance, selectedEducationLevelName);
 
-                if (selectedProgram == null)
-                    throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
-
-                var educationLevelName = selectedProgram.EducationLevel.Name;
-
-                if (educationLevelName != selectedEducationLevelName
-                    && ((educationLevelName == "Специалитет" && selectedEducationLevelName == "Бакалавриат") ||
-                    (educationLevelName == "Бакалавриат" && selectedEducationLevelName == "Специалитет")))
-                    throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
-            }
+            var userDocuments = await _documentRepository
+                .GetUserDocuments(FileDocumentType.Educational, userId);
 
             var newProgram = new EnteranceProgramEntity
             {
@@ -183,7 +175,7 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
 
         public async Task EditProgram(EducationProgramApplicationEditModel program, Guid programId, Guid userId)
         {
-
+            // todo
         }
 
         public async Task<List<DocumentType>> GetDocumentTypes()
@@ -194,6 +186,24 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
                 .ToListAsync();
 
             return documentTypes;
+        }
+
+        private async Task CheckEducationLevel(EnteranceEntity enterance, string selectedEducationLevelName)
+        {
+            var selectedProgram = await _directoryContext.EducationPrograms
+                    .Include(p => p.Faculty)
+                    .Include(p => p.EducationLevel)
+                    .FirstOrDefaultAsync(l => l.Id == enterance.Programs[0].ProgramId);
+
+            if (selectedProgram == null)
+                throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+
+            var educationLevelName = selectedProgram.EducationLevel.Name;
+
+            if (educationLevelName != selectedEducationLevelName
+                && ((educationLevelName == "Специалитет" && selectedEducationLevelName == "Бакалавриат") ||
+                (educationLevelName == "Бакалавриат" && selectedEducationLevelName == "Специалитет")))
+                throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
         }
     }
 }
