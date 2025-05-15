@@ -27,7 +27,7 @@ namespace ApplicantPersonalAccount.Notification.Services.Implementations
 
             try
             {
-                await SendEmail(notification);
+                await SendEmailBySmpt(notification);
             }
             catch (Exception)
             {
