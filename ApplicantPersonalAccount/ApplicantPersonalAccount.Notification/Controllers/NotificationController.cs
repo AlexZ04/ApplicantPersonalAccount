@@ -1,5 +1,7 @@
+using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Notification.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApplicantPersonalAccount.Notification.Controllers
 {
@@ -9,7 +11,7 @@ namespace ApplicantPersonalAccount.Notification.Controllers
     {
         [HttpPost("send-notification")]
         public async Task<IActionResult> SendNotification(
-            [FromQuery] string key,
+            [FromQuery, Required] string key,
             [FromBody] NotificationModel notification)
         {
             return Ok();

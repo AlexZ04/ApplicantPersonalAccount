@@ -1,0 +1,13 @@
+﻿using ApplicantPersonalAccount.Notification.Services;
+using ApplicantPersonalAccount.Notification.Services.Implementations;
+
+namespace ApplicantPersonalAccount.Notification.Setup
+{
+    public class SetupServices
+    {
+        public static void AddServices(IServiceCollection services)
+        {
+            services.AddScoped<INotificationService, NotificationServiceImpl>();
+        }
+    }
+}

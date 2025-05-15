@@ -21,25 +21,25 @@ namespace ApplicantPersonalAccount.API.Setup
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
 
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header
-            },
-            new List<string>()
-        }
-    });
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
             });
-        }
+            }
 
         public static void UseSwagger(WebApplication app)
         {
@@ -48,7 +48,6 @@ namespace ApplicantPersonalAccount.API.Setup
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
         }
     }
 }

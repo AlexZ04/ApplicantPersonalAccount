@@ -7,9 +7,9 @@ using ApplicantPersonalAccount.Infrastructure.RabbitMq.Connection;
 
 namespace ApplicantPersonalAccount.API.Setup
 {
-    public static class SetupServises
+    public static class SetupServices
     {
-        public static void AddServises(IServiceCollection services)
+        public static void AddServices(IServiceCollection services)
         {
             services.AddTransient<IAuthService, AuthorizationServiceImpl>();
             services.AddTransient<ITokenService, TokenServiceImpl>();

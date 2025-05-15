@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 SetupAspNet.AddAspNet(builder);
 SetupSwagger.AddSwagger(builder);
 SetupDatabases.AddDatabases(builder);
-SetupServises.AddServises(builder.Services);
+SetupServices.AddServices(builder.Services);
 SetupRepositories.AddRepositories(builder.Services);
 SetupAuth.AddAuth(builder);
 
