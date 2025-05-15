@@ -28,5 +28,8 @@
         public const string HAVE_MAX_PROGRAMS = "User already chose max amount of programs";
         public const string CANT_HAVE_THIS_EDUCATION_LEVEL = "Can't have this education level";
         public const string INVALID_PRIORITY = "Invalid program priority";
+
+        public const string INVALID_KEY = "Invalid key!";
+        public const string CANT_SEND_EMAIL = "Can't send email!";
     }
 }

@@ -1,4 +1,3 @@
-using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Notification.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
