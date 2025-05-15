@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicantPersonalAccount.Pe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicantPersonalAccount.Infrastructure", "ApplicantPersonalAccount.Infrastructure\ApplicantPersonalAccount.Infrastructure.csproj", "{3993DBB9-15EE-4CD3-855A-93BB98792AD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicantPersonalAccount.Applicant", "ApplicantPersonalAccount.Applicant\ApplicantPersonalAccount.Applicant.csproj", "{F9294802-8D98-4CD7-AE4E-49E52616A6F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicantPersonalAccount.Notification", "ApplicantPersonalAccount.Notification\ApplicantPersonalAccount.Notification.csproj", "{D1C792E2-C021-4EB6-9000-495908DD238B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{3993DBB9-15EE-4CD3-855A-93BB98792AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3993DBB9-15EE-4CD3-855A-93BB98792AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3993DBB9-15EE-4CD3-855A-93BB98792AD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9294802-8D98-4CD7-AE4E-49E52616A6F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9294802-8D98-4CD7-AE4E-49E52616A6F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9294802-8D98-4CD7-AE4E-49E52616A6F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9294802-8D98-4CD7-AE4E-49E52616A6F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1C792E2-C021-4EB6-9000-495908DD238B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1C792E2-C021-4EB6-9000-495908DD238B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1C792E2-C021-4EB6-9000-495908DD238B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1C792E2-C021-4EB6-9000-495908DD238B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
