@@ -66,5 +66,15 @@ namespace ApplicantPersonalAccount.Notification.Services.Implementations
 
             await smtp.SendMailAsync(message);
         }
+
+        public async Task SignUserToNotifications(string userEmail)
+        {
+            // todo
+        }
+
+        public async Task UnsighUserFromNotifications(string userEmail)
+        {
+            // todo
+        }
     }
 }
