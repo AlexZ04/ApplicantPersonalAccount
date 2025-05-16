@@ -1,23 +1,23 @@
-﻿using ApplicantPersonalAccount.Notification.Models;
+﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Notification.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Text.Json;
 using System.Text;
-using ApplicantPersonalAccount.Common.Constants;
+using System.Text.Json;
 
 namespace ApplicantPersonalAccount.Notification.MessageListener
 {
-    public class NotificationListener : BackgroundService
+    public class SubscribtionsToNotifListener : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IConnection _connection;
         private readonly IModel _channel;
         private readonly IConfiguration _config;
 
-        private readonly string _queueName = "notification_queue";
+        private readonly string _queueName = "subscribtions_queue";
 
-        public NotificationListener(IServiceProvider serviceProvider,
+        public SubscribtionsToNotifListener(IServiceProvider serviceProvider,
             IConfiguration config)
         {
             _serviceProvider = serviceProvider;
@@ -47,14 +47,16 @@ namespace ApplicantPersonalAccount.Notification.MessageListener
                 var body = eventArgs.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
-                var notification = JsonSerializer.Deserialize<NotificationModel>(message);
+                var subDto = JsonSerializer.Deserialize<SubscriptionToNotificationDTO>(message);
 
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
 
-                    await notificationService.SendEmail(NotificationsOptions.NOTIFICATION_KEY,
-                        notification!);
+                    if (subDto!.Subscribe) 
+                        await notificationService.SignUserToNotifications(subDto.UserEmail);
+                    else
+                        await notificationService.UnsignUserFromNotifications(subDto.UserEmail);
                 }
 
                 _channel.BasicAck(eventArgs.DeliveryTag, false);
