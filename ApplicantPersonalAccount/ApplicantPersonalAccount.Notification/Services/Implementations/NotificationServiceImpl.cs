@@ -2,6 +2,7 @@
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Notification.Models;
 using ApplicantPersonalAccount.Persistence.Contextes;
+using ApplicantPersonalAccount.Persistence.Entities.NotificationDb;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Net.Mail;
@@ -69,12 +70,33 @@ namespace ApplicantPersonalAccount.Notification.Services.Implementations
 
         public async Task SignUserToNotifications(string userEmail)
         {
-            // todo
+            var isSigned = await CheckSubscription(userEmail);
+
+            if (isSigned) 
+                throw new InvalidActionException(ErrorMessages.USER_IS_SIGNED);
+
+            var subUser = new NotificationSubscribtionEntity
+            {
+                Id = Guid.NewGuid(),
+                UserEmail = userEmail,
+            };
+
+            _notificationDataContext.Subscribers.Add(subUser);
+            await _notificationDataContext.SaveChangesAsync();
         }
 
-        public async Task UnsighUserFromNotifications(string userEmail)
+        public async Task UnsignUserFromNotifications(string userEmail)
         {
-            // todo
+            var isSigned = await CheckSubscription(userEmail);
+
+            if (!isSigned)
+                throw new InvalidActionException(ErrorMessages.USER_IS_UNSIGNED);
+
+            var record = await _notificationDataContext.Subscribers
+                .FirstAsync(s => s.UserEmail == userEmail);
+
+            _notificationDataContext.Subscribers.Remove(record);
+            await _notificationDataContext.SaveChangesAsync();
         }
     }
 }

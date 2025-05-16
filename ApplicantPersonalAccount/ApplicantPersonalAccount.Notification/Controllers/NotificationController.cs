@@ -16,6 +16,22 @@ namespace ApplicantPersonalAccount.Notification.Controllers
             _notificationService = notificationService;
         }
 
+        [HttpPost("subscribe")]
+        public async Task<IActionResult> SubscribeToNotifications(string userEmail)
+        {
+            await _notificationService.SignUserToNotifications(userEmail);
+
+            return Ok();
+        }
+
+        [HttpDelete("subscribe")]
+        public async Task<IActionResult> UnsubscribeFromNotifications(string userEmail)
+        {
+            await _notificationService.UnsignUserFromNotifications(userEmail);
+
+            return Ok();
+        }
+
         [HttpPost("send-notification")]
         public async Task<IActionResult> SendNotification(
             [FromQuery, Required] string key,
