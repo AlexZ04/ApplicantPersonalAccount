@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Notification.Services;
+﻿using ApplicantPersonalAccount.Notification.MessageListener;
+using ApplicantPersonalAccount.Notification.Services;
 using ApplicantPersonalAccount.Notification.Services.Implementations;
 
 namespace ApplicantPersonalAccount.Notification.Setup
@@ -8,6 +9,8 @@ namespace ApplicantPersonalAccount.Notification.Setup
         public static void AddServices(IServiceCollection services)
         {
             services.AddScoped<INotificationService, NotificationServiceImpl>();
+
+            services.AddHostedService<NotificationListener>();
         }
     }
 }
