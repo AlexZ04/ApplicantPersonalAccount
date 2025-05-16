@@ -18,7 +18,11 @@ namespace ApplicantPersonalAccount.Infrastructure.RabbitMq
         {
             using var channel = _connection.Connection.CreateModel();
 
-            channel.QueueDeclare(order, exclusive: false);
+            channel.QueueDeclare(queue: order, 
+                                 durable: true,
+                                 exclusive: false,
+                                 autoDelete: false,
+                                 arguments: null);
 
             var json = JsonSerializer.Serialize(message);
             var body = Encoding.UTF8.GetBytes(json);

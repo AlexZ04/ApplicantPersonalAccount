@@ -1,3 +1,4 @@
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Notification.Models;
 using ApplicantPersonalAccount.Notification.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,13 @@ namespace ApplicantPersonalAccount.Notification.Controllers
     public class NotificationController : ControllerBase
     {
         private readonly INotificationService _notificationService;
+        private readonly IMessageProducer _messageProducer;
 
-        public NotificationController(INotificationService notificationService)
+        public NotificationController(INotificationService notificationService,
+            IMessageProducer messageProducer)
         {
             _notificationService = notificationService;
+            _messageProducer = messageProducer;
         }
 
         [HttpPost("subscribe")]
@@ -37,7 +41,8 @@ namespace ApplicantPersonalAccount.Notification.Controllers
             [FromQuery, Required] string key,
             [FromBody] NotificationModel notification)
         {
-            await _notificationService.SendEmail(key, notification);
+            _messageProducer.SendMessage(notification, "notification_queue");
+            //await _notificationService.SendEmail(key, notification);
 
             return Ok();
         }
