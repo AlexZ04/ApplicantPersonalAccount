@@ -1,4 +1,5 @@
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Notification.Models;
 using ApplicantPersonalAccount.Notification.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,7 @@ namespace ApplicantPersonalAccount.Notification.Controllers
             [FromQuery, Required] string key,
             [FromBody] NotificationModel notification)
         {
-            _messageProducer.SendMessage(notification, "notification_queue");
+            _messageProducer.SendMessage(notification, RabbitQueues.NOTIFICATION);
             //await _notificationService.SendEmail(key, notification);
 
             return Ok();

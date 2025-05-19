@@ -1,4 +1,4 @@
-﻿using ApplicantPersonalAccount.Infrastructure.RabbitMq;
+﻿using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 
 namespace ApplicantPersonalAccount.Application.ControllerServices.Implementations
 {

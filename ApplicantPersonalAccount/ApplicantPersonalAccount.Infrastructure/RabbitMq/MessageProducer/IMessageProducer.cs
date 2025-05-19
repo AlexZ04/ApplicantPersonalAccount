@@ -1,4 +1,4 @@
-﻿namespace ApplicantPersonalAccount.Infrastructure.RabbitMq
+﻿namespace ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer
 {
     public interface IMessageProducer
     {

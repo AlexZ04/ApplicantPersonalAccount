@@ -5,71 +5,25 @@ using RabbitMQ.Client.Events;
 using System.Text.Json;
 using System.Text;
 using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 
 namespace ApplicantPersonalAccount.Notification.MessageListener
 {
-    public class NotificationListener : BackgroundService
+    public class NotificationListener : BaseMessageListener<NotificationModel>
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IConnection _connection;
-        private readonly IModel _channel;
-        private readonly IConfiguration _config;
+        public NotificationListener(IServiceProvider serviceProvider, IConfiguration config) 
+            : base(serviceProvider, config, RabbitQueues.NOTIFICATION) { }
 
-        private readonly string _queueName = "notification_queue";
-
-        public NotificationListener(IServiceProvider serviceProvider,
-            IConfiguration config)
+        protected override async Task ProcessMessage(
+            NotificationModel message,
+            IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
-            _config = config;
+            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            var factory = new ConnectionFactory
-            {
-                HostName = _config["RabbitMQ:Host"],
-                DispatchConsumersAsync = true
-            };
-
-            _connection = factory.CreateConnection();
-
-            _channel = _connection.CreateModel();
-            _channel.QueueDeclare(queue: _queueName,
-                                  durable: true,
-                                  exclusive: false,
-                                  autoDelete: false,
-                                  arguments: null);
+            await notificationService.SendEmail(NotificationsOptions.NOTIFICATION_KEY,
+                message!);
         }
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            var consumer = new AsyncEventingBasicConsumer(_channel);
-            consumer.Received += async (model, eventArgs) =>
-            {
-                var body = eventArgs.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-
-                var notification = JsonSerializer.Deserialize<NotificationModel>(message);
-
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
-
-                    await notificationService.SendEmail(NotificationsOptions.NOTIFICATION_KEY,
-                        notification!);
-                }
-
-                _channel.BasicAck(eventArgs.DeliveryTag, false);
-            };
-
-            _channel.BasicConsume(queue: _queueName,
-                                  autoAck: false,
-                                  consumer: consumer);
-        }
-
-        public override void Dispose()
-        {
-            _channel?.Close();
-            _connection?.Close();
-            base.Dispose();
-        }
+        
     }
 }
