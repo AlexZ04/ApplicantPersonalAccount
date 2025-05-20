@@ -8,6 +8,7 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
         public static void AddDatabases(WebApplicationBuilder builder)
         {
             AddUsersDb(builder);
+            AddRedis(builder);
         }
 
         public static void AddUsersDb(WebApplicationBuilder builder)
@@ -15,6 +16,14 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
             var usersConnection = builder.Configuration.GetConnectionString("UsersConnection");
 
             builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(usersConnection));
+        }
+
+        public static void AddRedis(WebApplicationBuilder builder)
+        {
+            builder.Services.AddStackExchangeRedisCache(options => {
+                options.Configuration = "localhost";
+                options.InstanceName = "ApplicantAPI";
+            });
         }
 
         public static void RunMigrations(WebApplication app)
