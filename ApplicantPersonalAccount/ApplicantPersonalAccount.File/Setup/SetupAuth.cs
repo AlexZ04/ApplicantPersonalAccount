@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ApplicantPersonalAccount.File.Setup
+namespace ApplicantPersonalAccount.Document.Setup
 {
     public class SetupAuth
     {

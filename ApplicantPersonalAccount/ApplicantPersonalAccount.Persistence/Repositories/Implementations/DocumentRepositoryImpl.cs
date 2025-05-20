@@ -11,13 +11,12 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
     public class DocumentRepositoryImpl : IDocumentRepository
     {
         private readonly FileDataContext _fileDataContext;
-        private readonly DirectoryDataContext _directoryDataContext;
+        //private readonly DirectoryDataContext _directoryDataContext;
 
-        public DocumentRepositoryImpl(FileDataContext fileDataContext, 
-            DirectoryDataContext directoryDataContext)
+        public DocumentRepositoryImpl(FileDataContext fileDataContext)
         {
             _fileDataContext = fileDataContext;
-            _directoryDataContext = directoryDataContext;
+            //_directoryDataContext = directoryDataContext;
         }
 
         public async Task AddFile(DocumentEntity file)
@@ -132,23 +131,23 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             Guid documentId, 
             Guid userId)
         {
-            var education = await _fileDataContext.EducationInfos
-                .Include(i => i.Document)
-                .FirstOrDefaultAsync(i => i.UserId == userId && i.Document.Id == documentId);
+            //var education = await _fileDataContext.EducationInfos
+            //    .Include(i => i.Document)
+            //    .FirstOrDefaultAsync(i => i.UserId == userId && i.Document.Id == documentId);
 
-            if (education == null)
-                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+            //if (education == null)
+            //    throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
-            if (editedEducation.DocumentTypeId != null)
-            {
-                var documentType = await _directoryDataContext.DocumentTypes
-                    .FirstOrDefaultAsync(t => t.Id == editedEducation.DocumentTypeId);
+            //if (editedEducation.DocumentTypeId != null)
+            //{
+            //    var documentType = await _directoryDataContext.DocumentTypes
+            //        .FirstOrDefaultAsync(t => t.Id == editedEducation.DocumentTypeId);
 
-                if (documentType == null)
-                    throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
-            }
+            //    if (documentType == null)
+            //        throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+            //}
 
-            education.DocumentTypeId = editedEducation.DocumentTypeId;
+            //education.DocumentTypeId = editedEducation.DocumentTypeId;
 
             await _fileDataContext.SaveChangesAsync();
         }

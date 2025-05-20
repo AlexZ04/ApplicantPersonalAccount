@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
-namespace ApplicantPersonalAccount.File.Setup
+namespace ApplicantPersonalAccount.Document.Setup
 {
     public class SetupAspNet
     {

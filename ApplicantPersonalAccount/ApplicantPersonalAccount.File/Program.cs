@@ -1,4 +1,4 @@
-using ApplicantPersonalAccount.File.Setup;
+using ApplicantPersonalAccount.Document.Setup;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,6 +1,23 @@
-﻿namespace ApplicantPersonalAccount.File.Services
+﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.Enums;
+using ApplicantPersonalAccount.Common.Models.Applicant;
+using ApplicantPersonalAccount.Common.Models.Document;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ApplicantPersonalAccount.Document.Services
 {
     public interface IFileService
     {
+        public Task UploadFile(FileDocumentType documentType, IFormFile file, Guid userId);
+        public Task DeleteFile(Guid id, Guid userId);
+        public Task<DocumentModel> GetDocumentInfo(Guid id);
+        public Task<FileContentResult> GetFile(Guid id);
+        public Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType,
+            Guid userId,
+            bool importingAll = false);
+        public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId);
+        public Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId);
+        public Task<DocumentType> GetEducationDocumentInfo(Guid documentId);
+        public Task<PassportInfoModel> GetPassportInfo(Guid userId);
     }
 }

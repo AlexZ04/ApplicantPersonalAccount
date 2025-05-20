@@ -1,7 +1,7 @@
 ﻿using ApplicantPersonalAccount.Persistence.Contextes;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApplicantPersonalAccount.File.Setup
+namespace ApplicantPersonalAccount.Document.Setup
 {
     public class SetupDatabases
     {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApplicantPersonalAccount.File
+namespace ApplicantPersonalAccount.Document
 {
     public class ExceptionHandler : IExceptionHandler
     {

@@ -1,7 +1,7 @@
-﻿using ApplicantPersonalAccount.File.Services;
-using ApplicantPersonalAccount.File.Services.Implementations;
+﻿using ApplicantPersonalAccount.Document.Services;
+using ApplicantPersonalAccount.Document.Services.Implementations;
 
-namespace ApplicantPersonalAccount.File.Setup
+namespace ApplicantPersonalAccount.Document.Setup
 {
     public class SetupServices
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace ApplicantPersonalAccount.File.Setup
+namespace ApplicantPersonalAccount.Document.Setup
 {
     public class SetupSwagger
     {
