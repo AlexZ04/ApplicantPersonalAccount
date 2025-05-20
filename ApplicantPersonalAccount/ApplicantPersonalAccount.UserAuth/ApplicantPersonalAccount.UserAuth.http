@@ -1,0 +1,6 @@
+@ApplicantPersonalAccount.UserAuth_HostAddress = http://localhost:5193
+
+GET {{ApplicantPersonalAccount.UserAuth_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
