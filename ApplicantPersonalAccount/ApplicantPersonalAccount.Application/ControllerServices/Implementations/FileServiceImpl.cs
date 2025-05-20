@@ -11,8 +11,6 @@ using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Security.Claims;
 
 namespace ApplicantPersonalAccount.Application.ControllerServices.Implementations
 {
@@ -23,7 +21,10 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
         private readonly FileDataContext _fileContext;
         private readonly DirectoryDataContext _directoryContext;
 
-        public FileServiceImpl(IDocumentRepository documentRepository, FileDataContext fileContext)
+        public FileServiceImpl(
+            IDocumentRepository documentRepository, 
+            FileDataContext fileContext, 
+            DirectoryDataContext directoryContext)
         {
             _pathToStorage = Path.Combine(Directory.GetCurrentDirectory(), "FileStorage");
 
@@ -32,6 +33,7 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
 
             _documentRepository = documentRepository;
             _fileContext = fileContext;
+            _directoryContext = directoryContext;
         }
 
         public async Task UploadFile(FileDocumentType documentType, IFormFile file, Guid userId)

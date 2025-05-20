@@ -1,8 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace ApplicantPersonalAccount.API.Setup
+namespace ApplicantPersonalAccount.File.Setup
 {
-    public static class SetupSwagger
+    public class SetupSwagger
     {
         public static void AddSwagger(WebApplicationBuilder builder)
         {
