@@ -71,7 +71,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             await _directoryContext.SaveChangesAsync();
         }
 
-        public async Task AddEducationPrograms(List<EducationProgram> programs)
+        public async Task SetEducationPrograms(List<EducationProgram> programs)
         {
             var educationLevels = await _directoryContext.EducationLevels.ToListAsync();
             var faculties = await _directoryContext.Faculties.ToListAsync();

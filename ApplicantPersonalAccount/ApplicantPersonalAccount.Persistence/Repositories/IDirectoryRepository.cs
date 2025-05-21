@@ -8,6 +8,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task SetDocumentTypes(List<DocumentType> types);
         public Task SetFaculties(List<Faculty> faculties);
         public Task ResetAll();
-        public Task AddEducationPrograms(List<EducationProgram> programs);
+        public Task SetEducationPrograms(List<EducationProgram> programs);
     }
 }
