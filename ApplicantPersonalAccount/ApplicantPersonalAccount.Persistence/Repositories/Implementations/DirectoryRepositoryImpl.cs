@@ -15,7 +15,16 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
         public async Task SetEducationLevels(List<EducationLevel> levels)
         {
-            _directoryContext.EducationLevels.AddRange(levels);
+            foreach (var level in levels)
+            {
+                var foundRecord = await _directoryContext.EducationLevels
+                    .FirstOrDefaultAsync(l => l.Name == level.Name);
+
+                if (foundRecord == null)
+                    _directoryContext.EducationLevels.Add(level);
+
+            }
+
             await _directoryContext.SaveChangesAsync();
         }
 
@@ -36,13 +45,29 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
                     .ToList()
             }).ToList();
 
-            _directoryContext.DocumentTypes.AddRange(documentTypes);
+            foreach (var documentType in documentTypes)
+            {
+                var foundRecord = await _directoryContext.DocumentTypes
+                    .FirstOrDefaultAsync(t => t.Name == documentType.Name);
+
+                if (foundRecord == null)
+                    _directoryContext.DocumentTypes.Add(documentType);
+            }
+
             await _directoryContext.SaveChangesAsync();
         }
 
         public async Task SetFaculties(List<Faculty> faculties)
         {
-            _directoryContext.Faculties.AddRange(faculties);
+            foreach (var faculty in faculties)
+            {
+                var foundRecord = await _directoryContext.Faculties
+                    .FirstOrDefaultAsync(f => f.Name == faculty.Name);
+
+                if (foundRecord == null)
+                    _directoryContext.Faculties.Add(faculty);
+            }
+
             await _directoryContext.SaveChangesAsync();
         }
 
@@ -66,7 +91,15 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             }).ToList();
 
-            _directoryContext.EducationPrograms.AddRange(educationPrograms);
+            foreach (var program in educationPrograms)
+            {
+                var foundRecord = await _directoryContext.EducationPrograms
+                    .FirstOrDefaultAsync(p => p.Name == program.Name);
+
+                if (foundRecord == null)
+                    _directoryContext.EducationPrograms.Add(program);
+            }
+
             await _directoryContext.SaveChangesAsync();
         }
 
