@@ -1,4 +1,4 @@
-﻿namespace ApplicantPersonalAccount.DirectoryService.DTOs
+﻿namespace ApplicantPersonalAccount.Common.DTOs
 {
     public class LoadingStatusDTO
     {

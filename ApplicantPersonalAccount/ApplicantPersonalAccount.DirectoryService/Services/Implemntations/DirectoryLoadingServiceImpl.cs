@@ -1,8 +1,8 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
 using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
-using ApplicantPersonalAccount.DirectoryService.DTOs;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc.RazorPages;

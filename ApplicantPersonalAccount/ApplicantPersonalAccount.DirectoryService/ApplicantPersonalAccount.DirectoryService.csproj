@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Implemntations\" />
 	<ProjectReference Include="..\ApplicantPersonalAccount.Common\ApplicantPersonalAccount.Common.csproj" />
 	<ProjectReference Include="..\ApplicantPersonalAccount.Persistence\ApplicantPersonalAccount.Persistence.csproj" />
   </ItemGroup>

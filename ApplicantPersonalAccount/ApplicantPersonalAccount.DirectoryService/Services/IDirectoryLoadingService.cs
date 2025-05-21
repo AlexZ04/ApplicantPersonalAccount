@@ -1,6 +1,6 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Enums;
-using ApplicantPersonalAccount.DirectoryService.DTOs;
 
 namespace ApplicantPersonalAccount.DirectoryService.Services
 {
