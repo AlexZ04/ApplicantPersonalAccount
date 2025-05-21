@@ -148,7 +148,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             //}
 
             //education.DocumentTypeId = editedEducation.DocumentTypeId;
-
+            
             await _fileDataContext.SaveChangesAsync();
         }
     }
