@@ -15,8 +15,9 @@ namespace ApplicantPersonalAccount.Notification.MessageListener
         public SubscribtionsToNotifListener(IServiceProvider serviceProvider, IConfiguration config)
             : base(serviceProvider, config, RabbitQueues.SUBS) { }
 
-        protected override async Task ProcessMessage(
+        protected override async Task<string?> ProcessMessage(
             SubscriptionToNotificationDTO message,
+            BasicDeliverEventArgs eventArgs,
             IServiceProvider serviceProvider)
         {
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
@@ -25,6 +26,8 @@ namespace ApplicantPersonalAccount.Notification.MessageListener
                 await notificationService.SignUserToNotifications(message.UserEmail);
             else
                 await notificationService.UnsignUserFromNotifications(message.UserEmail);
+
+            return null;
         }
     }
 }

@@ -5,6 +5,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Channels;
 
 namespace ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener
 {
@@ -54,7 +55,22 @@ namespace ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener
                 var deserialized = JsonSerializer.Deserialize<TMessage>(message);
 
                 using var scope = _serviceProvider.CreateScope();
-                await ProcessMessage(deserialized!, scope.ServiceProvider);
+                var res = await ProcessMessage(deserialized!, eventArgs, scope.ServiceProvider);
+
+                if (res != null &&
+                    (eventArgs.BasicProperties.ReplyTo != null && eventArgs.BasicProperties.ReplyTo!= ""))
+                {
+                    var replyProps = _channel.CreateBasicProperties();
+                    replyProps.CorrelationId = eventArgs.BasicProperties.CorrelationId;
+
+                    var responseBytes = Encoding.UTF8.GetBytes(res ?? "");
+
+                    _channel.BasicPublish(
+                        exchange: "",
+                        routingKey: eventArgs.BasicProperties.ReplyTo,
+                        basicProperties: replyProps,
+                        body: responseBytes);
+                }
 
                 _channel.BasicAck(eventArgs.DeliveryTag, false);
             };
@@ -64,8 +80,9 @@ namespace ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener
                                   consumer: consumer);
         }
 
-        protected abstract Task ProcessMessage(
+        protected abstract Task<string?> ProcessMessage(
             TMessage message,
+            BasicDeliverEventArgs eventArgs,
             IServiceProvider serviceProvider);
 
         public override void Dispose()
