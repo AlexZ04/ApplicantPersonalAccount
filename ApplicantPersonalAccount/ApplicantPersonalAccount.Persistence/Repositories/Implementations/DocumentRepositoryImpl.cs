@@ -140,15 +140,15 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             //if (editedEducation.DocumentTypeId != null)
             //{
-            //    var documentType = await _directoryDataContext.DocumentTypes
-            //        .FirstOrDefaultAsync(t => t.Id == editedEducation.DocumentTypeId);
+            //var documentType = await _directoryDataContext.DocumentTypes
+            //    .FirstOrDefaultAsync(t => t.Id == editedEducation.DocumentTypeId);
 
             //    if (documentType == null)
             //        throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
             //}
 
             //education.DocumentTypeId = editedEducation.DocumentTypeId;
-            
+
             await _fileDataContext.SaveChangesAsync();
         }
     }
