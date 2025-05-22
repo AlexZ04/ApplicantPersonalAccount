@@ -5,8 +5,6 @@ using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Repositories;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Xml.Linq;
 
 namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
 {

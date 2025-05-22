@@ -1,13 +1,9 @@
 ﻿using ApplicantPersonalAccount.Notification.Models;
 using ApplicantPersonalAccount.Notification.Services;
-using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Text.Json;
-using System.Text;
 using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
-using System.Threading.Channels;
 
 namespace ApplicantPersonalAccount.Notification.MessageListener
 {

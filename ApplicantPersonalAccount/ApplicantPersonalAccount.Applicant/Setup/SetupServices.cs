@@ -1,17 +1,18 @@
-﻿using ApplicantPersonalAccount.Document.Services;
-using ApplicantPersonalAccount.Document.Services.Implementations;
+﻿using ApplicantPersonalAccount.Applicant.Services;
+using ApplicantPersonalAccount.Applicant.Services.Implementations;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.Connection;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 
-namespace ApplicantPersonalAccount.Document.Setup
+namespace ApplicantPersonalAccount.Applicant.Setup
 {
-    public class SetupServices
+    public static class SetupServices
     {
         public static void AddServices(IServiceCollection services)
         {
-            services.AddTransient<IFileService, FileServiceImpl>();
             services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
             services.AddScoped<IMessageProducer, RabbitMqProducer>();
+
+            services.AddTransient<IApplicantService, ApplicantServiceImpl>();
         }
     }
 }

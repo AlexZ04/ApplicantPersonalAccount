@@ -11,12 +11,10 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
     public class DocumentRepositoryImpl : IDocumentRepository
     {
         private readonly FileDataContext _fileDataContext;
-        //private readonly DirectoryDataContext _directoryDataContext;
 
         public DocumentRepositoryImpl(FileDataContext fileDataContext)
         {
             _fileDataContext = fileDataContext;
-            //_directoryDataContext = directoryDataContext;
         }
 
         public async Task AddFile(DocumentEntity file)

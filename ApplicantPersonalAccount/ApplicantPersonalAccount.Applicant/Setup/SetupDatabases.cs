@@ -1,21 +1,21 @@
 ﻿using ApplicantPersonalAccount.Persistence.Contextes;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApplicantPersonalAccount.Document.Setup
+namespace ApplicantPersonalAccount.Applicant.Setup
 {
-    public class SetupDatabases
+    public static class SetupDatabases
     {
         public static void AddDatabases(WebApplicationBuilder builder)
         {
-            AddFilesDb(builder);
+            AddApplicationsDb(builder);
             AddRedis(builder);
         }
 
-        public static void AddFilesDb(WebApplicationBuilder builder)
+        public static void AddApplicationsDb(WebApplicationBuilder builder)
         {
-            var filesConnection = builder.Configuration.GetConnectionString("FilesConnection");
+            var applicationsConnection = builder.Configuration.GetConnectionString("ApplicationsConnection");
 
-            builder.Services.AddDbContext<FileDataContext>(options => options.UseNpgsql(filesConnection));
+            builder.Services.AddDbContext<ApplicationDataContext>(options => options.UseNpgsql(applicationsConnection));
         }
 
         public static void AddRedis(WebApplicationBuilder builder)
@@ -30,9 +30,9 @@ namespace ApplicantPersonalAccount.Document.Setup
         {
             using var serviceScope = app.Services.CreateScope();
 
-            var fileContext = serviceScope.ServiceProvider.GetService<FileDataContext>();
+            var applicationContext = serviceScope.ServiceProvider.GetService<ApplicationDataContext>();
 
-            fileContext?.Database.Migrate();
+            applicationContext?.Database.Migrate();
         }
     }
 }
