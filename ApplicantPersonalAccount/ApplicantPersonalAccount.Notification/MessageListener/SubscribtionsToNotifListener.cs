@@ -23,11 +23,27 @@ namespace ApplicantPersonalAccount.Notification.MessageListener
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
             if (message!.Subscribe)
-                await notificationService.SignUserToNotifications(message.UserEmail);
-            else
+                try
+                {
+                    await notificationService.SignUserToNotifications(message.UserEmail);
+
+                    return BrokerMessages.USER_IS_SUCCESSFULY_SIGNED;
+                }
+                catch (Exception e)
+                {
+                    return e.Message;
+                }
+
+            try
+            {
                 await notificationService.UnsignUserFromNotifications(message.UserEmail);
 
-            return null;
+                return BrokerMessages.USER_IS_SUCCESSFULY_UNSIGNED;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
         }
     }
 }

@@ -13,9 +13,9 @@ namespace ApplicantPersonalAccount.DirectoryService.Setup
 
         public static void AddDirectoryDb(WebApplicationBuilder builder)
         {
-            var usersConnection = builder.Configuration.GetConnectionString("DirectoryConnection");
+            var directoryConnection = builder.Configuration.GetConnectionString("DirectoryConnection");
 
-            builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(usersConnection));
+            builder.Services.AddDbContext<DirectoryDataContext>(options => options.UseNpgsql(directoryConnection));
         }
 
         public static void AddRedis(WebApplicationBuilder builder)
