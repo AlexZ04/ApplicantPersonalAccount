@@ -22,8 +22,7 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
         //[CheckToken]
         public async Task<IActionResult> SignToNotification()
         {
-            //await _applicantService.SignToNotifications(UserDescriptor.GetUserId(User));
-            await _applicantService.SignToNotifications(Guid.NewGuid());
+            await _applicantService.SignToNotifications(UserDescriptor.GetUserEmail(User));
 
             return Ok();
         }
@@ -33,8 +32,7 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
         //[CheckToken]
         public async Task<IActionResult> UnsighFromNotifications()
         {
-            //await _applicantService.UnsignFromNotifications(UserDescriptor.GetUserId(User));
-            await _applicantService.UnsignFromNotifications(Guid.NewGuid());
+            await _applicantService.UnsignFromNotifications(UserDescriptor.GetUserEmail(User));
 
             return Ok();
         }

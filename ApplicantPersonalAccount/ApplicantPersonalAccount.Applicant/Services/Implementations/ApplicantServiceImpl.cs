@@ -63,23 +63,28 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             throw new NotImplementedException();
         }
 
-        public async Task SignToNotifications(Guid userId)
+        public async Task SignToNotifications(string userEmail)
         {
             var rpcClient = new RpcClient();
             var request = new SubscriptionToNotificationDTO 
             {
                 Subscribe = true,
-                UserEmail = "test@email.com"
+                UserEmail = userEmail
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.SUBS);
-
-            throw new EarlyActionException(result);
         }
 
-        public Task UnsignFromNotifications(Guid userId)
+        public async Task UnsignFromNotifications(string userEmail)
         {
-            throw new NotImplementedException();
+            var rpcClient = new RpcClient();
+            var request = new SubscriptionToNotificationDTO
+            {
+                Subscribe = false,
+                UserEmail = userEmail
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.SUBS);
         }
     }
 }

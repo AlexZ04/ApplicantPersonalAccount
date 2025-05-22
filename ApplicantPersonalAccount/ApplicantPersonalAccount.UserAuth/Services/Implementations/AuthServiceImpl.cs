@@ -86,7 +86,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
                 throw new UnauthorizedAccessException();
 
             string accessToken = _tokenService.GenerateAccessToken(refreshToken.User.Id,
-                refreshToken.User.Role.ToString());
+                refreshToken.User.Role.ToString(), refreshToken.User.Email);
 
             refreshToken.Token = _tokenService.GenerateRefreshToken();
             refreshToken.Expires = DateTime.Now.AddDays(GeneralSettings.REFRESH_TOKEN_LIFETIME)
@@ -130,7 +130,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 
             TokenResponseModel tokenResponseModel = new TokenResponseModel
             {
-                AccessToken = _tokenService.GenerateAccessToken(user.Id, user.Role.ToString()),
+                AccessToken = _tokenService.GenerateAccessToken(user.Id, user.Role.ToString(), user.Email),
                 RefreshToken = refreshToken.Token,
                 AccessExpireTime = DateTime.Now.AddMinutes(GeneralSettings.ACCESS_TOKEN_LIFETIME)
                     .ToUniversalTime()

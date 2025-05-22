@@ -17,14 +17,14 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             _tokenRepository = tokenRepository;
         }
 
-        public string GenerateAccessToken(Guid id, string role)
+        public string GenerateAccessToken(Guid id, string role, string email)
         {
             ClaimsIdentity claims = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+                    new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.Role, role)
                 });
-
-            claims.AddClaim(new Claim(ClaimTypes.Role, role));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

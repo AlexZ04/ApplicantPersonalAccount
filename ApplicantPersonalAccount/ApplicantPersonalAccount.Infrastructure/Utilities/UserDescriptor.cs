@@ -13,5 +13,15 @@ namespace ApplicantPersonalAccount.Infrastructure.Utilities
 
             return new Guid(userId);
         }
+
+        public static string GetUserEmail(ClaimsPrincipal principal)
+        {
+            string? userEmail = principal.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (userEmail == null)
+                throw new UnauthorizedAccessException();
+
+            return userEmail;
+        }
     }
 }
