@@ -7,5 +7,6 @@
         public static readonly List<string> ALLOWED_FILE_EXTENSIONS = new() { ".pdf", ".png", ".jpg" };
         public const int MAX_FILE_SIZE = 30 * 1024 * 1024; // in MB
         public const int MAX_CHOSEN_PROGRAMS = 5;
+        public const int RPC_TIMEOUT = 60; // in seconds
     }
 }

@@ -1,8 +1,11 @@
-﻿using RabbitMQ.Client;
+﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Exceptions;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 
 namespace ApplicantPersonalAccount.Infrastructure.RabbitMq
 {
@@ -68,6 +71,15 @@ namespace ApplicantPersonalAccount.Infrastructure.RabbitMq
                 routingKey: requestQueue,
                 basicProperties: props,
                 body: messageBytes);
+
+            var cancToken = new CancellationTokenSource(TimeSpan.FromSeconds(GeneralSettings.RPC_TIMEOUT));
+            cancToken.Token.Register(() =>
+            {
+                if (_messagesData.TryRemove(corId.ToString(), out var taskSourse))
+                {
+                    taskSourse.TrySetException(new ProcessingException());
+                }
+            });
 
             return taskSource.Task;
         }
