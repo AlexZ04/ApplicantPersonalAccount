@@ -9,6 +9,7 @@ namespace ApplicantPersonalAccount.DirectoryService.Setup
         {
             services.AddHttpClient<IDirectoryService, DirectoryServiceImpl>();
             services.AddTransient<IDirectoryLoadingService, DirectoryLoadingServiceImpl>();
+            services.AddTransient<IDirectoryInfoService, IDirectoryInfoServiceImpl>();
         }
     }
 }

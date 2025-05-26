@@ -1,5 +1,4 @@
-﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
-using ApplicantPersonalAccount.Common.Models.Applicant;
+﻿using ApplicantPersonalAccount.Common.Models.Applicant;
 
 namespace ApplicantPersonalAccount.Applicant.Services
 {

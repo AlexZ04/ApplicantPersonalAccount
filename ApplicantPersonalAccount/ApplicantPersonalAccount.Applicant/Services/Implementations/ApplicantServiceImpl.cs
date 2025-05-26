@@ -1,6 +1,4 @@
-﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
-using ApplicantPersonalAccount.Common.DTOs;
-using ApplicantPersonalAccount.Common.Exceptions;
+﻿using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
