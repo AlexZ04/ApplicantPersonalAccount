@@ -1,8 +1,11 @@
-﻿using ApplicantPersonalAccount.Common.DTOs;
+﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
+using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Persistence.Repositories;
+using System.Text.Json;
 
 namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 {
@@ -19,9 +22,16 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             _messageProducer = messageProducer;
         }
 
-        public Task<ApplicantInfoForEventsModel> GetInfoForEvents(Guid userId)
+        public async Task<ApplicantInfoForEventsModel> GetInfoForEvents(Guid userId)
         {
-            throw new NotImplementedException();
+            var rpcClient = new RpcClient();
+
+            string result = await rpcClient.CallAsync(userId.ToString(), RabbitQueues.GET_INFO_FOR_EVENTS);
+            ProcessResponse(result);
+
+            var data = JsonSerializer.Deserialize<ApplicantInfoForEventsModel>(result)!;
+
+            return data;
         }
 
         public Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId)
@@ -39,6 +49,9 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.SUBS);
+
+            if (result != BrokerMessages.USER_IS_SUCCESSFULY_SIGNED)
+                throw new InvalidActionException(ErrorMessages.USER_IS_SIGNED);
         }
 
         public async Task UnsignFromNotifications(string userEmail)
@@ -51,6 +64,15 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.SUBS);
+
+            if (result != BrokerMessages.USER_IS_SUCCESSFULY_UNSIGNED)
+                throw new InvalidActionException(ErrorMessages.USER_IS_UNSIGNED);
+        }
+
+        private void ProcessResponse(string response)
+        {
+            if (response == null)
+                throw new ProcessingException();
         }
     }
 }

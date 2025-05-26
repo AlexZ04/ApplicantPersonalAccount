@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.UserAuth.Services;
+﻿using ApplicantPersonalAccount.UserAuth.MessageListener;
+using ApplicantPersonalAccount.UserAuth.Services;
 using ApplicantPersonalAccount.UserAuth.Services.Implementations;
 
 namespace ApplicantPersonalAccount.UserAuth.Setup
@@ -10,6 +11,8 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
             services.AddTransient<IAuthService, AuthServiceImpl>();
             services.AddTransient<ITokenService, TokenServiceImpl>();
             services.AddTransient<IUserService, UserServiceImpl>();
+
+            services.AddHostedService<GetEventsInfoListener>();
         }
     }
 }

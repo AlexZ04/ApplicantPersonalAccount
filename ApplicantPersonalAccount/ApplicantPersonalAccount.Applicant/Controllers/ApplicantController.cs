@@ -47,8 +47,8 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
         }
 
         [HttpGet("programs")]
-        //[Authorize]
-        //[CheckToken]
+        [Authorize]
+        [CheckToken]
         public async Task<IActionResult> GetListOfPrograms(
             [FromQuery] string? faculty,
             [FromQuery] string? educationForm,
@@ -74,8 +74,8 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
         }
 
         [HttpGet("document-types")]
-        //[Authorize]
-        //[CheckToken]
+        [Authorize]
+        [CheckToken]
         public async Task<IActionResult> GetDocumentTypes()
         {
             return Ok(await _directoryHelperService.GetDocumentTypes());

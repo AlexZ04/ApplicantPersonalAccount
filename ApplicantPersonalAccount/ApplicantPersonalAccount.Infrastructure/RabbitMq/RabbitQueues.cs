@@ -7,5 +7,9 @@
 
         public const string GET_DOCUMENT_TYPE = "document_type_queue";
         public const string GET_DIRECTORY_PROGRAMS = "directory_programs_queue";
+
+        public const string GET_USER_BY_ID = "get_user_queue";
+        public const string GET_INFO_FOR_EVENTS = "get_info_events_queue";
+        public const string EDIT_INFO_FOR_EVENTS = "edit_info_events_queue";
     }
 }
