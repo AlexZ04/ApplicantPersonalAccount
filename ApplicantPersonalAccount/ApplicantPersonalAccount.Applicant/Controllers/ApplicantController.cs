@@ -50,11 +50,11 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
         //[Authorize]
         //[CheckToken]
         public async Task<IActionResult> GetListOfPrograms(
-            [FromQuery] string faculty,
-            [FromQuery] string educationForm,
-            [FromQuery] string language,
-            [FromQuery] string code,
-            [FromQuery] string name,
+            [FromQuery] string? faculty,
+            [FromQuery] string? educationForm,
+            [FromQuery] string? language,
+            [FromQuery] string? code,
+            [FromQuery] string? name,
             [FromQuery] int page = 1,
             [FromQuery] int size = 5)
         {
@@ -64,11 +64,11 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
                 return BadRequest(new { Errors = validationErrors });
 
             return Ok(await _directoryHelperService.GetListOfPrograms(
-                faculty,
-                educationForm,
-                language,
-                code,
-                name,
+                faculty != null ? faculty : "",
+                educationForm != null ? educationForm : "",
+                language != null ? language : "",
+                code != null ? code : "",
+                name != null ? name : "",
                 page,
                 size));
         }

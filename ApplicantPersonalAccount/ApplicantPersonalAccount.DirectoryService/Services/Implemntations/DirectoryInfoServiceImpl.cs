@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
 using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models;
 using ApplicantPersonalAccount.Persistence.Contextes;
@@ -7,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
 {
-    public class IDirectoryInfoServiceImpl : IDirectoryInfoService
+    public class DirectoryInfoServiceImpl : IDirectoryInfoService
     {
         private readonly DirectoryDataContext _directoryContext;
 
-        public IDirectoryInfoServiceImpl(DirectoryDataContext directoryContext)
+        public DirectoryInfoServiceImpl(DirectoryDataContext directoryContext)
         {
             _directoryContext = directoryContext;
         }
@@ -77,6 +78,18 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
             };
 
             return result;
+        }
+
+        public async Task<ProgramPagedList> GetListOfPrograms(GetProgramsDTO message)
+        {
+            return await GetListOfPrograms(
+                message.Faculty,
+                message.EducationForm,
+                message.Language,
+                message.Code,
+                message.Name,
+                message.Page,
+                message.Size);
         }
     }
 }

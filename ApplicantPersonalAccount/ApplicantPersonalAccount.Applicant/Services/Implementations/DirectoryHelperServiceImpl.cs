@@ -17,6 +17,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE);
+            if (result == null) return new List<DocumentType>();
+
             var documentTypes = JsonSerializer.Deserialize<List<DocumentType>>(result)!;
 
             return documentTypes;
@@ -31,7 +33,24 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             int page = 1,
             int size = 5)
         {
-            throw new NotImplementedException();
+            var rpcClient = new RpcClient();
+            var request = new GetProgramsDTO
+            {
+                Faculty = faculty,
+                EducationForm = educationForm,
+                Language = language,
+                Code = code,
+                Name = name,
+                Page = page,
+                Size = size
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DIRECTORY_PROGRAMS);
+            if (result == "") return new ProgramPagedList();
+
+            var programs = JsonSerializer.Deserialize<ProgramPagedList>(result)!;
+
+            return programs;
         }
     }
 }

@@ -4,17 +4,16 @@ using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ApplicantPersonalAccount.DirectoryService.MessageListener
 {
-    public class DocumentTypeListener : BaseMessageListener<BrokerRequestDTO>
+    public class ProgramListener : BaseMessageListener<GetProgramsDTO>
     {
-        public DocumentTypeListener(IServiceProvider serviceProvider, IConfiguration config)
-            : base(serviceProvider, config, RabbitQueues.GET_DOCUMENT_TYPE) { }
+        public ProgramListener(IServiceProvider serviceProvider, IConfiguration config)
+            : base(serviceProvider, config, RabbitQueues.GET_DIRECTORY_PROGRAMS) { }
 
         protected override async Task<string?> ProcessMessage(
-            BrokerRequestDTO message,
+            GetProgramsDTO message,
             BasicDeliverEventArgs eventArgs,
             IServiceProvider serviceProvider)
         {
@@ -22,14 +21,14 @@ namespace ApplicantPersonalAccount.DirectoryService.MessageListener
 
             try
             {
-                var data = await directoryInfoService.GetDocumentTypes();
+                var data = await directoryInfoService.GetListOfPrograms(message);
                 return JsonSerializer.Serialize(data);
             }
             catch
             {
                 return "";
             }
-            
+
         }
     }
 }

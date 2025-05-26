@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.DTOs;
 
 namespace ApplicantPersonalAccount.DirectoryService.Services
 {
@@ -13,5 +14,6 @@ namespace ApplicantPersonalAccount.DirectoryService.Services
             string name,
             int page = 1,
             int size = 5);
+        public Task<ProgramPagedList> GetListOfPrograms(GetProgramsDTO message);
     }
 }
