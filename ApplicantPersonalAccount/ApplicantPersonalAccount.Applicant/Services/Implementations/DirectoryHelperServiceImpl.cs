@@ -1,15 +1,28 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.DTOs;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
+using System.Text.Json;
+using System.Web.Helpers;
 
 namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 {
     public class DirectoryHelperServiceImpl : IDirectoryHelperService
     {
-        public Task<List<DocumentType>> GetDocumentTypes()
+        public async Task<List<DocumentType>> GetDocumentTypes()
         {
-            throw new NotImplementedException();
+            var rpcClient = new RpcClient();
+            var request = new BrokerRequestDTO
+            {
+                Request = "request"
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE);
+            var documentTypes = JsonSerializer.Deserialize<List<DocumentType>>(result)!;
+
+            return documentTypes;
         }
 
-        public Task<ProgramPagedList> GetListOfPrograms(
+        public async Task<ProgramPagedList> GetListOfPrograms(
             string faculty,
             string educationForm,
             string language,

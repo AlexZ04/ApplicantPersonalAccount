@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.DirectoryService.Services;
+﻿using ApplicantPersonalAccount.DirectoryService.MessageListener;
+using ApplicantPersonalAccount.DirectoryService.Services;
 using ApplicantPersonalAccount.DirectoryService.Services.Implemntations;
 
 namespace ApplicantPersonalAccount.DirectoryService.Setup
@@ -10,6 +11,8 @@ namespace ApplicantPersonalAccount.DirectoryService.Setup
             services.AddHttpClient<IDirectoryService, DirectoryServiceImpl>();
             services.AddTransient<IDirectoryLoadingService, DirectoryLoadingServiceImpl>();
             services.AddTransient<IDirectoryInfoService, IDirectoryInfoServiceImpl>();
+
+            services.AddHostedService<DocumentTypeListener>();
         }
     }
 }
