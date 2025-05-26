@@ -13,6 +13,8 @@ namespace ApplicantPersonalAccount.Applicant.Setup
             services.AddScoped<IMessageProducer, RabbitMqProducer>();
 
             services.AddTransient<IApplicantService, ApplicantServiceImpl>();
+            services.AddTransient<IApplicationService, ApplicationServiceImpl>();
+            services.AddTransient<IDirectoryHelperService, DirectoryHelperServiceImpl>();
         }
     }
 }
