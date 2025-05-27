@@ -8,7 +8,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task SignUser(SignedToNotificationsEntity signingInfo);
         public Task UnsignUser(Guid userId);
         public Task DeleteProgram(Guid programId, Guid userId);
-        public Task<EnteranceEntity> GetUserEnterance(Guid userId);
+        public Task<EnteranceEntity> GetUserEnterance(Guid userId, bool createIfNecessary = false);
         public Task AddProgramToEnterance(EnteranceProgramEntity program, EnteranceEntity enterance);
     }
 }

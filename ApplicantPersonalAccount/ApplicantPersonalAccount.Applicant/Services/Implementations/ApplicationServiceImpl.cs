@@ -29,7 +29,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
         public async Task AddProgram(EducationProgramApplicationModel program, Guid userId)
         {
-            var enterance = await _applicationRepository.GetUserEnterance(userId);
+            var enterance = await _applicationRepository.GetUserEnterance(userId, true);
 
             var rpcClient = new RpcClient();
             var request = new GuidRequestDTO

@@ -4,6 +4,7 @@ using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 {
@@ -55,11 +56,15 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             await _applicationContext.SaveChangesAsync();
         }
 
-        public async Task<EnteranceEntity> GetUserEnterance(Guid userId)
+        public async Task<EnteranceEntity> GetUserEnterance(Guid userId, bool createIfNecessary = false)
         {
             var enterance = await _applicationContext.Enterances
                 .Include(p => p.Programs)
                 .FirstOrDefaultAsync(e => e.ApplicantId == userId);
+
+            if (enterance == null && createIfNecessary)
+                enterance = await CreateEnterance(userId);
+
 
             return enterance ?? throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
         }
@@ -70,6 +75,19 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             _applicationContext.EnterancePrograms.Add(program);
 
             await _applicationContext.SaveChangesAsync();
+        }
+
+        private async Task<EnteranceEntity> CreateEnterance(Guid userId)
+        {
+            var newEnterance = new EnteranceEntity
+            {
+                ApplicantId = userId,
+            };
+
+            _applicationContext.Enterances.Add(newEnterance);
+            await _applicationContext.SaveChangesAsync();
+
+            return newEnterance;
         }
     }
 }

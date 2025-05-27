@@ -4,11 +4,11 @@ namespace ApplicantPersonalAccount.Persistence.Entities.ApplicationDb
 {
     public class EnteranceEntity
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid ApplicantId { get; set; }
-        public Guid? ManagerId { get; set; }
-        public EnteranceStatus Status { get; set; }
-        public List<EnteranceProgramEntity> Programs {  get; set; }
-        public DateTime? UpdateTime { get; set; }
+        public Guid? ManagerId { get; set; } = null;
+        public EnteranceStatus Status { get; set; } = EnteranceStatus.Created;
+        public List<EnteranceProgramEntity> Programs { get; set; } = new List<EnteranceProgramEntity>();
+        public DateTime? UpdateTime { get; set; } = null;
     }
 }
