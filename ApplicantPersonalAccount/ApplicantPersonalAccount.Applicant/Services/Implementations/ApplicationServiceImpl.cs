@@ -7,6 +7,7 @@ using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
+using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using System.Text.Json;
@@ -46,8 +47,9 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             if (enterance.Programs.Count() > 0)
                 await CheckEducationLevel(enterance, selectedEducationLevelName);
 
-            var userDocuments = await _documentRepository
-                .GetUserDocuments(FileDocumentType.Educational, userId);
+            result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_DOCUMENTS);
+
+            var userDocuments = JsonSerializer.Deserialize<DocumentEntity>(result)!;
 
             var newProgram = new EnteranceProgramEntity
             {

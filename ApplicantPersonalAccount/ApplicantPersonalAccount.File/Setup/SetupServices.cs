@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Document.Services;
+﻿using ApplicantPersonalAccount.Document.MessageListeners;
+using ApplicantPersonalAccount.Document.Services;
 using ApplicantPersonalAccount.Document.Services.Implementations;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.Connection;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
@@ -12,6 +13,8 @@ namespace ApplicantPersonalAccount.Document.Setup
             services.AddTransient<IFileService, FileServiceImpl>();
             services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
             services.AddScoped<IMessageProducer, RabbitMqProducer>();
+
+            services.AddHostedService<GetUserDocumentsListener>();
         }
     }
 }
