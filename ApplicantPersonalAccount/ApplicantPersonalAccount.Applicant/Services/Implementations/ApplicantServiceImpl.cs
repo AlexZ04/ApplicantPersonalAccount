@@ -1,10 +1,12 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.DTOs;
+using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
+using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using System.Text.Json;
@@ -16,6 +18,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
     {
         private readonly IMessageProducer _messageProducer;
         private readonly JsonSerializerOptions _jsonOptions;
+        private readonly IApplicationRepository _applicationRepository;
 
         public ApplicantServiceImpl(
             IApplicationRepository applicationRepository,
@@ -26,6 +29,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             {
                 ReferenceHandler = ReferenceHandler.IgnoreCycles
             };
+
+            _applicationRepository = applicationRepository;
         }
 
         public async Task<ApplicantInfoForEventsModel> GetInfoForEvents(Guid userId)
@@ -95,6 +100,22 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             if (result != BrokerMessages.USER_IS_SUCCESSFULY_UNSIGNED)
                 throw new InvalidActionException(ErrorMessages.USER_IS_UNSIGNED);
+        }
+
+        public async Task<bool> CanUserEdit(Guid userId)
+        {
+            var status = await GetUserEnteranceStatus(userId);
+
+            if (status == EnteranceStatus.Closed)
+                return true;
+            return false;
+        }
+
+        private async Task<EnteranceStatus> GetUserEnteranceStatus(Guid userId)
+        {
+            var enterance = await _applicationRepository.GetUserEnterance(userId);
+
+            return enterance.Status;
         }
     }
 }
