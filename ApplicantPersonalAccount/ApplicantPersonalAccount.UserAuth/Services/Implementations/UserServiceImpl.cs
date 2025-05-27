@@ -65,7 +65,8 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         {
             UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
 
-            await CheckEditable(UserDescriptor.GetUserId(user));
+            if (UserDescriptor.GetUserRole(user) == "Applicant")
+                await CheckEditable(UserDescriptor.GetUserId(user));
 
             foundUser.Name = userNewInfo.Name;
             foundUser.Email = userNewInfo.Email;

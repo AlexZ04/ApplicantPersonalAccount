@@ -23,5 +23,15 @@ namespace ApplicantPersonalAccount.Infrastructure.Utilities
 
             return userEmail;
         }
+
+        public static string GetUserRole(ClaimsPrincipal principal)
+        {
+            string? userRole = principal.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (userRole == null)
+                throw new UnauthorizedAccessException();
+
+            return userRole;
+        }
     }
 }

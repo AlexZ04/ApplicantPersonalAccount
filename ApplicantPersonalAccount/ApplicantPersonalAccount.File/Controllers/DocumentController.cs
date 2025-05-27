@@ -84,7 +84,9 @@ namespace ApplicantPersonalAccount.Document.Controllers
         [CheckToken]
         public async Task<IActionResult> EditPassportInfo([FromBody] PassportInfoEditModel passport)
         {
-            await _fileService.EditPassport(passport, UserDescriptor.GetUserId(User));
+            await _fileService.EditPassport(passport,
+                UserDescriptor.GetUserId(User),
+                UserDescriptor.GetUserRole(User));
 
             return Ok();
         }
@@ -95,7 +97,8 @@ namespace ApplicantPersonalAccount.Document.Controllers
         public async Task<IActionResult> EditEducationInfo([FromBody] EducationInfoEditModel education,
             [FromQuery] Guid documentId)
         {
-            await _fileService.EditEducational(education, documentId, UserDescriptor.GetUserId(User));
+            await _fileService.EditEducational(education, documentId,
+                UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User));
 
             return Ok();
         }

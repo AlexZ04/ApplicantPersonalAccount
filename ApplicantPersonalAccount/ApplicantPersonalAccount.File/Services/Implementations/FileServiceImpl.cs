@@ -121,18 +121,22 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             return userDocuments;
         }
 
-        public async Task EditPassport(PassportInfoEditModel editedPassport, Guid userId)
+        public async Task EditPassport(PassportInfoEditModel editedPassport, Guid userId, string userRole)
         {
-            await CheckEditable(userId);
+            if (userRole == "Applicant")
+                await CheckEditable(userId);
 
             await _documentRepository.EditPassport(editedPassport, userId);
         }
 
-        public async Task EditEducational(EducationInfoEditModel editedEducation,
+        public async Task EditEducational(
+            EducationInfoEditModel editedEducation,
             Guid documentId,
-            Guid userId)
+            Guid userId,
+            string userRole)
         {
-            await CheckEditable(userId);
+            if (userRole == "Applicant")
+                await CheckEditable(userId);
 
             await _documentRepository.EditEducational(editedEducation, documentId, userId);
         }

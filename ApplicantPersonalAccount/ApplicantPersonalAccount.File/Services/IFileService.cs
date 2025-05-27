@@ -15,8 +15,9 @@ namespace ApplicantPersonalAccount.Document.Services
         public Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType,
             Guid userId,
             bool importingAll = false);
-        public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId);
-        public Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId);
+        public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId, string userRole);
+        public Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId,
+            Guid userId, string userRole);
         public Task<DocumentType> GetEducationDocumentInfo(Guid documentId);
         public Task<PassportInfoModel> GetPassportInfo(Guid userId);
     }
