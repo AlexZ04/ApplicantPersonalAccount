@@ -1,6 +1,8 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.User;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -63,6 +65,8 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         {
             UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
 
+            await CheckEditable(UserDescriptor.GetUserId(user));
+
             foundUser.Name = userNewInfo.Name;
             foundUser.Email = userNewInfo.Email;
             foundUser.Phone = userNewInfo.Phone;
@@ -74,6 +78,19 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             foundUser.UpdateTime = DateTime.UtcNow.ToUniversalTime();
 
             await _userRepository.SaveChanges();
+        }
+
+        private async Task CheckEditable(Guid userId)
+        {
+            var rpcClient = new RpcClient();
+            var request = new GuidRequestDTO
+            {
+                Id = userId
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.CAN_EDIT_LISTENER);
+            if (result == null || result == "false")
+                throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
         }
     }
 }

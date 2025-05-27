@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Applicant.Services;
+﻿using ApplicantPersonalAccount.Applicant.MessageListeners;
+using ApplicantPersonalAccount.Applicant.Services;
 using ApplicantPersonalAccount.Applicant.Services.Implementations;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.Connection;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
@@ -15,6 +16,8 @@ namespace ApplicantPersonalAccount.Applicant.Setup
             services.AddTransient<IApplicantService, ApplicantServiceImpl>();
             services.AddTransient<IApplicationService, ApplicationServiceImpl>();
             services.AddTransient<IDirectoryHelperService, DirectoryHelperServiceImpl>();
+
+            services.AddHostedService<CanEditListener>();
         }
     }
 }

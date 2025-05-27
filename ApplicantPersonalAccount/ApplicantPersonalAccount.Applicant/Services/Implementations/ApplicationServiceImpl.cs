@@ -17,10 +17,14 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
     public class ApplicationServiceImpl : IApplicationService
     {
         private readonly IApplicationRepository _applicationRepository;
+        private readonly IApplicantService _applicationService;
 
-        public ApplicationServiceImpl(IApplicationRepository applicationRepository)
+        public ApplicationServiceImpl(
+            IApplicationRepository applicationRepository,
+            IApplicantService applicationService)
         {
             _applicationRepository = applicationRepository;
+            _applicationService = applicationService;
         }
 
         public async Task AddProgram(EducationProgramApplicationModel program, Guid userId)
@@ -65,7 +69,10 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
         public async Task EditProgram(EducationProgramApplicationEditModel program, Guid programId, Guid userId)
         {
-            throw new NotImplementedException();
+            var canEdit = await _applicationService.CanUserEdit(userId);
+
+            if (!canEdit)
+                throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
         }
 
         public async Task DeleteProgram(Guid programId, Guid userId)

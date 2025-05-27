@@ -1,9 +1,11 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
 using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Common.Models.Document;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
@@ -121,6 +123,8 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
 
         public async Task EditPassport(PassportInfoEditModel editedPassport, Guid userId)
         {
+            await CheckEditable(userId);
+
             await _documentRepository.EditPassport(editedPassport, userId);
         }
 
@@ -128,6 +132,8 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             Guid documentId,
             Guid userId)
         {
+            await CheckEditable(userId);
+
             await _documentRepository.EditEducational(editedEducation, documentId, userId);
         }
 
@@ -169,6 +175,19 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
                 WhenIssued = info.WhenIssued,
                 ByWhoIssued = info.ByWhoIssued
             };
+        }
+
+        private async Task CheckEditable(Guid userId)
+        {
+            var rpcClient = new RpcClient();
+            var request = new GuidRequestDTO
+            {
+                Id = userId
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.CAN_EDIT_LISTENER);
+            if (result == null || result == "false")
+                throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
         }
     }
 }

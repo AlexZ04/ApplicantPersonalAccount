@@ -34,5 +34,7 @@
 
         public const string ONE_OF_THE_SERVICES_NOT_WORKING = "It seems that one of the services is not working." +
             "You request will be done when service will return to work";
+
+        public const string USER_CANT_EDIT_THIS_DATA = "User can't edit this data!";
     }
 }

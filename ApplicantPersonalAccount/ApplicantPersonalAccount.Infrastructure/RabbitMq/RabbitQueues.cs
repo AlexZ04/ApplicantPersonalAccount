@@ -14,5 +14,7 @@
         public const string EDIT_INFO_FOR_EVENTS = "edit_info_events_queue";
 
         public const string GET_USER_DOCUMENTS = "user_documents_queue";
+
+        public const string CAN_EDIT_LISTENER = "can_edit_queue";
     }
 }

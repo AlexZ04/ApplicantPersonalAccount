@@ -1,4 +1,6 @@
-﻿using ApplicantPersonalAccount.UserAuth.MessageListener;
+﻿using ApplicantPersonalAccount.Infrastructure.RabbitMq.Connection;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
+using ApplicantPersonalAccount.UserAuth.MessageListener;
 using ApplicantPersonalAccount.UserAuth.Services;
 using ApplicantPersonalAccount.UserAuth.Services.Implementations;
 
@@ -15,6 +17,9 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
             services.AddHostedService<GetEventsInfoListener>();
             services.AddHostedService<GetUserByIdListener>();
             services.AddHostedService<EditInfoEventsListener>();
+
+            services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
+            services.AddScoped<IMessageProducer, RabbitMqProducer>();
         }
     }
 }
