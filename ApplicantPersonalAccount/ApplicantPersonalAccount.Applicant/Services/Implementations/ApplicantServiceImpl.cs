@@ -4,6 +4,7 @@ using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using System.Text.Json;
@@ -30,18 +31,18 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         public async Task<ApplicantInfoForEventsModel> GetInfoForEvents(Guid userId)
         {
             var rpcClient = new RpcClient();
-            var request = new GetInfoForEventsRequestDTO
+            var request = new GuidRequestDTO
             {
-                UserId = userId
+                Id = userId
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_INFO_FOR_EVENTS);
-            ProcessResponse(result);
+            ResponseProcessor.ProcessResponse(result);
 
             var infoEventsData = JsonSerializer.Deserialize<InfoForEventsEntity>(result, _jsonOptions)!;
 
             result = await rpcClient.CallAsync(userId.ToString(), RabbitQueues.GET_USER_BY_ID);
-            ProcessResponse(result);
+            ResponseProcessor.ProcessResponse(result);
 
             var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;
 
@@ -94,12 +95,6 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             if (result != BrokerMessages.USER_IS_SUCCESSFULY_UNSIGNED)
                 throw new InvalidActionException(ErrorMessages.USER_IS_UNSIGNED);
-        }
-
-        private void ProcessResponse(string response)
-        {
-            if (response == null)
-                throw new ProcessingException();
         }
     }
 }

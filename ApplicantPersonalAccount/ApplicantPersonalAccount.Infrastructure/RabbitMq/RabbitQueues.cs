@@ -7,6 +7,7 @@
 
         public const string GET_DOCUMENT_TYPE = "document_type_queue";
         public const string GET_DIRECTORY_PROGRAMS = "directory_programs_queue";
+        public const string GET_EDUCATION_PROGRAM_BY_ID = "education_program_by_id";
 
         public const string GET_USER_BY_ID = "get_user_queue";
         public const string GET_INFO_FOR_EVENTS = "get_info_events_queue";
