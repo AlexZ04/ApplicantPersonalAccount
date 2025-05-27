@@ -4,7 +4,7 @@ namespace ApplicantPersonalAccount.Common.DTOs
 {
     public class BrokerEditInfoForEventsDTO
     {
-        Guid UserID { get; set; }
-        EditApplicantInfoForEventsModel Model { get; set; }
+        public Guid UserId { get; set; }
+        public EditApplicantInfoForEventsModel Model { get; set; }
     }
 }

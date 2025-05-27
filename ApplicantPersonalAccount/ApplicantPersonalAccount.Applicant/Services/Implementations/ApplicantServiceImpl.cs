@@ -47,9 +47,15 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             return userInfo;
         }
 
-        public Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId)
+        public void EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId)
         {
-            throw new NotImplementedException();
+            var request = new BrokerEditInfoForEventsDTO
+            {
+                UserId = userId,
+                Model = editedInfo,
+            };
+
+            _messageProducer.SendMessage(request, RabbitQueues.NOTIFICATION);
         }
 
         public async Task SignToNotifications(string userEmail)
