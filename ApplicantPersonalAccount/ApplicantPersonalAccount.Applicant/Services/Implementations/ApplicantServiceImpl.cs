@@ -4,6 +4,7 @@ using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
+using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using System.Text.Json;
 
@@ -29,9 +30,21 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             string result = await rpcClient.CallAsync(userId.ToString(), RabbitQueues.GET_INFO_FOR_EVENTS);
             ProcessResponse(result);
 
-            var data = JsonSerializer.Deserialize<ApplicantInfoForEventsModel>(result)!;
+            var infoEventsData = JsonSerializer.Deserialize<InfoForEventsEntity>(result)!;
 
-            return data;
+            result = await rpcClient.CallAsync(userId.ToString(), RabbitQueues.GET_USER_BY_ID);
+            ProcessResponse(result);
+
+            var userData = JsonSerializer.Deserialize<UserEntity>(result)!;
+
+            var userInfo = new ApplicantInfoForEventsModel
+            {
+                EducationPlace = infoEventsData.EducationPlace,
+                SocialNetworks = infoEventsData.SocialNetwork,
+                Address = userData.Address
+            };
+
+            return userInfo;
         }
 
         public Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId)

@@ -13,6 +13,7 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
             services.AddTransient<IUserService, UserServiceImpl>();
 
             services.AddHostedService<GetEventsInfoListener>();
+            services.AddHostedService<GetUserByIdListener>();
         }
     }
 }
