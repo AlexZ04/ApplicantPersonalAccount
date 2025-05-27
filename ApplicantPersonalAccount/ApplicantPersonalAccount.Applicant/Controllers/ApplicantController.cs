@@ -109,7 +109,7 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
             if (validationErrors.Count() > 0)
                 return BadRequest(new { Errors = validationErrors });
 
-            await _applicationService.AddProgram(program, UserDescriptor.GetUserId(User));
+            await _applicationService.AddProgram(program, UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User));
 
             return Ok();
         }
@@ -125,7 +125,8 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
             if (validationErrors.Count() > 0)
                 return BadRequest(new { Errors = validationErrors });
 
-            await _applicationService.EditProgram(program, programId, UserDescriptor.GetUserId(User));
+            await _applicationService.EditProgram(program, programId,
+                UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User));
 
             return Ok();
         }
@@ -135,7 +136,8 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
         [CheckToken]
         public async Task<IActionResult> DeleteProgram([FromRoute] Guid programId)
         {
-            await _applicationService.DeleteProgram(programId, UserDescriptor.GetUserId(User));
+            await _applicationService.DeleteProgram(programId, 
+                UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User));
 
             return Ok();
         }

@@ -27,8 +27,11 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             _applicationService = applicationService;
         }
 
-        public async Task AddProgram(EducationProgramApplicationModel program, Guid userId)
+        public async Task AddProgram(EducationProgramApplicationModel program, Guid userId, string userRole)
         {
+            if (userRole == "Applicant")
+                await CheckEditable(userId);
+
             var enterance = await _applicationRepository.GetUserEnterance(userId, true);
 
             var rpcClient = new RpcClient();
@@ -53,7 +56,9 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_DOCUMENTS);
 
-            var userDocuments = JsonSerializer.Deserialize<DocumentEntity>(result)!;
+            var userDocuments = JsonSerializer.Deserialize<List<DocumentEntity>>(result)!;
+
+            await CheckDocumentsCompatibility(userDocuments, selectedEducationLevelName);
 
             var newProgram = new EnteranceProgramEntity
             {
@@ -67,16 +72,18 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             await _applicationRepository.AddProgramToEnterance(newProgram, enterance);
         }
 
-        public async Task EditProgram(EducationProgramApplicationEditModel program, Guid programId, Guid userId)
+        public async Task EditProgram(EducationProgramApplicationEditModel program, Guid programId,
+            Guid userId, string userRole)
         {
-            var canEdit = await _applicationService.CanUserEdit(userId);
-
-            if (!canEdit)
-                throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
+            if (userRole == "Applicant")
+                await CheckEditable(userId);
         }
 
-        public async Task DeleteProgram(Guid programId, Guid userId)
+        public async Task DeleteProgram(Guid programId, Guid userId, string userRole)
         {
+            if (userRole == "Applicant")
+                await CheckEditable(userId);
+
             await _applicationRepository.DeleteProgram(programId, userId);
         }
 
@@ -103,6 +110,19 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 && ((educationLevelName == "Специалитет" && selectedEducationLevelName == "Бакалавриат") ||
                 (educationLevelName == "Бакалавриат" && selectedEducationLevelName == "Специалитет")))
                 throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
+        }
+
+        private async Task CheckDocumentsCompatibility(List<DocumentEntity> documents, string selectedEducationLevelName)
+        {
+            throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
+        }
+
+        private async Task CheckEditable(Guid userId)
+        {
+            var canEdit = await _applicationService.CanUserEdit(userId);
+
+            if (!canEdit)
+                throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
         }
     }
 }
