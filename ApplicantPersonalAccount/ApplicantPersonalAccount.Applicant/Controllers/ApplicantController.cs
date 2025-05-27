@@ -81,22 +81,22 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
             return Ok(await _directoryHelperService.GetDocumentTypes());
         }
 
-        [HttpPut("info-for-events")]
-        [Authorize(Roles = "Applicant")]
-        [CheckToken]
-        public async Task<IActionResult> EditInfoForEvents([FromBody] EditApplicantInfoForEventsModel editedInfo)
-        {
-            await _applicantService.EditInfoForEvents(editedInfo, UserDescriptor.GetUserId(User));
-
-            return Ok();
-        }
-
         [HttpGet("info-for-events")]
         [Authorize(Roles = "Applicant")]
         [CheckToken]
         public async Task<IActionResult> GetInfoForEvents()
         {
             return Ok(await _applicantService.GetInfoForEvents(UserDescriptor.GetUserId(User)));
+        }
+
+        [HttpPut("info-for-events")]
+        [Authorize(Roles = "Applicant")]
+        [CheckToken]
+        public IActionResult EditInfoForEvents([FromBody] EditApplicantInfoForEventsModel editedInfo)
+        {
+            _applicantService.EditInfoForEvents(editedInfo, UserDescriptor.GetUserId(User));
+
+            return Ok();
         }
 
         [HttpPost("program")]

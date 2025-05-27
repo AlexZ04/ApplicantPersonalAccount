@@ -12,14 +12,12 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 {
     public class ApplicantServiceImpl : IApplicantService
     {
-        private readonly IApplicationRepository _applicationRepository;
         private readonly IMessageProducer _messageProducer;
 
         public ApplicantServiceImpl(
             IApplicationRepository applicationRepository,
             IMessageProducer messageProducer)
         {
-            _applicationRepository = applicationRepository;
             _messageProducer = messageProducer;
         }
 

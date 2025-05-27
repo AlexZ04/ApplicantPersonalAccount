@@ -10,7 +10,7 @@ namespace ApplicantPersonalAccount.UserAuth.MessageListener
     public class EditInfoEventsListener : BaseMessageListener<BrokerEditInfoForEventsDTO>
     {
         public EditInfoEventsListener(IServiceProvider serviceProvider, IConfiguration config)
-            : base(serviceProvider, config, RabbitQueues.NOTIFICATION) { }
+            : base(serviceProvider, config, RabbitQueues.EDIT_INFO_FOR_EVENTS) { }
 
         protected override async Task<string?> ProcessMessage(
             BrokerEditInfoForEventsDTO message,

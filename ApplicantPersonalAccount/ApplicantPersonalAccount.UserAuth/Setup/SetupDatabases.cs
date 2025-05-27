@@ -21,7 +21,7 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
         public static void AddRedis(WebApplicationBuilder builder)
         {
             builder.Services.AddStackExchangeRedisCache(options => {
-                options.Configuration = "localhost";
+                options.Configuration = "localhost:6379";
                 options.InstanceName = "ApplicantAPI";
             });
         }

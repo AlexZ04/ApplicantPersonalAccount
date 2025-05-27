@@ -2,7 +2,6 @@
 using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using System.Text.Json;
-using System.Web.Helpers;
 
 namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 {

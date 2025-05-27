@@ -14,6 +14,7 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
 
             services.AddHostedService<GetEventsInfoListener>();
             services.AddHostedService<GetUserByIdListener>();
+            services.AddHostedService<EditInfoEventsListener>();
         }
     }
 }
