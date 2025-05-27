@@ -6,8 +6,8 @@ namespace ApplicantPersonalAccount.UserAuth.Services
     public interface IUserService
     {
         public Task<UserProfileModel> GetProfile(ClaimsPrincipal user);
-        public Task ChangePassword(PasswordEditModel passwordModel, ClaimsPrincipal user);
-        public Task ChangeEmail(EmailEditModel passwordModel, ClaimsPrincipal user);
-        public Task EditProfile(UserEditModel userNewInfo, ClaimsPrincipal user);
+        public Task ChangePassword(PasswordEditModel passwordModel, Guid userId);
+        public Task ChangeEmail(EmailEditModel passwordModel, Guid userId);
+        public Task EditProfile(UserEditModel userNewInfo, Guid userId, string userRole);
     }
 }

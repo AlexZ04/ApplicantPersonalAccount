@@ -39,9 +39,9 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             return profile;
         }
 
-        public async Task ChangePassword(PasswordEditModel passwordModel, ClaimsPrincipal user)
+        public async Task ChangePassword(PasswordEditModel passwordModel, Guid userId)
         {
-            UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
+            UserEntity foundUser = await _userRepository.GetUserById(userId);
 
             if (!Hasher.CheckPassword(foundUser.Password, passwordModel.OldPassword))
                 throw new ImpossibleActionException(ErrorMessages.INVALID_PASSWORD);
@@ -51,9 +51,9 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             await _userRepository.SaveChanges();
         }
 
-        public async Task ChangeEmail(EmailEditModel passwordModel, ClaimsPrincipal user)
+        public async Task ChangeEmail(EmailEditModel passwordModel, Guid userId)
         {
-            UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
+            UserEntity foundUser = await _userRepository.GetUserById(userId);
 
             foundUser.Email = passwordModel.Email;
             foundUser.UpdateTime = DateTime.UtcNow.ToUniversalTime();
@@ -61,12 +61,12 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             await _userRepository.SaveChanges();
         }
 
-        public async Task EditProfile(UserEditModel userNewInfo, ClaimsPrincipal user)
+        public async Task EditProfile(UserEditModel userNewInfo, Guid userId, string userRole)
         {
-            UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
+            UserEntity foundUser = await _userRepository.GetUserById(userId);
 
-            if (UserDescriptor.GetUserRole(user) == "Applicant")
-                await CheckEditable(UserDescriptor.GetUserId(user));
+            if (userRole == "Applicant")
+                await CheckEditable(userId);
 
             foundUser.Name = userNewInfo.Name;
             foundUser.Email = userNewInfo.Email;

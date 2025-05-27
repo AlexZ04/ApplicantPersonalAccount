@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Common.Models.User;
 using ApplicantPersonalAccount.Infrastructure.Filters;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.UserAuth.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +25,7 @@ namespace ApplicantPersonalAccount.UserAuth.Controllers
         [CheckToken]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordEditModel passwordModel)
         {
-            await _userService.ChangePassword(passwordModel, User);
+            await _userService.ChangePassword(passwordModel, UserDescriptor.GetUserId(User));
 
             return Ok();
         }
@@ -34,7 +35,7 @@ namespace ApplicantPersonalAccount.UserAuth.Controllers
         [CheckToken]
         public async Task<IActionResult> ChangeEmail([FromBody] EmailEditModel emailModel)
         {
-            await _userService.ChangeEmail(emailModel, User);
+            await _userService.ChangeEmail(emailModel, UserDescriptor.GetUserId(User));
 
             return Ok();
         }
@@ -44,7 +45,8 @@ namespace ApplicantPersonalAccount.UserAuth.Controllers
         [CheckToken]
         public async Task<IActionResult> EditProfile([FromBody] UserEditModel userNewInfo)
         {
-            await _userService.EditProfile(userNewInfo, User);
+            await _userService.EditProfile(userNewInfo, UserDescriptor.GetUserId(User),
+                UserDescriptor.GetUserRole(User));
 
             return Ok();
         }
