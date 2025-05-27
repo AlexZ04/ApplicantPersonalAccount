@@ -4,24 +4,38 @@ using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ApplicantPersonalAccount.UserAuth.MessageListener
 {
-    public class GetEventsInfoListener : BaseMessageListener<Guid>
+    public class GetEventsInfoListener : BaseMessageListener<GetInfoForEventsRequestDTO>
     {
+        private readonly JsonSerializerOptions _jsonOptions;
+
         public GetEventsInfoListener(IServiceProvider serviceProvider, IConfiguration config)
-            : base(serviceProvider, config, RabbitQueues.GET_INFO_FOR_EVENTS) { }
+            : base(serviceProvider, config, RabbitQueues.GET_INFO_FOR_EVENTS) 
+        {
+            _jsonOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            };
+        }
 
         protected override async Task<string?> ProcessMessage(
-            Guid message,
+            GetInfoForEventsRequestDTO message,
             BasicDeliverEventArgs eventArgs,
             IServiceProvider serviceProvider)
         {
-            var userRep = serviceProvider.GetRequiredService<IUserRepository>();
-            
-            var userData = await userRep.GetInfoForEvents(message);
-
-            return JsonSerializer.Serialize(userData);
+            try
+            {
+                var userRep = serviceProvider.GetRequiredService<IUserRepository>();
+                var userData = await userRep.GetInfoForEvents(message.UserId);
+                return JsonSerializer.Serialize(userData, _jsonOptions);
+            }
+            catch
+            {
+                return "";
+            }
         }
     }
 }

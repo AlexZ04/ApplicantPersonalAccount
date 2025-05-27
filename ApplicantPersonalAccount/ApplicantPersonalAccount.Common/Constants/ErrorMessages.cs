@@ -32,7 +32,7 @@
         public const string INVALID_KEY = "Invalid key!";
         public const string CANT_SEND_EMAIL = "Can't send email!";
 
-        public const string ONE_OF_THE_SERVICES_NOT_WORKING = "It seems that one of the services is not working.\n" +
+        public const string ONE_OF_THE_SERVICES_NOT_WORKING = "It seems that one of the services is not working." +
             "You request will be done when service will return to work";
     }
 }

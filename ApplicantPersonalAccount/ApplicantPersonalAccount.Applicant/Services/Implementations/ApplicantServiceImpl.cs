@@ -7,33 +7,43 @@ using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 {
     public class ApplicantServiceImpl : IApplicantService
     {
         private readonly IMessageProducer _messageProducer;
+        private readonly JsonSerializerOptions _jsonOptions;
 
         public ApplicantServiceImpl(
             IApplicationRepository applicationRepository,
             IMessageProducer messageProducer)
         {
             _messageProducer = messageProducer;
+            _jsonOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            };
         }
 
         public async Task<ApplicantInfoForEventsModel> GetInfoForEvents(Guid userId)
         {
             var rpcClient = new RpcClient();
+            var request = new GetInfoForEventsRequestDTO
+            {
+                UserId = userId
+            };
 
-            string result = await rpcClient.CallAsync(userId.ToString(), RabbitQueues.GET_INFO_FOR_EVENTS);
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_INFO_FOR_EVENTS);
             ProcessResponse(result);
 
-            var infoEventsData = JsonSerializer.Deserialize<InfoForEventsEntity>(result)!;
+            var infoEventsData = JsonSerializer.Deserialize<InfoForEventsEntity>(result, _jsonOptions)!;
 
             result = await rpcClient.CallAsync(userId.ToString(), RabbitQueues.GET_USER_BY_ID);
             ProcessResponse(result);
 
-            var userData = JsonSerializer.Deserialize<UserEntity>(result)!;
+            var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;
 
             var userInfo = new ApplicantInfoForEventsModel
             {
@@ -53,7 +63,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 Model = editedInfo,
             };
 
-            _messageProducer.SendMessage(request, RabbitQueues.NOTIFICATION);
+            _messageProducer.SendMessage(request, RabbitQueues.EDIT_INFO_FOR_EVENTS);
         }
 
         public async Task SignToNotifications(string userEmail)
