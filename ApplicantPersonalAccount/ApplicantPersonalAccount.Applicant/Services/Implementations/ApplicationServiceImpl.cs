@@ -6,10 +6,12 @@ using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
+using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace ApplicantPersonalAccount.Applicant.Services.Implementations
@@ -17,14 +19,17 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
     public class ApplicationServiceImpl : IApplicationService
     {
         private readonly IApplicationRepository _applicationRepository;
-        private readonly IApplicantService _applicationService;
+        private readonly IApplicantService _applicantService;
+        private readonly ApplicationDataContext _applicationDataContext;
 
         public ApplicationServiceImpl(
             IApplicationRepository applicationRepository,
-            IApplicantService applicationService)
+            IApplicantService applicationService,
+            ApplicationDataContext applicationContext)
         {
             _applicationRepository = applicationRepository;
-            _applicationService = applicationService;
+            _applicantService = applicationService;
+            _applicationDataContext = applicationContext;
         }
 
         public async Task AddProgram(EducationProgramApplicationModel program, Guid userId, string userRole)
@@ -77,6 +82,16 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         {
             if (userRole == "Applicant")
                 await CheckEditable(userId);
+
+            var foundProgram = await _applicationDataContext.EnterancePrograms
+                .FirstOrDefaultAsync(p => p.Id == programId);
+
+            if (foundProgram == null)
+                throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+
+            foundProgram.Priority = program.Priority;
+
+            await _applicationDataContext.SaveChangesAsync();
         }
 
         public async Task DeleteProgram(Guid programId, Guid userId, string userRole)
@@ -128,7 +143,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
         private async Task CheckEditable(Guid userId)
         {
-            var canEdit = await _applicationService.CanUserEdit(userId);
+            var canEdit = await _applicantService.CanUserEdit(userId);
 
             if (!canEdit)
                 throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
