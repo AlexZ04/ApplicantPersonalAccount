@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Common.Enums;
+﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Models.Document;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 
@@ -14,5 +15,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
             bool importingAll = false);
         public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId);
         public Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId);
+        public Task<DocumentType> GetDocumentTypeById(Guid id);
     }
 }

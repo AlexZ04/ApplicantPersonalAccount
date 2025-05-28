@@ -1,10 +1,14 @@
-﻿using ApplicantPersonalAccount.Common.Constants;
+﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Document;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 {
@@ -129,25 +133,35 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             Guid documentId, 
             Guid userId)
         {
-            //var education = await _fileDataContext.EducationInfos
-            //    .Include(i => i.Document)
-            //    .FirstOrDefaultAsync(i => i.UserId == userId && i.Document.Id == documentId);
+            var education = await _fileDataContext.EducationInfos
+                .Include(i => i.Document)
+                .FirstOrDefaultAsync(i => i.UserId == userId && i.Document.Id == documentId);
 
-            //if (education == null)
-            //    throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+            if (education == null)
+                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
-            //if (editedEducation.DocumentTypeId != null)
-            //{
-            //var documentType = await _directoryDataContext.DocumentTypes
-            //    .FirstOrDefaultAsync(t => t.Id == editedEducation.DocumentTypeId);
+            if (editedEducation.DocumentTypeId != null)
+                await GetDocumentTypeById((Guid)editedEducation.DocumentTypeId);
 
-            //    if (documentType == null)
-            //        throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
-            //}
-
-            //education.DocumentTypeId = editedEducation.DocumentTypeId;
+            education.DocumentTypeId = editedEducation.DocumentTypeId;
 
             await _fileDataContext.SaveChangesAsync();
+        }
+
+        public async Task<DocumentType> GetDocumentTypeById(Guid id)
+        {
+            var rpcClient = new RpcClient();
+            var request = new GuidRequestDTO
+            {
+                Id = id
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID);
+            if (result == null) throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+
+            var documentType = JsonSerializer.Deserialize<DocumentType>(result)!;
+
+            return documentType;
         }
     }
 }

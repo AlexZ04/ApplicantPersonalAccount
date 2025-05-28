@@ -154,7 +154,7 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             if (info.DocumentTypeId == null)
                 throw new NotFoundException(ErrorMessages.THERE_IS_NO_INFO_FOR_THIS_FILE);
 
-            var documentType = await GetDocumentTypeById((Guid)info.DocumentTypeId);
+            var documentType = await _documentRepository.GetDocumentTypeById((Guid)info.DocumentTypeId);
 
             return documentType;
         }
@@ -188,22 +188,6 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             string result = await rpcClient.CallAsync(request, RabbitQueues.CAN_EDIT_LISTENER);
             if (result == null || result == "false")
                 throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
-        }
-
-        private async Task<DocumentType> GetDocumentTypeById(Guid id)
-        {
-            var rpcClient = new RpcClient();
-            var request = new GuidRequestDTO
-            {
-                Id = id
-            };
-
-            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID);
-            if (result == null) throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
-
-            var documentType = JsonSerializer.Deserialize<DocumentType>(result)!;
-
-            return documentType;
         }
     }
 }
