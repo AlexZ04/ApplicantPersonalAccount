@@ -49,14 +49,16 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             if (enterance.Programs.Count > GeneralSettings.MAX_CHOSEN_PROGRAMS)
                 throw new InvalidActionException(ErrorMessages.HAVE_MAX_PROGRAMS);
 
+            var selectedEducationLevelId = educationProgram.EducationLevel.Id;
+
             if (enterance.Programs.Count() > 0)
-                await CheckEducationLevel(enterance, educationProgram.EducationLevel.Id);
+                await CheckEducationLevel(enterance, selectedEducationLevelId);
 
             result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_DOCUMENTS);
 
             var userDocuments = JsonSerializer.Deserialize<List<DocumentEntity>>(result)!;
 
-            //await CheckDocumentsCompatibility(userDocuments, selectedEducationLevelName);
+            await CheckDocumentsCompatibility(userDocuments, selectedEducationLevelId);
 
             var newProgram = new EnteranceProgramEntity
             {
@@ -105,9 +107,23 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
         }
 
-        private async Task CheckDocumentsCompatibility(List<DocumentEntity> documents, string selectedEducationLevelName)
+        private async Task CheckDocumentsCompatibility(List<DocumentEntity> documents, int selectedEducationLevelId)
         {
-            throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
+            var availableLevels = new HashSet<int>();
+            var rpcClient = new RpcClient();
+
+            foreach (var document in documents)
+            {
+                var currentDocument = await GetDocumentTypeById(document.Id, rpcClient);
+
+                availableLevels.Add(currentDocument.EducationLevel.Id);
+
+                foreach (var educationLevel in currentDocument.NextEducationLevels) 
+                    availableLevels.Add(educationLevel.Id);
+            }
+
+            if (!availableLevels.Contains(selectedEducationLevelId))
+                throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
         }
 
         private async Task CheckEditable(Guid userId)
@@ -116,6 +132,21 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             if (!canEdit)
                 throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
+        }
+
+        private async Task<DocumentType> GetDocumentTypeById(Guid id, RpcClient rpcClient)
+        {
+            var request = new GuidRequestDTO
+            {
+                Id = id
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID);
+            if (result == null) throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+
+            var documentType = JsonSerializer.Deserialize<DocumentType>(result)!;
+
+            return documentType;
         }
     }
 }
