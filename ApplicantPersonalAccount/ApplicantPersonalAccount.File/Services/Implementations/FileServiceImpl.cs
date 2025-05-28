@@ -12,6 +12,7 @@ using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace ApplicantPersonalAccount.Document.Services.Implementations
 {
@@ -143,24 +144,19 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
 
         public async Task<DocumentType> GetEducationDocumentInfo(Guid documentId)
         {
-            //var info = await _fileContext.EducationInfos
-            //    .Include(i => i.Document)
-            //    .FirstOrDefaultAsync(i => i.Document.Id == documentId);
+            var info = await _fileContext.EducationInfos
+                .Include(i => i.Document)
+                .FirstOrDefaultAsync(i => i.Document.Id == documentId);
 
-            //if (info == null)
-            //    throw new NotFoundException(ErrorMessages.DOCUMENT_NOT_FOUND);
+            if (info == null)
+                throw new NotFoundException(ErrorMessages.DOCUMENT_NOT_FOUND);
 
-            //if (info.DocumentTypeId == null)
-            //    throw new NotFoundException(ErrorMessages.THERE_IS_NO_INFO_FOR_THIS_FILE);
+            if (info.DocumentTypeId == null)
+                throw new NotFoundException(ErrorMessages.THERE_IS_NO_INFO_FOR_THIS_FILE);
 
-            //var documentType = await _directoryContext.DocumentTypes
-            //    .FindAsync(info.DocumentTypeId);
+            var documentType = await GetDocumentTypeById((Guid)info.DocumentTypeId);
 
-            //if (documentType == null)
-            //    throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
-
-            //return documentType;
-            throw new NotImplementedException();
+            return documentType;
         }
 
         public async Task<PassportInfoModel> GetPassportInfo(Guid userId)
@@ -192,6 +188,22 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             string result = await rpcClient.CallAsync(request, RabbitQueues.CAN_EDIT_LISTENER);
             if (result == null || result == "false")
                 throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
+        }
+
+        private async Task<DocumentType> GetDocumentTypeById(Guid id)
+        {
+            var rpcClient = new RpcClient();
+            var request = new GuidRequestDTO
+            {
+                Id = id
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID);
+            if (result == null) throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+
+            var documentType = JsonSerializer.Deserialize<DocumentType>(result)!;
+
+            return documentType;
         }
     }
 }

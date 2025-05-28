@@ -1,19 +1,19 @@
 ﻿using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.DirectoryService.Services;
-using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
 
 namespace ApplicantPersonalAccount.DirectoryService.MessageListener
 {
-    public class DocumentTypeListener : BaseMessageListener<BrokerRequestDTO>
+    public class DocumentTypeByIdListener : BaseMessageListener<GuidRequestDTO>
     {
-        public DocumentTypeListener(IServiceProvider serviceProvider, IConfiguration config)
-            : base(serviceProvider, config, RabbitQueues.GET_DOCUMENT_TYPE) { }
+        public DocumentTypeByIdListener(IServiceProvider serviceProvider, IConfiguration config)
+            : base(serviceProvider, config, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID) { }
 
         protected override async Task<string?> ProcessMessage(
-            BrokerRequestDTO message,
+            GuidRequestDTO message,
             BasicDeliverEventArgs eventArgs,
             IServiceProvider serviceProvider)
         {
@@ -21,14 +21,15 @@ namespace ApplicantPersonalAccount.DirectoryService.MessageListener
 
             try
             {
-                var data = await directoryInfoService.GetDocumentTypes();
+                var data = await directoryInfoService.GetDocumentTypeById(message.Id);
                 return JsonSerializer.Serialize(data);
             }
             catch
             {
                 return "";
             }
-            
+
         }
+    {
     }
 }

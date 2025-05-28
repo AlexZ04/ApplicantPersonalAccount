@@ -91,5 +91,13 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
                 message.Page,
                 message.Size);
         }
+
+        public async Task<DocumentType> GetDocumentTypeById(Guid id)
+        {
+            var documentType = await _directoryContext.DocumentTypes
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            return documentType ?? throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+        }
     }
 }

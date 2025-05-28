@@ -58,7 +58,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             var userDocuments = JsonSerializer.Deserialize<List<DocumentEntity>>(result)!;
 
-            await CheckDocumentsCompatibility(userDocuments, selectedEducationLevelName);
+            //await CheckDocumentsCompatibility(userDocuments, selectedEducationLevelName);
 
             var newProgram = new EnteranceProgramEntity
             {

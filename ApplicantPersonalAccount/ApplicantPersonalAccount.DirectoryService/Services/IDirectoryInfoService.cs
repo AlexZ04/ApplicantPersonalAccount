@@ -15,5 +15,6 @@ namespace ApplicantPersonalAccount.DirectoryService.Services
             int page = 1,
             int size = 5);
         public Task<ProgramPagedList> GetListOfPrograms(GetProgramsDTO message);
+        public Task<DocumentType> GetDocumentTypeById(Guid id);
     }
 }
