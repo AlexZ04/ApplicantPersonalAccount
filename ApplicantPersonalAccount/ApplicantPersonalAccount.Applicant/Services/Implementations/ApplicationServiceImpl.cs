@@ -49,10 +49,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             if (enterance.Programs.Count > GeneralSettings.MAX_CHOSEN_PROGRAMS)
                 throw new InvalidActionException(ErrorMessages.HAVE_MAX_PROGRAMS);
 
-            var selectedEducationLevelName = educationProgram.EducationLevel.Name;
-
             if (enterance.Programs.Count() > 0)
-                await CheckEducationLevel(enterance, selectedEducationLevelName);
+                await CheckEducationLevel(enterance, educationProgram.EducationLevel.Id);
 
             result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_DOCUMENTS);
 
@@ -87,7 +85,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             await _applicationRepository.DeleteProgram(programId, userId);
         }
 
-        private async Task CheckEducationLevel(EnteranceEntity enterance, string selectedEducationLevelName)
+        private async Task CheckEducationLevel(EnteranceEntity enterance, int selectedEducationLevelId)
         {
             var rpcClient = new RpcClient();
             var request = new GuidRequestDTO
@@ -101,14 +99,9 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             var selectedProgram = JsonSerializer.Deserialize<EducationProgram>(result)!;
 
-            if (selectedProgram == null)
-                throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+            var educationLevelId = selectedProgram.EducationLevel.Id;
 
-            var educationLevelName = selectedProgram.EducationLevel.Name;
-
-            if (educationLevelName != selectedEducationLevelName
-                && ((educationLevelName == "Специалитет" && selectedEducationLevelName == "Бакалавриат") ||
-                (educationLevelName == "Бакалавриат" && selectedEducationLevelName == "Специалитет")))
+            if (educationLevelId != selectedEducationLevelId)
                 throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
         }
 
