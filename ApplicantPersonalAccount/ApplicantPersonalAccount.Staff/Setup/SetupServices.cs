@@ -1,5 +1,8 @@
 ﻿using ApplicantPersonalAccount.Infrastructure.RabbitMq.Connection;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
+using ApplicantPersonalAccount.Staff.Domain.Services;
+using ApplicantPersonalAccount.Staff.Domain.Services.Implementations;
+using ApplicantPersonalAccount.Staff.Domain.Services.Interfaces;
 
 namespace ApplicantPersonalAccount.Staff.Setup
 {
@@ -9,6 +12,10 @@ namespace ApplicantPersonalAccount.Staff.Setup
         {
             services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
             services.AddScoped<IMessageProducer, RabbitMqProducer>();
+
+            services.AddTransient<IStaffAuthService, StaffAuthServiceImpl>();
+
+            services.AddTransient<ServiceStorage, ServiceStorage>();
         }
     }
 }
