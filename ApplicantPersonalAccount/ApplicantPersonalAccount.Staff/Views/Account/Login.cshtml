@@ -19,9 +19,9 @@
 			</div>
 
 			<div class="login-field">
-				<label asp-for="UserName"></label>
-				<input asp-for="UserName" />
-				<span asp-validation-for="UserName"></span>
+				<label asp-for="UserEmail"></label>
+				<input asp-for="UserEmail" />
+				<span asp-validation-for="UserEmail"></span>
 			</div>
 
 			<div class="login-field">
@@ -30,11 +30,11 @@
 				<span asp-validation-for="Password"></span>
 			</div>
 
-			<div class="login-field">
-				<label asp-for="RememberMe"></label>
-				<input asp-for="RememberMe" />
-				<span asp-validation-for="RememberMe"></span>
-			</div>
+			@* <div class="login-field"> *@
+			@* 	<label asp-for="RememberMe"></label> *@
+			@* 	<input asp-for="RememberMe" /> *@
+			@* 	<span asp-validation-for="RememberMe"></span> *@
+			@* </div> *@
 
 			<input type="submit" value="@PageElementsNames.ENTER" />
 

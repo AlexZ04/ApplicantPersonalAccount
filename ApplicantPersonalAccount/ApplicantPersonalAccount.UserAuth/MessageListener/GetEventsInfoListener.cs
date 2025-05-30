@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace ApplicantPersonalAccount.UserAuth.MessageListener
 {
-    public class GetEventsInfoListener : BaseMessageListener<GetInfoForEventsRequestDTO>
+    public class GetEventsInfoListener : BaseMessageListener<GuidRequestDTO>
     {
         private readonly JsonSerializerOptions _jsonOptions;
 
@@ -22,14 +22,14 @@ namespace ApplicantPersonalAccount.UserAuth.MessageListener
         }
 
         protected override async Task<string?> ProcessMessage(
-            GetInfoForEventsRequestDTO message,
+            GuidRequestDTO message,
             BasicDeliverEventArgs eventArgs,
             IServiceProvider serviceProvider)
         {
             try
             {
                 var userRep = serviceProvider.GetRequiredService<IUserRepository>();
-                var userData = await userRep.GetInfoForEvents(message.UserId);
+                var userData = await userRep.GetInfoForEvents(message.Id);
                 return JsonSerializer.Serialize(userData, _jsonOptions);
             }
             catch

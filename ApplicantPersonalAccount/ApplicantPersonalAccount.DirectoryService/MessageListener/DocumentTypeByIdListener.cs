@@ -30,6 +30,5 @@ namespace ApplicantPersonalAccount.DirectoryService.MessageListener
             }
 
         }
-    {
     }
 }

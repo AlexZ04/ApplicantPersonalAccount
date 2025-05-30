@@ -17,5 +17,7 @@
         public const string GET_USER_DOCUMENTS = "user_documents_queue";
 
         public const string CAN_EDIT_LISTENER = "can_edit_queue";
+
+        public const string LOGIN = "login_queue";
     }
 }
