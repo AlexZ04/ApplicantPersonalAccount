@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Staff.Domain.Services.Interfaces;
+using ApplicantPersonalAccount.Staff.Models;
 
 namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 {
@@ -10,6 +11,16 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
         public StaffAuthServiceImpl(IMessageProducer messageProducer)
         {
             _messageProducer = messageProducer;
+        }
+
+        public async Task Logout()
+        {
+
+        }
+
+        public async Task<bool> Login(LoginViewModel loginModel)
+        {
+            return true;
         }
     }
 }

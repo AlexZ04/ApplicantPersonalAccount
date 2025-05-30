@@ -1,0 +1,43 @@
+﻿@model LoginViewModel
+@{
+	string pageTitle = PageTitles.LOGIN_PAGE;
+	ViewBag.Title = pageTitle;
+}
+
+<div>
+	<h1>
+		@pageTitle
+	</h1>
+
+	<div class="container">
+		<form asp-area="" asp-controller="Account" 
+			asp-action="Login" method="post" 
+			asp-route-returnUrl="@ViewBag.ReturnUrl">
+
+			<div asp-validation-summary="All">
+
+			</div>
+
+			<div class="login-field">
+				<label asp-for="UserName"></label>
+				<input asp-for="UserName" />
+				<span asp-validation-for="UserName"></span>
+			</div>
+
+			<div class="login-field">
+				<label asp-for="Password"></label>
+				<input asp-for="Password" />
+				<span asp-validation-for="Password"></span>
+			</div>
+
+			<div class="login-field">
+				<label asp-for="RememberMe"></label>
+				<input asp-for="RememberMe" />
+				<span asp-validation-for="RememberMe"></span>
+			</div>
+
+			<input type="submit" value="@PageElementsNames.ENTER" />
+
+		</form>
+	</div>
+</div>
