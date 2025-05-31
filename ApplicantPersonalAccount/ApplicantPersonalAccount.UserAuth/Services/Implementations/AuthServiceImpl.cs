@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Authorization;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
@@ -75,6 +76,17 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             await _userRepository.SaveChanges();
 
             return refreshToken;
+        }
+
+        public async Task<TokenResponseModel> LoginAdmin(UserLoginModel loginCredentials)
+        {
+            UserEntity user = await _userRepository.GetUsersByCredentials(
+                loginCredentials.Email, loginCredentials.Password);
+
+            if (user.Role == Role.Applicant)
+                throw new UnaccessableAction(ErrorMessages.INVALID_CREDENTIALS);
+
+            return await LoginUser(loginCredentials);
         }
 
         public async Task<TokenResponseModel> LoginRefresh(RefreshTokenModel tokenModel)

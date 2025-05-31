@@ -17,7 +17,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         [HttpGet]
         public async Task<IActionResult> Login(string? returnUrl)
         {
-            await _serviceStorage._staffAuthService.Logout();
+            _serviceStorage._staffAuthService.Logout();
 
             ViewBag.ReturnUrl = returnUrl;
 
@@ -40,9 +40,9 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-            await _serviceStorage._staffAuthService.Logout();
+            _serviceStorage._staffAuthService.Logout();
 
             return RedirectToAction("Action", "Home");
         }

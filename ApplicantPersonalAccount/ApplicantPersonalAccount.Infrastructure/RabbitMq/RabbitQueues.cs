@@ -19,5 +19,6 @@
         public const string CAN_EDIT_LISTENER = "can_edit_queue";
 
         public const string LOGIN = "login_queue";
+        public const string REFRESH_LOGIN = "refresh_token_login";
     }
 }

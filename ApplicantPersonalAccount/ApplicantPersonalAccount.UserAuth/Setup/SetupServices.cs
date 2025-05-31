@@ -18,6 +18,7 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
             services.AddHostedService<GetUserByIdListener>();
             services.AddHostedService<EditInfoEventsListener>();
             services.AddHostedService<LoginListener>();
+            services.AddHostedService<RefreshLoginListener>();
 
             services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
             services.AddScoped<IMessageProducer, RabbitMqProducer>();
