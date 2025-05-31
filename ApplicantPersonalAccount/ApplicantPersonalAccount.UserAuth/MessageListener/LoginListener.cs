@@ -21,7 +21,7 @@ namespace ApplicantPersonalAccount.UserAuth.MessageListener
 
             try
             {
-                var response = await authService.LoginUser(message);
+                var response = await authService.LoginAdmin(message);
                 return JsonSerializer.Serialize(response);
             }
             catch
