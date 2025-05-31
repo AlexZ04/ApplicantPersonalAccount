@@ -1,11 +1,12 @@
 ﻿using ApplicantPersonalAccount.Infrastructure.Filters;
+using ApplicantPersonalAccount.Staff.Domain.Infrascructure;
 using ApplicantPersonalAccount.Staff.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace ApplicantPersonalAccount.Staff.Controllers.Admin
 {
+    [TokenAuthFilter]
     [Authorize(Roles = "Manager,HeadManager,Admin")]
     [CheckToken]
     public partial class StaffController : Controller

@@ -15,10 +15,9 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login(string? returnUrl)
+        public IActionResult Login(string? returnUrl)
         {
             _serviceStorage._staffAuthService.Logout();
-
             ViewBag.ReturnUrl = returnUrl;
 
             return View(new LoginViewModel());
@@ -27,15 +26,17 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginModel, string? returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
-
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ReturnUrl = returnUrl;
                 return View(loginModel);
+            }
 
-            if (! (await _serviceStorage._staffAuthService.Login(loginModel)))
+            if (await _serviceStorage._staffAuthService.Login(loginModel))
                 return Redirect(returnUrl ?? "/");
 
             ModelState.AddModelError(string.Empty, ErrorMessages.INVALID_CREDENTIALS);
+            ViewBag.ReturnUrl = returnUrl;
             return View(loginModel);
         }
 
@@ -43,8 +44,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         public IActionResult Logout()
         {
             _serviceStorage._staffAuthService.Logout();
-
-            return RedirectToAction("Action", "Home");
+            return RedirectToAction("Login", "Account");
         }
     }
 }
