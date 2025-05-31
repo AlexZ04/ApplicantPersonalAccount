@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ApplicantPersonalAccount.Infrastructure\ApplicantPersonalAccount.Infrastructure.csproj" />
   </ItemGroup>
 
