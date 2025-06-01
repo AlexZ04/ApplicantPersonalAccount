@@ -22,5 +22,15 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Admin
         {
             return View();
         }
+
+        public IActionResult WorkWithDirectory()
+        {
+            return View();
+        }
+
+        public IActionResult WorkWithManagers()
+        {
+            return View();
+        }
     }
 }

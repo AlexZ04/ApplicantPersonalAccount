@@ -44,7 +44,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         [HttpPost]
         public IActionResult Logout()
         {
-            _serviceStorage._staffAuthService.Logout();
+            _serviceStorage._staffAuthService.Logout(UserDescriptor.GetUserId(User));
             return RedirectToAction("Login", "Account");
         }
     }
