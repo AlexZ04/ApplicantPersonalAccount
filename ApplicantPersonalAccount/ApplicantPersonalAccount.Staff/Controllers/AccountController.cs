@@ -18,7 +18,8 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         [HttpGet]
         public IActionResult Login(string? returnUrl)
         {
-            _serviceStorage._staffAuthService.Logout(UserDescriptor.GetUserId(User));
+            _serviceStorage._staffAuthService.DeleteCookies();
+
             ViewBag.ReturnUrl = returnUrl;
 
             return View(new LoginViewModel());

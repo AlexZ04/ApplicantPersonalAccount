@@ -42,6 +42,17 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             }
         }
 
+        public void DeleteCookies()
+        {
+            var context = _httpContextAccessor.HttpContext;
+
+            if (context != null)
+            {
+                context.Response.Cookies.Delete("AccessToken");
+                context.Response.Cookies.Delete("RefreshToken");
+            }
+        }
+
         public async Task<bool> Login(LoginViewModel loginModel)
         {
             var rpcClient = new RpcClient();
