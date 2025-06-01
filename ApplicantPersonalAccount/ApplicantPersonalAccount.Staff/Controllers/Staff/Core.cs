@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicantPersonalAccount.Staff.Controllers.Admin
 {
-    [TokenAuthFilter]
-    [Authorize(Roles = "Manager,HeadManager,Admin")]
-    [CheckToken]
+    //[TokenAuthFilter]
+    //[Authorize(Roles = "Manager,HeadManager,Admin")]
+    //[CheckToken]
     public partial class StaffController : Controller
     {
         private readonly ServiceStorage _serviceStorage;

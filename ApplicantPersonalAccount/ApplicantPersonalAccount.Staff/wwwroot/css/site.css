@@ -31,3 +31,15 @@ body {
 .login-field {
     margin-bottom: 8px;
 }
+
+.header-class {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 10px;
+}
+
+.header-container {
+    display: flex;
+    gap: 10px;
+}
