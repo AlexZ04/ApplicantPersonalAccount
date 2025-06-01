@@ -9,6 +9,6 @@ namespace ApplicantPersonalAccount.UserAuth.Services
         public Task<TokenResponseModel> LoginUser(UserLoginModel loginCredentials);
         public Task<TokenResponseModel> LoginAdmin(UserLoginModel loginCredentials);
         public Task<TokenResponseModel> LoginRefresh(RefreshTokenModel tokenModel);
-        public Task Logout(string? token, ClaimsPrincipal user);
+        public Task Logout(string? token, Guid userId);
     }
 }

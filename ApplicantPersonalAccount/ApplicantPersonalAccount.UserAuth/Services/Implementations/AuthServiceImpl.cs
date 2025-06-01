@@ -116,13 +116,13 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             };
         }
 
-        public async Task Logout(string? token, ClaimsPrincipal user)
+        public async Task Logout(string? token, Guid userId)
         {
             if (token == null)
                 throw new UnauthorizedAccessException();
 
             RefreshTokenEntity refreshToken = await _tokenRepository
-                .GetUserRefreshToken(UserDescriptor.GetUserId(user));
+                .GetUserRefreshToken(userId);
 
             await _tokenService.CacheTokens(token, refreshToken.Token);
         }

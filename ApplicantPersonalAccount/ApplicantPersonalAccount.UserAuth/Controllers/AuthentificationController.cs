@@ -1,5 +1,6 @@
 using ApplicantPersonalAccount.Common.Models.Authorization;
 using ApplicantPersonalAccount.Infrastructure.Filters;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.UserAuth.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -42,7 +43,8 @@ namespace ApplicantPersonalAccount.UserAuth.Controllers
         [CheckToken]
         public async Task<IActionResult> Logout()
         {
-            await _authorizationService.Logout(HttpContext.GetTokenAsync("access_token").Result, User);
+            await _authorizationService.Logout(HttpContext.GetTokenAsync("access_token").Result,
+                UserDescriptor.GetUserId(User));
 
             return Ok();
         }
