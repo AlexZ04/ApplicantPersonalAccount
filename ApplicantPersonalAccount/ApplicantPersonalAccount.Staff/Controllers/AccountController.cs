@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Staff.Domain.Services;
 using ApplicantPersonalAccount.Staff.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         [HttpGet]
         public IActionResult Login(string? returnUrl)
         {
-            _serviceStorage._staffAuthService.Logout();
+            _serviceStorage._staffAuthService.Logout(UserDescriptor.GetUserId(User));
             ViewBag.ReturnUrl = returnUrl;
 
             return View(new LoginViewModel());

@@ -16,8 +16,9 @@ namespace ApplicantPersonalAccount.Staff.Domain.Infrascructure
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var accessToken = context.HttpContext.Request.Cookies["AccessToken"];
+            var refreshToken = context.HttpContext.Request.Cookies["RefreshToken"];
 
-            if (string.IsNullOrEmpty(accessToken))
+            if (string.IsNullOrEmpty(accessToken) && !string.IsNullOrEmpty(refreshToken))
             {
                 if (await _authService.RefreshToken())
                     return;

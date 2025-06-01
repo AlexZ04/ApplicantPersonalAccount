@@ -23,9 +23,17 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public void Logout()
+        public void Logout(Guid userId)
         {
             var context = _httpContextAccessor.HttpContext;
+
+            var logoutDto = new LogoutDTO
+            {
+                UserId = userId,
+                Token = context?.Request.Cookies["RefreshToken"]
+            };
+
+            _messageProducer.SendMessage(logoutDto, RabbitQueues.LOGOUT);
 
             if (context != null)
             {

@@ -20,5 +20,6 @@
 
         public const string LOGIN = "login_queue";
         public const string REFRESH_LOGIN = "refresh_token_login";
+        public const string LOGOUT = "logout_queue";
     }
 }
