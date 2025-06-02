@@ -1,6 +1,7 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ApplicantPersonalAccount.Staff.Setup
@@ -9,7 +10,11 @@ namespace ApplicantPersonalAccount.Staff.Setup
     {
         public static void AddAuth(WebApplicationBuilder builder)
         {
-            builder.Services.AddAuthentication()
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
@@ -24,6 +29,7 @@ namespace ApplicantPersonalAccount.Staff.Setup
                     IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                     ValidateIssuerSigningKey = true,
                 };
+
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
@@ -37,7 +43,7 @@ namespace ApplicantPersonalAccount.Staff.Setup
             builder.Services.Configure<CookieOptions>(options =>
             {
                 options.HttpOnly = true;
-                options.SameSite = SameSiteMode.Strict;
+                options.SameSite = SameSiteMode.None;
                 options.Secure = true;
             });
 
@@ -46,7 +52,6 @@ namespace ApplicantPersonalAccount.Staff.Setup
 
         public static void UseAuth(WebApplication app)
         {
-            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseAuthorization();
         }
