@@ -9,7 +9,7 @@ namespace ApplicantPersonalAccount.Staff.Setup
     {
         public static void AddAuth(WebApplicationBuilder builder)
         {
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
@@ -29,6 +29,14 @@ namespace ApplicantPersonalAccount.Staff.Setup
                         OnMessageReceived = context =>
                         {
                             context.Token = context.Request.Cookies["AccessToken"];
+                            return Task.CompletedTask;
+                        },
+                        OnChallenge = context =>
+                        {
+                            context.HandleResponse();
+
+                            context.Response.Redirect("/Account/Login" + 
+                                (context.Request.Path.HasValue ? $"?returnUrl={context.Request.Path}" : ""));
                             return Task.CompletedTask;
                         }
                     };

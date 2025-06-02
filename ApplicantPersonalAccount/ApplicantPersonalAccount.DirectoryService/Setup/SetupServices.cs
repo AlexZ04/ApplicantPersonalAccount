@@ -16,6 +16,7 @@ namespace ApplicantPersonalAccount.DirectoryService.Setup
             services.AddHostedService<ProgramListener>();
             services.AddHostedService<EducationProgramByIdListener>();
             services.AddHostedService<DocumentTypeByIdListener>();
+            services.AddHostedService<GetImportStatusListener>();
         }
     }
 }
