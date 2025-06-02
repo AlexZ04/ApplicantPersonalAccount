@@ -10,37 +10,29 @@ namespace ApplicantPersonalAccount.Staff.Setup
         public static void AddAuth(WebApplicationBuilder builder)
         {
             builder.Services.AddAuthentication()
-                .AddJwtBearer(options =>
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthOptions.ISSUER,
+                    ValidateAudience = true,
+                    ValidAudience = AuthOptions.AUDIENCE,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                    ValidateIssuerSigningKey = true,
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
                     {
-                        ValidateIssuer = true,
-                        ValidIssuer = AuthOptions.ISSUER,
-                        ValidateAudience = true,
-                        ValidAudience = AuthOptions.AUDIENCE,
-                        ValidateLifetime = true,
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuerSigningKey = true,
-                    };
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = context =>
-                        {
-                            context.Token = context.Request.Cookies["AccessToken"];
-                            return Task.CompletedTask;
-                        },
-                        OnChallenge = context =>
-                        {
-                            context.HandleResponse();
-
-                            context.Response.Redirect("/Account/Login" + 
-                                (context.Request.Path.HasValue ? $"?returnUrl={context.Request.Path}" : ""));
-                            return Task.CompletedTask;
-                        }
-                    };
-                });
+                        context.Token = context.Request.Cookies["AccessToken"];
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
             builder.Services.Configure<CookieOptions>(options =>
             {

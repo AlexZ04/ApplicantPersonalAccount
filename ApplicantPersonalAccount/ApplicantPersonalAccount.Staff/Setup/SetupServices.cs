@@ -14,6 +14,7 @@ namespace ApplicantPersonalAccount.Staff.Setup
             services.AddScoped<IMessageProducer, RabbitMqProducer>();
 
             services.AddTransient<IStaffAuthService, StaffAuthServiceImpl>();
+            services.AddTransient<IAdminDirectoryService, AdminDirectoryServiceImpl>();
             services.AddHttpContextAccessor();
 
             services.AddTransient<ServiceStorage, ServiceStorage>();

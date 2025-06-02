@@ -3,6 +3,7 @@ using ApplicantPersonalAccount.Staff.Domain.Infrascructure;
 using ApplicantPersonalAccount.Staff.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ApplicantPersonalAccount.Staff.Controllers.Admin
 {
@@ -23,8 +24,10 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Admin
             return View();
         }
 
-        public IActionResult WorkWithDirectory()
+        public async Task<IActionResult> WorkWithDirectory()
         {
+            ViewBag.ImportStatus = await _serviceStorage.AdminDirectoryService.GetImportStatus();
+
             return View();
         }
 

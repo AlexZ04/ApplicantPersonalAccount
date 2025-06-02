@@ -4,11 +4,15 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services
 {
     public class ServiceStorage
     {
-        public readonly IStaffAuthService _staffAuthService;
+        public readonly IStaffAuthService StaffAuthService;
+        public readonly IAdminDirectoryService AdminDirectoryService;
 
-        public ServiceStorage(IStaffAuthService staffAuthService)
+        public ServiceStorage(
+            IStaffAuthService staffAuthService,
+            IAdminDirectoryService adminDirectoryService)
         {
-            _staffAuthService = staffAuthService;
+            StaffAuthService = staffAuthService;
+            AdminDirectoryService = adminDirectoryService;
         }
     }
 }

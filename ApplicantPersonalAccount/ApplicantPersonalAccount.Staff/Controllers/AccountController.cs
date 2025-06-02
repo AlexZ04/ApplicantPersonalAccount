@@ -18,7 +18,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         [HttpGet]
         public IActionResult Login(string? returnUrl)
         {
-            _serviceStorage._staffAuthService.DeleteCookies();
+            _serviceStorage.StaffAuthService.DeleteCookies();
 
             ViewBag.ReturnUrl = returnUrl;
 
@@ -34,7 +34,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers
                 return View(loginModel);
             }
 
-            if (await _serviceStorage._staffAuthService.Login(loginModel))
+            if (await _serviceStorage.StaffAuthService.Login(loginModel))
                 return Redirect(returnUrl ?? "/");
 
             ModelState.AddModelError(string.Empty, ErrorMessages.INVALID_CREDENTIALS);
@@ -45,7 +45,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers
         [HttpPost]
         public IActionResult Logout()
         {
-            _serviceStorage._staffAuthService.Logout(UserDescriptor.GetUserId(User));
+            _serviceStorage.StaffAuthService.Logout(UserDescriptor.GetUserId(User));
             return RedirectToAction("Login", "Account");
         }
     }
