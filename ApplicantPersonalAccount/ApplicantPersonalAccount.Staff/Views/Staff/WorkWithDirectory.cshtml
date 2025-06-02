@@ -1,6 +1,21 @@
-﻿@{
+﻿@using ApplicantPersonalAccount.Common.Enums
+@{
 	string importStatus = ViewBag.ImportStatus;
+	List<DirectoryImportType> importTypes = ViewBag.ImportTypes;
 }
-<div class ="container">
-	<span>Current directory import status: @importStatus (reload to check update)</span>
+<div class="container">
+	<span class="standart-margin">Current directory import status: <b>@importStatus</b> (reload to check update)</span>
+	
+	<form asp-action="ImportDirectory" method="post" class="card p-4">
+		<h4 class="mb-2">Import directory</h4>
+
+		<select name="importType" class="form-control mb-2">
+			@foreach (var type in importTypes)
+			{
+				<option value="@type">@type</option>
+			}
+		</select>
+
+		<button type="submit" class="btn btn-primary mb-2">Update</button>
+	</form>
 </div>

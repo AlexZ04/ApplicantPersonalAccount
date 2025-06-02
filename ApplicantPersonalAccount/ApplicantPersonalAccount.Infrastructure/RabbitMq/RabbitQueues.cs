@@ -14,6 +14,7 @@
         public const string EDIT_INFO_FOR_EVENTS = "edit_info_events_queue";
         public const string GET_DOCUMENT_TYPE_BY_ID = "document_type_id_queue";
         public const string IMPORT_STATUS = "import_status_queue";
+        public const string IMPORT_REQUEST = "import_request_queue";
 
         public const string GET_USER_DOCUMENTS = "user_documents_queue";
 

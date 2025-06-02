@@ -4,6 +4,7 @@ using ApplicantPersonalAccount.Staff.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using ApplicantPersonalAccount.Common.Enums;
 
 namespace ApplicantPersonalAccount.Staff.Controllers.Admin
 {
@@ -27,8 +28,18 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Admin
         public async Task<IActionResult> WorkWithDirectory()
         {
             ViewBag.ImportStatus = await _serviceStorage.AdminDirectoryService.GetImportStatus();
+            ViewBag.ImportTypes = Enum.GetValues(typeof(DirectoryImportType))
+                .Cast<DirectoryImportType>()
+                .ToList();
 
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult ImportDirectory(DirectoryImportType importType)
+        {
+            _serviceStorage.AdminDirectoryService.RequestImport(importType);
+            return RedirectToAction(nameof(WorkWithDirectory));
         }
 
         public IActionResult WorkWithManagers()

@@ -89,9 +89,13 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
                 string.Format("Receiving data: {0}", "document types");
             var documentTypes = await _directoryService.GetDocumentTypes();
 
+            await Task.Delay(1000);
+
             ImportStatusHolder.ImportStatus =
                 string.Format("Setting data: {0}", "document types");
             await _directoryRepository.SetDocumentTypes(documentTypes);
+
+            await Task.Delay(1000);
         }
 
         private async Task LoadFaculties()
@@ -100,9 +104,13 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
                 string.Format("Receiving data: {0}", "faculties");
             var faculties = await _directoryService.GetFaculties();
 
+            await Task.Delay(1000);
+
             ImportStatusHolder.ImportStatus =
                 string.Format("Setting data: {0}", "faculties");
             await _directoryRepository.SetFaculties(faculties);
+
+            await Task.Delay(1000);
         }
 
         private async Task LoadEducationLevels()
@@ -111,9 +119,13 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
                 string.Format("Receiving data: {0}", "education levels");
             var educationLevels = await _directoryService.GetEducationLevels();
 
+            await Task.Delay(1000);
+
             ImportStatusHolder.ImportStatus =
                 string.Format("Setting data: {0}", "education levels");
             await _directoryRepository.SetEducationLevels(educationLevels);
+
+            await Task.Delay(1000);
         }
 
         private async Task LoadPrograms()
@@ -125,9 +137,13 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
                 string.Format("Receiving data: {0}", "programs");
             programs = await _directoryService.GetEducationPrograms(1, size);
 
+            await Task.Delay(1000);
+
             ImportStatusHolder.ImportStatus =
                 string.Format("Setting data: {0}", "programs");
             await _directoryRepository.SetEducationPrograms(programs.Programs);
+
+            await Task.Delay(1000);
         }
     }
 }

@@ -44,3 +44,7 @@ body {
     display: flex;
     gap: 10px;
 }
+
+.standart-margin {
+    margin-bottom: 20px;
+}
