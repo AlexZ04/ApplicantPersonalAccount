@@ -15,6 +15,7 @@ namespace ApplicantPersonalAccount.Staff.Setup
 
             services.AddTransient<IStaffAuthService, StaffAuthServiceImpl>();
             services.AddTransient<IAdminDirectoryService, AdminDirectoryServiceImpl>();
+            services.AddTransient<IAdminManagerService, AdminManagerServiceImpl>();
             services.AddHttpContextAccessor();
 
             services.AddTransient<ServiceStorage, ServiceStorage>();

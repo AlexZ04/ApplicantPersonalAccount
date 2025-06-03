@@ -48,3 +48,24 @@ body {
 .standart-margin {
     margin-bottom: 20px;
 }
+
+.manager-container {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border: 1px solid black;
+    margin-bottom: 4px;
+}
+
+.manager-actions-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.manager {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}

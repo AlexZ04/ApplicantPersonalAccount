@@ -41,10 +41,5 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Admin
             _serviceStorage.AdminDirectoryService.RequestImport(importType);
             return RedirectToAction(nameof(WorkWithDirectory));
         }
-
-        public IActionResult WorkWithManagers()
-        {
-            return View();
-        }
     }
 }

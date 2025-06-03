@@ -6,13 +6,16 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services
     {
         public readonly IStaffAuthService StaffAuthService;
         public readonly IAdminDirectoryService AdminDirectoryService;
+        public readonly IAdminManagerService AdminManagerService;
 
         public ServiceStorage(
             IStaffAuthService staffAuthService,
-            IAdminDirectoryService adminDirectoryService)
+            IAdminDirectoryService adminDirectoryService,
+            IAdminManagerService adminManagerService)
         {
             StaffAuthService = staffAuthService;
             AdminDirectoryService = adminDirectoryService;
+            AdminManagerService = adminManagerService;
         }
     }
 }

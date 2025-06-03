@@ -1,3 +1,21 @@
-﻿<div class="container">
-	Managers
+﻿@using ApplicantPersonalAccount.Common.DTOs.Managers
+@{
+	List<ManagerDTO> managers = ViewBag.Managers;
+}
+<div class="container">
+	<a class="navbar-brand" asp-area="" asp-controller="Staff" asp-action="CreateManager">Create Manager</a>
+
+	@foreach (var manager in managers)
+	{
+		<div class="manager-container">
+
+			<div class="manager">
+				<span>@manager.Name</span>
+				<span>@manager.Email</span>
+				<span>@manager.Role</span>
+			</div>
+
+			<div class="manager-actions-container">actions</div>
+		</div>
+	}
 </div>
