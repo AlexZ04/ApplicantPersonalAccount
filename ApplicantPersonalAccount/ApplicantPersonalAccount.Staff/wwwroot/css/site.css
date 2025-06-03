@@ -77,3 +77,8 @@ body {
 .manager:hover {
     opacity: 0.5;
 }
+
+.manager-container a {
+    text-decoration: none;
+    color: black;
+}

@@ -6,7 +6,6 @@ using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.User;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
-using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Staff.Domain.Services.Interfaces;
 using ApplicantPersonalAccount.Staff.Models;
 using System.Text.Json;
@@ -57,7 +56,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             if (result == null)
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
-            var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;
+            var userData = JsonSerializer.Deserialize<ManagerProfileDTO>(result, _jsonOptions)!;
 
             var managerModel = new ManagerProfileViewModel
             {

@@ -10,7 +10,7 @@
 	@foreach (var manager in managers)
 	{
 		<div class="manager-container">
-			<a href="@Url.Action("ManagerInfo", "Staff", new { id = manager.Id })" class="manager-link">
+			<a href="@Url.Action("ManagerInfo", "Staff", new { id = manager.Id })">
 				<div class="manager">
 					<span>@manager.Name</span>
 					<span>@manager.Email</span>
