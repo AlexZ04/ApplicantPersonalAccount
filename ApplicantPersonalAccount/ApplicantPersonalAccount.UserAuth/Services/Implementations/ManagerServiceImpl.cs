@@ -3,6 +3,7 @@ using ApplicantPersonalAccount.Common.DTOs.Managers;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Persistence.Contextes;
+using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
@@ -10,10 +11,14 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
     public class ManagerServiceImpl : IManagerService
     {
         private readonly UserDataContext _userContext;
+        private readonly IUserRepository _userRepository;
 
-        public ManagerServiceImpl(UserDataContext userContext)
+        public ManagerServiceImpl(
+            UserDataContext userContext,
+            IUserRepository userRepository)
         {
             _userContext = userContext;
+            _userRepository = userRepository;
         }
 
         public async Task<List<ManagerProfileDTO>> GetAllManagers()
@@ -42,13 +47,21 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 
         public async Task DeleteManagerById(Guid id)
         {
-            var user = await _userContext.Users
-                .FirstOrDefaultAsync(u => u.Id == id);
-
-            if (user == null)
-                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+            var user = await _userRepository.GetUserById(id);
 
             _userContext.Users.Remove(user);
+            await _userContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateManager(ManagerUpdateDTO updateData)
+        {
+            var manager = await _userRepository.GetUserById(updateData.Id);
+
+            manager.Name = updateData.Name;
+            manager.Email = updateData.Email;
+            manager.Phone = updateData.Phone;
+            manager.Gender = updateData.Gender;
+
             await _userContext.SaveChangesAsync();
         }
     }

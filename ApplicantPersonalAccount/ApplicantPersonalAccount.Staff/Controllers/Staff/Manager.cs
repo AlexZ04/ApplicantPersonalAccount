@@ -39,12 +39,12 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveManagerInfo(ManagerProfileViewModel model)
+        public IActionResult EditManagerInfo(ManagerProfileViewModel model)
         {
             if (!ModelState.IsValid)
                 return View("ManagerInfo", model);
 
-            //await _serviceStorage.AdminManagerService.UpdateManagerProfile(model);
+            _serviceStorage.AdminManagerService.EditManagerProfile(model);
             return RedirectToAction("WorkWithManagers");
         }
 

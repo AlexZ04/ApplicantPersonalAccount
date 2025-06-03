@@ -85,5 +85,20 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
             _messageProducer.SendMessage(request, RabbitQueues.IMPORT_REQUEST);
         }
+
+        public void EditManagerProfile(ManagerProfileViewModel model)
+        {
+            var request = new ManagerUpdateDTO
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Email = model.Email,
+                Phone = model.Phone,
+                Birthday = model.Birthday,
+                Gender = model.Gender,
+            };
+
+            _messageProducer.SendMessage(request, RabbitQueues.UPDATE_MANAGER);
+        }
     }
 }

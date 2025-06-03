@@ -27,5 +27,7 @@
 
         public const string GET_ALL_MANAGERS = "get_managers_queue";
         public const string DELETE_MANAGER = "delete_manager_queue";
+        public const string UPDATE_MANAGER = "update_manager_queue";
+        public const string CREATE_MANGER = "create_manager_queue";
     }
 }

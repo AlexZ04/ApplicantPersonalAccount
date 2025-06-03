@@ -8,5 +8,6 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Interfaces
         public Task<List<ManagerDTO>> GetListOfManagers();
         public Task<ManagerProfileViewModel> GetManagerProfile(Guid id);
         public void DeleteManager(Guid id);
+        public void EditManagerProfile(ManagerProfileViewModel model);
     }
 }
