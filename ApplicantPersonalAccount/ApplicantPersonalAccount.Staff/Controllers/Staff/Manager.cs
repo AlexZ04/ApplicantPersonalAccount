@@ -25,6 +25,11 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
             return View();
         }
 
+        public async Task<IActionResult> ManagerInfo()
+        {
+            return View();
+        }
+
         public IActionResult CreateManager()
         {
             return View();
