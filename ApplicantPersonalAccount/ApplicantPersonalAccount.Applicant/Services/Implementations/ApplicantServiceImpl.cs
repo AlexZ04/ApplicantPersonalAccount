@@ -46,7 +46,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             var infoEventsData = JsonSerializer.Deserialize<InfoForEventsEntity>(result, _jsonOptions)!;
 
-            result = await rpcClient.CallAsync(userId.ToString(), RabbitQueues.GET_USER_BY_ID);
+            result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
             ResponseProcessor.ProcessResponse(result);
 
             var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;
