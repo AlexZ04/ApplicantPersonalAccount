@@ -52,9 +52,11 @@ body {
 .manager-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 4px;
     border: 1px solid black;
     margin-bottom: 4px;
+    width: 50dvw;
 }
 
 .manager-actions-container {
@@ -68,4 +70,10 @@ body {
     align-items: center;
     gap: 10px;
     cursor: pointer;
+
+    transition: 0.5s;
+}
+
+.manager:hover {
+    opacity: 0.5;
 }

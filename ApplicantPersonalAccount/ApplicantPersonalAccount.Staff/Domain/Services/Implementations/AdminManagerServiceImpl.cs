@@ -7,7 +7,21 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
     {
         public async Task<List<ManagerDTO>> GetListOfManagers()
         {
-            return new List<ManagerDTO>();
+            return new List<ManagerDTO>() 
+            {
+                new ManagerDTO
+                {
+                    Name = "Test Name",
+                    Email = "abcaf@gmail.com",
+                    Role = "Manager"
+                },
+                new ManagerDTO
+                {
+                    Name = "Test Name",
+                    Email = "abcaf@gmail.com",
+                    Role = "Main Manager"
+                },
+            };
         }
     }
 }
