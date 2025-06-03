@@ -21,27 +21,26 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
         {
             _jsonOptions = new JsonSerializerOptions
             {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                Converters = { new JsonStringEnumConverter() }
             };
         }
 
         public async Task<List<ManagerDTO>> GetListOfManagers()
         {
-            return new List<ManagerDTO>() 
+            var rpcClient = new RpcClient();
+            var request = new BrokerRequestDTO
             {
-                new ManagerDTO
-                {
-                    Name = "Test Name",
-                    Email = "abcaf@gmail.com",
-                    Role = "Manager"
-                },
-                new ManagerDTO
-                {
-                    Name = "Test Name",
-                    Email = "abcaf@gmail.com",
-                    Role = "Main Manager"
-                },
+                Request = "request"
             };
+
+            var result = await rpcClient.CallAsync(request, RabbitQueues.GET_ALL_MANAGERS);
+            if (result == null)
+                return new List<ManagerDTO>();
+
+            var userData = JsonSerializer.Deserialize<List<ManagerDTO>>(result, _jsonOptions)!;
+
+            return userData;
         }
 
         public async Task<ManagerProfileViewModel> GetManagerProfile(Guid id)

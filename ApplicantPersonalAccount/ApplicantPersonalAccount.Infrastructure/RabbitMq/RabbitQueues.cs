@@ -12,6 +12,7 @@
         public const string GET_USER_BY_ID = "get_user_queue";
         public const string GET_INFO_FOR_EVENTS = "get_info_events_queue";
         public const string EDIT_INFO_FOR_EVENTS = "edit_info_events_queue";
+        
         public const string GET_DOCUMENT_TYPE_BY_ID = "document_type_id_queue";
         public const string IMPORT_STATUS = "import_status_queue";
         public const string IMPORT_REQUEST = "import_request_queue";
@@ -23,5 +24,7 @@
         public const string LOGIN = "login_queue";
         public const string REFRESH_LOGIN = "refresh_token_login";
         public const string LOGOUT = "logout_queue";
+
+        public const string GET_ALL_MANAGERS = "get_managers_queue";
     }
 }
