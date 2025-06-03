@@ -26,5 +26,6 @@
         public const string LOGOUT = "logout_queue";
 
         public const string GET_ALL_MANAGERS = "get_managers_queue";
+        public const string DELETE_MANAGER = "delete_manager_queue";
     }
 }

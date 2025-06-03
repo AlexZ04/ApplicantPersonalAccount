@@ -39,9 +39,19 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteManager(Guid id)
+        public async Task<IActionResult> SaveManagerInfo(ManagerProfileViewModel model)
         {
-            //await _serviceStorage.AdminManagerService.DeleteManager(id);
+            if (!ModelState.IsValid)
+                return View("ManagerInfo", model);
+
+            //await _serviceStorage.AdminManagerService.UpdateManagerProfile(model);
+            return RedirectToAction("WorkWithManagers");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteManager(Guid id)
+        {
+            _serviceStorage.AdminManagerService.DeleteManager(id);
             return RedirectToAction("WorkWithManagers");
         }
     }

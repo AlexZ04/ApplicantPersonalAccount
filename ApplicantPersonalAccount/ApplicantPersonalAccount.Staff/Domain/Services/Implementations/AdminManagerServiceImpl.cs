@@ -5,6 +5,7 @@ using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.User;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Staff.Domain.Services.Interfaces;
 using ApplicantPersonalAccount.Staff.Models;
@@ -15,15 +16,18 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 {
     public class AdminManagerServiceImpl : IAdminManagerService
     {
+        private readonly IMessageProducer _messageProducer;
         private readonly JsonSerializerOptions _jsonOptions;
 
-        public AdminManagerServiceImpl()
+        public AdminManagerServiceImpl(IMessageProducer messageProducer)
         {
             _jsonOptions = new JsonSerializerOptions
             {
                 ReferenceHandler = ReferenceHandler.IgnoreCycles,
                 Converters = { new JsonStringEnumConverter() }
             };
+
+            _messageProducer = messageProducer;
         }
 
         public async Task<List<ManagerDTO>> GetListOfManagers()
@@ -71,6 +75,15 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             return managerModel;
+        }
+
+        public void DeleteManager(Guid id)
+        {
+            var request = new GuidRequestDTO
+            {
+                Id = id
+            };
+            _messageProducer.SendMessage(request, RabbitQueues.IMPORT_REQUEST);
         }
     }
 }
