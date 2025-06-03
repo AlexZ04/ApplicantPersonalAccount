@@ -17,7 +17,14 @@
 				<span>@manager.Role</span>
 			</div>
 
-			<div class="manager-actions-container">actions</div>
+			<div class="manager-actions-container">
+
+				<form id="delete-manager-@manager.Id" asp-area=""
+				asp-controller="Staff" asp-action="DeleteManager" method="post">
+					<a href="#" onclick="document.getElementById('delete-manager-@manager.Id').submit()">Delete</a>
+				</form>
+
+			</div>
 		</div>
 	}
 </div>

@@ -25,7 +25,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
             return View();
         }
 
-        public async Task<IActionResult> ManagerInfo()
+        public async Task<IActionResult> ManagerInfo(Guid id)
         {
             return View();
         }
@@ -33,6 +33,13 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
         public IActionResult CreateManager()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteManager(Guid id)
+        {
+            //await _serviceStorage.AdminManagerService.DeleteManager(id);
+            return RedirectToAction("WorkWithManagers");
         }
     }
 }
