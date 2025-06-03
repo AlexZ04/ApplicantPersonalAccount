@@ -1,18 +1,16 @@
 ﻿@model ApplicantPersonalAccount.Staff.Models.ManagerProfileViewModel
 
 <div class="container">
-    <h2>Manager Info</h2>
+    <h2>Manager Info (@Model.Role)</h2>
 
     <form asp-action="EditManagerInfo" method="post">
-        <div group-cont>
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Role" />
+        
         <div class="group-cont">
-            <label asp-for="Role"></label>
-            <input asp-for="Role" class="form-control" disabled />
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="group-cont">
@@ -41,7 +39,7 @@
 
         <div class="group-cont">
             <label asp-for="Citizenship"></label>
-            <textarea asp-for="Citizenship" class="form-control"></textarea>
+            <input asp-for="Citizenship" class="form-control" />
             <span asp-validation-for="Citizenship" class="text-danger"></span>
         </div>
 

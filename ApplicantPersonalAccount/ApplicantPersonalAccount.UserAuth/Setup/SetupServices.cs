@@ -23,6 +23,7 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
             services.AddHostedService<LogoutListener>();
             services.AddHostedService<GetAllManagersListener>();
             services.AddHostedService<DeleteManagerListener>();
+            services.AddHostedService<UpdateManagerListener>();
 
             services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
             services.AddScoped<IMessageProducer, RabbitMqProducer>();

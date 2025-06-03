@@ -95,7 +95,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
                 Email = model.Email,
                 Phone = model.Phone,
                 Birthday = model.Birthday,
-                Gender = model.Gender,
+                Gender = model.Gender
             };
 
             _messageProducer.SendMessage(request, RabbitQueues.UPDATE_MANAGER);
