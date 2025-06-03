@@ -1,1 +1,57 @@
-﻿<div>manager info</div>
+﻿@model ApplicantPersonalAccount.Staff.Models.ManagerProfileViewModel
+
+<div class="container">
+    <h2>Manager Info</h2>
+
+    <form asp-action="SaveManagerInfo" method="post">
+        <div group-cont>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Role"></label>
+            <input asp-for="Role" class="form-control" disabled />
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Phone"></label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Birthday"></label>
+            <input asp-for="Birthday" type="date" class="form-control" />
+            <span asp-validation-for="Birthday" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Address"></label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Citizenship"></label>
+            <textarea asp-for="Citizenship" class="form-control"></textarea>
+            <span asp-validation-for="Citizenship" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont-btns">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="WorkWithManagers" class="btn btn-secondary">Back</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

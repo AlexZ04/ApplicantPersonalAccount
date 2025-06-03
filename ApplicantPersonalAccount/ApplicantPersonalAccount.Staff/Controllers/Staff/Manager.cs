@@ -1,6 +1,7 @@
 ﻿using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Staff.Domain.Infrascructure;
 using ApplicantPersonalAccount.Staff.Domain.Services;
+using ApplicantPersonalAccount.Staff.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,9 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
 
         public async Task<IActionResult> ManagerInfo(Guid id)
         {
-            return View();
+            var manager = await _serviceStorage.AdminManagerService.GetManagerProfile(id);
+
+            return View(manager);
         }
 
         public IActionResult CreateManager()
