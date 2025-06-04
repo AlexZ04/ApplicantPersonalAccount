@@ -84,7 +84,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             {
                 Id = id
             };
-            _messageProducer.SendMessage(request, RabbitQueues.IMPORT_REQUEST);
+            _messageProducer.SendMessage(request, RabbitQueues.DELETE_MANAGER);
         }
 
         public void EditManagerProfile(ManagerProfileViewModel model)
