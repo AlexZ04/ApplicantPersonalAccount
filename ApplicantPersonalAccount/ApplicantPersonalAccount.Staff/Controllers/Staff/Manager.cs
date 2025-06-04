@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs.Managers;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Staff.Domain.Infrascructure;
 using ApplicantPersonalAccount.Staff.Domain.Services;
@@ -22,16 +23,31 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
 
         public async Task<IActionResult> WorkWithManagers()
         {
-            ViewBag.Managers = await _serviceStorage.AdminManagerService.GetListOfManagers();
-
+            try
+            {
+                ViewBag.Managers = await _serviceStorage.AdminManagerService.GetListOfManagers();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Managers = new List<ManagerDTO>();
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
             return View();
         }
 
         public async Task<IActionResult> ManagerInfo(Guid id)
         {
-            var manager = await _serviceStorage.AdminManagerService.GetManagerProfile(id);
-
-            return View(manager);
+            try
+            {
+                var manager = await _serviceStorage.AdminManagerService.GetManagerProfile(id);
+                return View(manager);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View("WorkWithManagers");
+            }
         }
 
         public IActionResult CreateManager()
@@ -47,10 +63,17 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
             if (!ModelState.IsValid)
                 return View("CreateManager", model);
 
-            var isCreated = await _serviceStorage.AdminManagerService.CreateManager(model);
+            try
+            {
+                var isCreated = await _serviceStorage.AdminManagerService.CreateManager(model);
 
-            if (isCreated)
-                return RedirectToAction("WorkWithManagers");
+                if (isCreated)
+                    return RedirectToAction("WorkWithManagers");
+            }
+            catch (Exception ex) 
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
             ModelState.AddModelError(string.Empty, ErrorMessages.CANT_REGISTER_USER);
 

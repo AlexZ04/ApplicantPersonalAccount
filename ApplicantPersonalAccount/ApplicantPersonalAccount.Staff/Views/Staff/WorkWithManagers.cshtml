@@ -3,6 +3,13 @@
 	List<ManagerDTO> managers = ViewBag.Managers;
 }
 <div class="container">
+	@if (!ViewData.ModelState.IsValid)
+	{
+		<div class="alert alert-danger">
+			<div asp-validation-summary="All" class="text-danger"></div>
+		</div>
+	}
+
 	<a class="navbar-brand" asp-area="" asp-controller="Staff" asp-action="CreateManager">Create Manager</a>
 
 	<span>Managers and Main managers:</span>
