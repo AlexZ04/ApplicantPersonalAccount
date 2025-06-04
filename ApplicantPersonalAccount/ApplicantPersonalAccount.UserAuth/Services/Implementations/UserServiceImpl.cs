@@ -56,7 +56,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             UserEntity foundUser = await _userRepository.GetUserById(userId);
 
             foundUser.Email = passwordModel.Email;
-            foundUser.UpdateTime = DateTime.UtcNow.ToUniversalTime();
+            foundUser.UpdateTime = DateTime.Now.ToUniversalTime();
 
             await _userRepository.SaveChanges();
         }
@@ -76,7 +76,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             foundUser.Citizenship = userNewInfo.Citizenship;
             foundUser.Address = userNewInfo.Address;
 
-            foundUser.UpdateTime = DateTime.UtcNow.ToUniversalTime();
+            foundUser.UpdateTime = DateTime.Now.ToUniversalTime();
 
             await _userRepository.SaveChanges();
         }

@@ -97,7 +97,7 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
-                SigningTime = DateTime.UtcNow.ToUniversalTime()
+                SigningTime = DateTime.Now.ToUniversalTime()
             };
 
             await _applicationRepository.SignUser(signingInfo);
@@ -162,7 +162,7 @@ namespace ApplicantPersonalAccount.Application.ControllerServices.Implementation
                 ProgramId = program.ProgramId,
                 Priority = program.Priority,
                 Enterance = enterance,
-                CreateTime = DateTime.UtcNow.ToUniversalTime()
+                CreateTime = DateTime.Now.ToUniversalTime()
             };
 
             await _applicationRepository.AddProgramToEnterance(newProgram, enterance);

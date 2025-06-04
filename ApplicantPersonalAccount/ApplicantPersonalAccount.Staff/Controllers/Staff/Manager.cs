@@ -42,7 +42,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterNewManagerAsync(ManagerCreateModel model)
+        public async Task<IActionResult> RegisterNewManager(ManagerCreateModel model)
         {
             if (!ModelState.IsValid)
                 return View("CreateManager", model);

@@ -31,7 +31,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
                 Subject = claims,
                 Issuer = AuthOptions.ISSUER,
                 Audience = AuthOptions.AUDIENCE,
-                Expires = DateTime.UtcNow.AddMinutes(AuthOptions.LIFETIME_MINUTES),
+                Expires = DateTime.Now.AddMinutes(AuthOptions.LIFETIME_MINUTES).ToUniversalTime(),
                 SigningCredentials = new(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256Signature)
             };
 

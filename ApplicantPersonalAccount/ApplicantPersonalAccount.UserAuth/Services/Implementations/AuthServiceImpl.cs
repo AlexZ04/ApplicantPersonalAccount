@@ -112,7 +112,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken.Token,
-                AccessExpireTime = DateTime.UtcNow.AddMinutes(AuthOptions.LIFETIME_MINUTES)
+                AccessExpireTime = DateTime.Now.AddMinutes(AuthOptions.LIFETIME_MINUTES).ToUniversalTime(),
             };
         }
 

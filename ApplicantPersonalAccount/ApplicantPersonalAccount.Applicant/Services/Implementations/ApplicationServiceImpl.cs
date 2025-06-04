@@ -71,7 +71,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 ProgramId = program.ProgramId,
                 Priority = program.Priority,
                 Enterance = enterance,
-                CreateTime = DateTime.UtcNow.ToUniversalTime()
+                CreateTime = DateTime.Now.ToUniversalTime()
             };
 
             await _applicationRepository.AddProgramToEnterance(newProgram, enterance);

@@ -81,7 +81,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
                 Email = createManager.Email,
                 Phone = createManager.Phone,
                 Gender = createManager.Gender,
-                Birthdate = createManager.Birthday != null ? (DateTime)createManager.Birthday : DateTime.UtcNow,
+                Birthdate = createManager.Birthday != null ? (DateTime)createManager.Birthday : DateTime.Now.ToUniversalTime(),
                 Password = Hasher.HashPassword(createManager.Password),
                 CreateTime = DateTime.Now.ToUniversalTime(),
                 UpdateTime = DateTime.Now.ToUniversalTime(),
