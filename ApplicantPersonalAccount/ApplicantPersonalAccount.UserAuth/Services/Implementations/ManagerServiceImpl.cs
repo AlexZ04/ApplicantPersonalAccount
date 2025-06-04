@@ -18,19 +18,24 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         private readonly UserDataContext _userContext;
         private readonly IUserRepository _userRepository;
         private readonly IMessageProducer _messageProducer;
+        private readonly ILogger<ManagerServiceImpl> _logger;
 
         public ManagerServiceImpl(
             UserDataContext userContext,
             IUserRepository userRepository,
-            IMessageProducer messageProducer)
+            IMessageProducer messageProducer,
+            ILogger<ManagerServiceImpl> logger)
         {
             _userContext = userContext;
             _userRepository = userRepository;
             _messageProducer = messageProducer;
+            _logger = logger;
         }
 
         public async Task<List<ManagerProfileDTO>> GetAllManagers()
         {
+            _logger.LogInformation("Getting list of all managers");
+
             var managers = await _userContext.Users
                 .Where(u => u.Role == Role.Manager || u.Role == Role.HeadManager)
                 .Select(m => new ManagerProfileDTO
@@ -57,6 +62,8 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         {
             var user = await _userRepository.GetUserById(id);
 
+            _logger.LogInformation($"Deleting manager with id {id}");
+
             _userContext.Users.Remove(user);
             await _userContext.SaveChangesAsync();
         }
@@ -64,6 +71,8 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         public async Task UpdateManager(ManagerUpdateDTO updateData)
         {
             var manager = await _userRepository.GetUserById(updateData.Id);
+
+            _logger.LogInformation($"Updating manager with id {updateData.Id}");
 
             manager.Name = updateData.Name;
             manager.Email = updateData.Email;
