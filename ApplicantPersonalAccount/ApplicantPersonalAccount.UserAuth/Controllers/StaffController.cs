@@ -1,4 +1,6 @@
-﻿using ApplicantPersonalAccount.Infrastructure.Filters;
+﻿using ApplicantPersonalAccount.Common.Models.Applicant;
+using ApplicantPersonalAccount.Infrastructure.Filters;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.UserAuth.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +39,18 @@ namespace ApplicantPersonalAccount.UserAuth.Controllers
         public async Task<IActionResult> GetUserProfile([FromRoute, Required] Guid id)
         {
             return Ok(await _userService.GetProfile(id));
+        }
+
+        [HttpPut("profile/{id}")]
+        [Authorize(Roles = "Manager,HeadManager,Admin")]
+        [CheckToken]
+        public async Task<IActionResult> EditUserProfile(
+            [FromRoute, Required] Guid id,
+            [FromBody] ApplicantEditModel newInfo)
+        {
+            await _managerService.EditUser(newInfo, id, UserDescriptor.GetUserRole(User));
+
+            return Ok();
         }
     }
 }

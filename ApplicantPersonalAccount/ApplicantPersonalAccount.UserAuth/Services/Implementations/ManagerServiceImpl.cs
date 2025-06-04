@@ -1,7 +1,5 @@
-﻿using ApplicantPersonalAccount.Common.Constants;
-using ApplicantPersonalAccount.Common.DTOs.Managers;
+﻿using ApplicantPersonalAccount.Common.DTOs.Managers;
 using ApplicantPersonalAccount.Common.Enums;
-using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
@@ -10,6 +8,8 @@ using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using ApplicantPersonalAccount.Notification.Models;
+using ApplicantPersonalAccount.Common.Models.User;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 
 namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 {
@@ -18,17 +18,20 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         private readonly UserDataContext _userContext;
         private readonly IUserRepository _userRepository;
         private readonly IMessageProducer _messageProducer;
+        private readonly IUserService _userService;
         private readonly ILogger<ManagerServiceImpl> _logger;
 
         public ManagerServiceImpl(
             UserDataContext userContext,
             IUserRepository userRepository,
             IMessageProducer messageProducer,
+            IUserService userService,
             ILogger<ManagerServiceImpl> logger)
         {
             _userContext = userContext;
             _userRepository = userRepository;
             _messageProducer = messageProducer;
+            _userService = userService;
             _logger = logger;
         }
 
@@ -141,6 +144,20 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
                 $"Don't show this email to anyone. Edit your password in security considerations";
 
             return message;
+        }
+
+        public async Task EditUser(ApplicantEditModel newInfo, Guid userId, string currentUserRole)
+        {
+            var newEditedModel = new UserEditModel
+            {
+                Name = newInfo.Name,
+                Phone = newInfo.Phone,
+                Birthdate = newInfo.Birthdate,
+                Citizenship = newInfo.Citizenship,
+                Address = newInfo.Address
+            };
+
+            await _userService.EditProfile(newEditedModel, userId, currentUserRole);
         }
     }
 }
