@@ -13,6 +13,7 @@ using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace ApplicantPersonalAccount.Document.Services.Implementations
 {
@@ -21,10 +22,12 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
         private readonly string _pathToStorage;
         private readonly FileDataContext _fileContext;
         private readonly IDocumentRepository _documentRepository;
+        private readonly ILogger<FileServiceImpl> _logger;
 
         public FileServiceImpl(
             IDocumentRepository documentRepository,
-            FileDataContext fileContext)
+            FileDataContext fileContext,
+            ILogger<FileServiceImpl> logger)
         {
             _pathToStorage = Path.Combine(Directory.GetCurrentDirectory(), "FileStorage");
 
@@ -33,10 +36,13 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
 
             _documentRepository = documentRepository;
             _fileContext = fileContext;
+            _logger = logger;
         }
 
         public async Task UploadFile(FileDocumentType documentType, IFormFile file, Guid userId)
         {
+            _logger.LogInformation($"Uploading {documentType} to user with id {userId}");
+
             var fileName = Hasher.HashFilename(file.FileName) + Path.GetExtension(file.FileName);
             var pathToNewFile = Path.Combine(_pathToStorage, fileName);
 
@@ -60,6 +66,8 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
 
         public async Task DeleteFile(Guid id, Guid userId)
         {
+            _logger.LogInformation($"Deleting {id} document from user with id {userId}");
+
             var document = await _documentRepository.GetDocumentInfoById(id);
 
             if (document.OwnerId != userId)
@@ -88,6 +96,8 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
 
         public async Task<FileContentResult> GetFile(Guid id)
         {
+            _logger.LogInformation($"Asking to download file {id}");
+
             var document = await _documentRepository.GetDocumentInfoById(id);
 
             if (!File.Exists(document.Path))
@@ -127,6 +137,8 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             if (userRole == "Applicant")
                 await CheckEditable(userId);
 
+            _logger.LogInformation($"Sending request to edit passport {userId} user");
+
             await _documentRepository.EditPassport(editedPassport, userId);
         }
 
@@ -138,6 +150,8 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
         {
             if (userRole == "Applicant")
                 await CheckEditable(userId);
+
+            _logger.LogInformation($"Sending request to edit education {documentId} from {userId} user");
 
             await _documentRepository.EditEducational(editedEducation, documentId, userId);
         }
