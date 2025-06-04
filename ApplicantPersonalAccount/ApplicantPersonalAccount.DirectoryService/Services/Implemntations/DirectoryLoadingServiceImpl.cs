@@ -13,15 +13,18 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IDirectoryService _directoryService;
         private readonly DirectoryDataContext _directoryContext;
+        private readonly ILogger<DirectoryLoadingServiceImpl> _logger;
 
         public DirectoryLoadingServiceImpl(
             IDirectoryRepository directoryRepository,
             IDirectoryService directoryService,
-            DirectoryDataContext directoryContext)
+            DirectoryDataContext directoryContext,
+            ILogger<DirectoryLoadingServiceImpl> logger)
         {
             _directoryRepository = directoryRepository;
             _directoryService = directoryService;
             _directoryContext = directoryContext;
+            _logger = logger;
         }
 
         public async Task<DocumentType> GetDocumentTypeById(Guid id)
@@ -34,6 +37,8 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
 
         public LoadingStatusDTO GetLoadingStatus()
         {
+            _logger.LogInformation($"Current import status is requested");
+
             return new LoadingStatusDTO
             {
                 Status = ImportStatusHolder.ImportStatus,
@@ -42,7 +47,10 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
 
         public async Task RequestDictImport(DirectoryImportType importType)
         {
-            ImportStatusHolder.ImportStatus = string.Format("Importing dictionary: {0}", importType);
+            var importString = string.Format("Importing dictionary: {0}", importType);
+
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
 
             switch (importType)
             {
@@ -85,14 +93,18 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
 
         private async Task LoadDocumentTypes()
         {
-            ImportStatusHolder.ImportStatus =
-                string.Format("Receiving data: {0}", "document types");
+            var importString = string.Format("Receiving data: {0}", "document types");
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
+                
             var documentTypes = await _directoryService.GetDocumentTypes();
 
             await Task.Delay(1000);
 
-            ImportStatusHolder.ImportStatus =
-                string.Format("Setting data: {0}", "document types");
+            importString = string.Format("Setting data: {0}", "document types");
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
+
             await _directoryRepository.SetDocumentTypes(documentTypes);
 
             await Task.Delay(1000);
@@ -100,14 +112,18 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
 
         private async Task LoadFaculties()
         {
-            ImportStatusHolder.ImportStatus =
-                string.Format("Receiving data: {0}", "faculties");
+            var importString = string.Format("Receiving data: {0}", "faculties");
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
+
             var faculties = await _directoryService.GetFaculties();
 
             await Task.Delay(1000);
 
-            ImportStatusHolder.ImportStatus =
-                string.Format("Setting data: {0}", "faculties");
+            importString = string.Format("Setting data: {0}", "faculties");
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
+                
             await _directoryRepository.SetFaculties(faculties);
 
             await Task.Delay(1000);
@@ -115,14 +131,18 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
 
         private async Task LoadEducationLevels()
         {
-            ImportStatusHolder.ImportStatus =
-                string.Format("Receiving data: {0}", "education levels");
+            var importString = string.Format("Receiving data: {0}", "education levels");
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
+                
             var educationLevels = await _directoryService.GetEducationLevels();
 
             await Task.Delay(1000);
 
-            ImportStatusHolder.ImportStatus =
-                string.Format("Setting data: {0}", "education levels");
+            importString = string.Format("Setting data: {0}", "education levels");
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
+                
             await _directoryRepository.SetEducationLevels(educationLevels);
 
             await Task.Delay(1000);
@@ -133,14 +153,18 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
             var programs = await _directoryService.GetEducationPrograms(1, 1);
             var size = programs.Pagination.Count;
 
-            ImportStatusHolder.ImportStatus =
-                string.Format("Receiving data: {0}", "programs");
+            var importString = string.Format("Receiving data: {0}", "programs");
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
+
             programs = await _directoryService.GetEducationPrograms(1, size);
 
             await Task.Delay(1000);
 
-            ImportStatusHolder.ImportStatus =
-                string.Format("Setting data: {0}", "programs");
+            importString = string.Format("Setting data: {0}", "programs");
+            ImportStatusHolder.ImportStatus = importString;
+            _logger.LogInformation(importString);
+
             await _directoryRepository.SetEducationPrograms(programs.Programs);
 
             await Task.Delay(1000);

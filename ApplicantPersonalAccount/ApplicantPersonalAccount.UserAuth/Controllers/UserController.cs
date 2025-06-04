@@ -56,7 +56,7 @@ namespace ApplicantPersonalAccount.UserAuth.Controllers
         [CheckToken]
         public async Task<IActionResult> GetProfile()
         {
-            return Ok(await _userService.GetProfile(UserDescriptor.GetUserId(User));
+            return Ok(await _userService.GetProfile(UserDescriptor.GetUserId(User)));
         }
     }
 }
