@@ -15,24 +15,28 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
     public partial class StaffController : Controller
     {
         private readonly ServiceStorage _serviceStorage;
+        private readonly ILogger<StaffController> _logger;
 
-        public StaffController(ServiceStorage serviceStorage)
+        public StaffController(
+            ServiceStorage serviceStorage,
+            ILogger<StaffController> logger)
         {
             _serviceStorage = serviceStorage;
+            _logger = logger;
         }
 
         public async Task<IActionResult> WorkWithManagers()
         {
-            
             try
             {
                 ViewBag.Managers = await _serviceStorage.AdminManagerService.GetListOfManagers();
-                return View();
+                _logger.LogInformation($"List of managers loaded");
             }
             catch (Exception ex)
             {
                 ViewBag.Managers = new List<ManagerDTO>();
                 ModelState.AddModelError(string.Empty, ex.Message);
+                _logger.LogWarning(ex.Message);
             }
             return View();
         }
@@ -42,11 +46,13 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
             try
             {
                 var manager = await _serviceStorage.AdminManagerService.GetManagerProfile(id);
+                _logger.LogWarning($"Profile loaded, Manager id: {id}");
                 return View(manager);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
+                _logger.LogWarning(ex.Message);
                 return View("WorkWithManagers");
             }
         }
@@ -69,14 +75,19 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
                 var isCreated = await _serviceStorage.AdminManagerService.CreateManager(model);
 
                 if (isCreated)
+                {
+                    _logger.LogInformation($"User {model.Email} created");
                     return RedirectToAction("WorkWithManagers");
+                }
             }
             catch (Exception ex) 
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
+                _logger.LogWarning(ex.Message);
             }
 
             ModelState.AddModelError(string.Empty, ErrorMessages.CANT_REGISTER_USER);
+            _logger.LogError(ErrorMessages.CANT_REGISTER_USER + $" User email: {model.Email}");
 
             return View("CreateManager", model);
         }
@@ -88,6 +99,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
                 return View(model);
 
             _serviceStorage.AdminManagerService.EditManagerProfile(model);
+            _logger.LogInformation($"Trying to edit {model.Email} user profile");
             return RedirectToAction("WorkWithManagers");
         }
 
@@ -95,6 +107,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
         public IActionResult DeleteManager(Guid id)
         {
             _serviceStorage.AdminManagerService.DeleteManager(id);
+            _logger.LogInformation($"Trying to delete {id} user profile");
             return RedirectToAction("WorkWithManagers");
         }
     }

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicantPersonalAccount.Common\ApplicantPersonalAccount.Common.csproj" />
+    <ProjectReference Include="..\ApplicantPersonalAccount.Notification\ApplicantPersonalAccount.Notification.csproj" />
     <ProjectReference Include="..\ApplicantPersonalAccount.Persistence\ApplicantPersonalAccount.Persistence.csproj" />
   </ItemGroup>
 
