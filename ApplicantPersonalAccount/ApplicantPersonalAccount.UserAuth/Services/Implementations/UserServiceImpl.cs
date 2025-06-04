@@ -13,15 +13,21 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
     public class UserServiceImpl : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILogger<UserServiceImpl> _logger;
 
-        public UserServiceImpl(IUserRepository userRepository)
+        public UserServiceImpl(
+            IUserRepository userRepository,
+            ILogger<UserServiceImpl> logger)
         {
             _userRepository = userRepository;
+            _logger = logger;
         }
 
-        public async Task<UserProfileModel> GetProfile(ClaimsPrincipal user)
+        public async Task<UserProfileModel> GetProfile(Guid userId)
         {
-            UserEntity foundUser = await _userRepository.GetUserById(UserDescriptor.GetUserId(user));
+            UserEntity foundUser = await _userRepository.GetUserById(userId);
+
+            _logger.LogInformation($"Getting information about user id {userId}");
 
             UserProfileModel profile = new UserProfileModel
             {
@@ -43,6 +49,8 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         {
             UserEntity foundUser = await _userRepository.GetUserById(userId);
 
+            _logger.LogInformation($"Trying to change password for user id {userId}");
+
             if (!Hasher.CheckPassword(foundUser.Password, passwordModel.OldPassword))
                 throw new ImpossibleActionException(ErrorMessages.INVALID_PASSWORD);
 
@@ -55,6 +63,8 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         {
             UserEntity foundUser = await _userRepository.GetUserById(userId);
 
+            _logger.LogInformation($"Trying to change email for user id {userId}");
+
             foundUser.Email = passwordModel.Email;
             foundUser.UpdateTime = DateTime.Now.ToUniversalTime();
 
@@ -64,6 +74,8 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         public async Task EditProfile(UserEditModel userNewInfo, Guid userId, string userRole)
         {
             UserEntity foundUser = await _userRepository.GetUserById(userId);
+
+            _logger.LogInformation($"Trying to change profile for user id {userId}");
 
             if (userRole == "Applicant")
                 await CheckEditable(userId);
