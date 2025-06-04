@@ -1,19 +1,19 @@
-using ApplicantPersonalAccount.Common.Enums;
+﻿using ApplicantPersonalAccount.Common.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApplicantPersonalAccount.Staff.Models
 {
-    public class ManagerProfileViewModel
+    public class ManagerCreateModel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        [Required]
         [Display(Name = "Name")]
+        [Required]
         public string Name { get; set; } = String.Empty;
         [Display(Name = "Role")]
         public string Role { get; set; } = "Manager";
-        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = string.Empty;
         [Required]
@@ -25,11 +25,9 @@ namespace ApplicantPersonalAccount.Staff.Models
         public DateTime? Birthday { get; set; } = DateTime.UtcNow;
         [Display(Name = "Gender")]
         public Gender Gender { get; set; } = Gender.Male;
-
-        [Display(Name = "Citizenship")]
-        public string Citizenship { get; set; } = string.Empty;
-
-        [Display(Name = "Address")]
-        public string Address { get; set; } = string.Empty;
+        [Display(Name = "Password")]
+        [UIHint("password")]
+        [Required]
+        public string Password { get; set; } = String.Empty;
     }
-} 
+}

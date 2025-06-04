@@ -1,8 +1,6 @@
-﻿using ApplicantPersonalAccount.Common.DTOs;
-using ApplicantPersonalAccount.Common.DTOs.Managers;
+﻿using ApplicantPersonalAccount.Common.DTOs.Managers;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener;
-using ApplicantPersonalAccount.Persistence.Repositories;
 using ApplicantPersonalAccount.UserAuth.Services;
 using RabbitMQ.Client.Events;
 

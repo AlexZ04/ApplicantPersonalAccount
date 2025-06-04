@@ -1,3 +1,54 @@
-﻿<div>
-	aaa
+﻿@model ApplicantPersonalAccount.Staff.Models.ManagerCreateModel
+
+<div class="container">
+	<h2>Create Manager</h2>
+
+    <form asp-action="RegisterNewManager" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="group-cont">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Phone"></label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Birthday"></label>
+            <input asp-for="Birthday" type="date" class="form-control" />
+            <span asp-validation-for="Birthday" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Gender"></label>
+            <input asp-for="Gender" class="form-control" />
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont-btns">
+            <button type="submit" class="btn btn-primary">Create Manager</button>
+            <a asp-action="WorkWithManagers" class="btn btn-secondary">Back</a>
+        </div>
+    </form>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

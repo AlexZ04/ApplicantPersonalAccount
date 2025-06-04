@@ -30,14 +30,14 @@
 				<span asp-validation-for="Password"></span>
 			</div>
 
-			@* <div class="login-field"> *@
-			@* 	<label asp-for="RememberMe"></label> *@
-			@* 	<input asp-for="RememberMe" /> *@
-			@* 	<span asp-validation-for="RememberMe"></span> *@
-			@* </div> *@
-
 			<input type="submit" value="@PageElementsNames.ENTER" />
 
 		</form>
 	</div>
 </div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

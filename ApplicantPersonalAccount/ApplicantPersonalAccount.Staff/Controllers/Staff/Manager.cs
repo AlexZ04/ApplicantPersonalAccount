@@ -35,7 +35,19 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
 
         public IActionResult CreateManager()
         {
-            return View();
+            var newManager = new ManagerCreateModel();
+
+            return View(newManager);
+        }
+
+        [HttpPost]
+        public IActionResult RegisterNewManager(ManagerCreateModel model)
+        {
+            if (!ModelState.IsValid)
+                return View("ManagerInfo", model);
+
+            //_serviceStorage.AdminManagerService.EditManagerProfile(model);s
+            return RedirectToAction("WorkWithManagers");
         }
 
         [HttpPost]

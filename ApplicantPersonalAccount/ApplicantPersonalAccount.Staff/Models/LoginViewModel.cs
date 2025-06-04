@@ -11,7 +11,5 @@ namespace ApplicantPersonalAccount.Staff.Models
         [UIHint("password")]
         [Required]
         public string? Password { get; set; }
-        //[Display(Name = "Remember me?")]
-        //public bool RememberMe { get; set; } = false;
     }
 }
