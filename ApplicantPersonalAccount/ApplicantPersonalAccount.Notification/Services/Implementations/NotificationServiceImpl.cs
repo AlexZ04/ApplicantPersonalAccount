@@ -12,16 +12,23 @@ namespace ApplicantPersonalAccount.Notification.Services.Implementations
     public class NotificationServiceImpl : INotificationService
     {
         private readonly NotificationDataContext _notificationDataContext;
+        private readonly ILogger<NotificationServiceImpl> _logger;
 
-        public NotificationServiceImpl(NotificationDataContext notificationDataContext)
+        public NotificationServiceImpl(
+            NotificationDataContext notificationDataContext,
+            ILogger<NotificationServiceImpl> logger)
         {
             _notificationDataContext = notificationDataContext;
+            _logger = logger;
         }
 
         public async Task SendEmail(string key, NotificationModel notification)
         {
             if (key != NotificationsOptions.NOTIFICATION_KEY)
+            {
+                _logger.LogWarning($"Somebody typed invalid notification key");
                 throw new UnaccessableAction(ErrorMessages.INVALID_KEY);
+            }
 
             if (!(await CheckSubscription(notification.UserEmail)))
                 return;
@@ -32,6 +39,7 @@ namespace ApplicantPersonalAccount.Notification.Services.Implementations
             }
             catch (Exception)
             {
+                _logger.LogWarning($"Can't send email to {notification.UserEmail}");
                 throw new InvalidActionException(ErrorMessages.CANT_SEND_EMAIL);
             }
         }
@@ -46,6 +54,8 @@ namespace ApplicantPersonalAccount.Notification.Services.Implementations
 
         private async Task SendEmailBySmpt(NotificationModel notification)
         {
+            _logger.LogInformation($"Sending email to {notification.UserEmail}");
+
             MailAddress to = new MailAddress(notification.UserEmail);
             MailAddress from = new MailAddress(NotificationsOptions.EMAIL, 
                 NotificationsOptions.FROM_TITLE);
@@ -72,9 +82,12 @@ namespace ApplicantPersonalAccount.Notification.Services.Implementations
         {
             var isSigned = await CheckSubscription(userEmail);
 
-            if (isSigned) 
+            if (isSigned)
+            {
+                _logger.LogError($"Can't sign {userEmail} to notifications");
                 throw new InvalidActionException(ErrorMessages.USER_IS_SIGNED);
-
+            }
+            
             var subUser = new NotificationSubscribtionEntity
             {
                 Id = Guid.NewGuid(),
@@ -90,7 +103,10 @@ namespace ApplicantPersonalAccount.Notification.Services.Implementations
             var isSigned = await CheckSubscription(userEmail);
 
             if (!isSigned)
+            {
+                _logger.LogError($"Can't unsign {userEmail} from notifications");
                 throw new InvalidActionException(ErrorMessages.USER_IS_UNSIGNED);
+            }
 
             var record = await _notificationDataContext.Subscribers
                 .FirstAsync(s => s.UserEmail == userEmail);
