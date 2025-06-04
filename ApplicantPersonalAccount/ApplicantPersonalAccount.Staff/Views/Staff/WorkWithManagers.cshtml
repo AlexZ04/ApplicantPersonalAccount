@@ -22,6 +22,7 @@
 
 				<form id="delete-manager-@manager.Id" asp-area=""
 				asp-controller="Staff" asp-action="DeleteManager" method="post">
+					<input type="hidden" name="id" value="@manager.Id" />
 					<a href="#" onclick="document.getElementById('delete-manager-@manager.Id').submit()">Delete</a>
 				</form>
 
