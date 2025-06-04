@@ -119,7 +119,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.CREATE_MANGER);
-            if (result == null)
+            if (result == string.Empty)
                 return false;
 
             return true;

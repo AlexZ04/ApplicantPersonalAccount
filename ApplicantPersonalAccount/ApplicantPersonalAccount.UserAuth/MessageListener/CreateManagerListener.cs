@@ -21,12 +21,16 @@ namespace ApplicantPersonalAccount.UserAuth.MessageListener
 
             try
             {
-                await managerService.CreateManager(message);
-                return "created";
+                var created = await managerService.CreateManager(message);
+
+                if (created)
+                    return "created";
+
+                return "";
             }
             catch
             {
-                return null;
+                return "";
             }
         }
     }

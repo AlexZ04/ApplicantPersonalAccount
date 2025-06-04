@@ -2,7 +2,9 @@
 using ApplicantPersonalAccount.Common.DTOs.Managers;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Contextes;
+using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,7 +69,38 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 
         public async Task<bool> CreateManager(ManagerCreateDTO createManager)
         {
-            return false;
+            var canBeCreated = await _userRepository.EmailIsAvailable(createManager.Email);
+
+            if (!canBeCreated)
+                return false;
+
+            var newUser = new UserEntity
+            {
+                Id = createManager.Id,
+                Name = createManager.Name,
+                Email = createManager.Email,
+                Phone = createManager.Phone,
+                Gender = createManager.Gender,
+                Birthdate = createManager.Birthday != null ? (DateTime)createManager.Birthday : DateTime.UtcNow,
+                Password = Hasher.HashPassword(createManager.Password),
+                CreateTime = DateTime.Now.ToUniversalTime(),
+                UpdateTime = DateTime.Now.ToUniversalTime(),
+                Role = createManager.Role,
+
+                InfoForEvents = new InfoForEventsEntity
+                {
+                    Id = Guid.NewGuid(),
+                    EducationPlace = string.Empty,
+                    SocialNetwork = string.Empty
+                }
+            };
+
+            _userRepository.AddUser(newUser);
+            newUser.InfoForEvents.User = newUser;
+
+            await _userRepository.SaveChanges();
+
+            return true;
         }
     }
 }
