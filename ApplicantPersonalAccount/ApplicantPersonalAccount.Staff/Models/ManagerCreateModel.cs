@@ -18,6 +18,7 @@ namespace ApplicantPersonalAccount.Staff.Models
         public string Email { get; set; } = string.Empty;
         [Required]
         [Display(Name = "Phone")]
+        [Phone]
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; } = String.Empty;
         [Display(Name = "Birthday")]
