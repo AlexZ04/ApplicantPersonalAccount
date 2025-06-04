@@ -14,10 +14,14 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Admin
     public partial class StaffController : Controller
     {
         private readonly ServiceStorage _serviceStorage;
+        private readonly ILogger<StaffController> _logger;
 
-        public StaffController(ServiceStorage serviceStorage)
+        public StaffController(
+            ServiceStorage serviceStorage,
+            ILogger<StaffController> logger)
         {
             _serviceStorage = serviceStorage;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -39,6 +43,9 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Admin
         public IActionResult ImportDirectory(DirectoryImportType importType)
         {
             _serviceStorage.AdminDirectoryService.RequestImport(importType);
+
+            _logger.LogInformation($"Import of directory by type requested: {importType}");
+
             return RedirectToAction(nameof(WorkWithDirectory));
         }
     }

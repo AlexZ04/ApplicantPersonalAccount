@@ -42,3 +42,4 @@ ApplicantPersonalAccount/ApplicantPersonalAccount.Common/Constants/AuthOptions.c
 ApplicantPersonalAccount/ApplicantPersonalAccount.Common/Constants/ServerURLs.cs
 /ApplicantPersonalAccount/ApplicantPersonalAccount.API/FileStorage
 ApplicantPersonalAccount/ApplicantPersonalAccount.Common/Constants/NotificationsOptions.cs
+/Logs

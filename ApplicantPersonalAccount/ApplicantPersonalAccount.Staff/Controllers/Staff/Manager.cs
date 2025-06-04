@@ -23,6 +23,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
 
         public async Task<IActionResult> WorkWithManagers()
         {
+            
             try
             {
                 ViewBag.Managers = await _serviceStorage.AdminManagerService.GetListOfManagers();
