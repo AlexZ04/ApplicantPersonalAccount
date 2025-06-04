@@ -10,7 +10,7 @@ namespace ApplicantPersonalAccount.UserAuth.MessageListener
     public class CreateManagerListener : BaseMessageListener<ManagerCreateDTO>
     {
         public CreateManagerListener(IServiceProvider serviceProvider, IConfiguration config)
-            : base(serviceProvider, config, RabbitQueues.CREATE_MANGER) { }
+            : base(serviceProvider, config, RabbitQueues.CREATE_MANAGER) { }
 
         protected override async Task<string?> ProcessMessage(
             ManagerCreateDTO message,

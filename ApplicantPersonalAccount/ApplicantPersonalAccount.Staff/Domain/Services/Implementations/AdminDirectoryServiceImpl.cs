@@ -12,14 +12,20 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
     public class AdminDirectoryServiceImpl : IAdminDirectoryService
     {
         private readonly IMessageProducer _messageProducer;
+        private readonly ILogger<AdminDirectoryServiceImpl> _logger;
 
-        public AdminDirectoryServiceImpl(IMessageProducer messageProducer)
+        public AdminDirectoryServiceImpl(
+            IMessageProducer messageProducer,
+            ILogger<AdminDirectoryServiceImpl> logger)
         {
             _messageProducer = messageProducer;
+            _logger = logger;
         }
 
         public async Task<string> GetImportStatus()
         {
+            _logger.LogInformation("Send request to get import status");
+
             var rpcClient = new RpcClient();
             var request = new BrokerRequestDTO
             {
@@ -29,8 +35,11 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             string result = await rpcClient.CallAsync(request, RabbitQueues.IMPORT_STATUS);
 
             if (result == "")
+            {
+                _logger.LogError("Error with getting import status");
                 return PageElementsNames.ERROR_WITH_STATUS;
-
+            }
+                
             return result;
         }
 
@@ -40,6 +49,8 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             {
                 Type = importType
             };
+
+            _logger.LogInformation($"Sending request to import directory. Import type: {importType}");
 
             _messageProducer.SendMessage(request, RabbitQueues.IMPORT_REQUEST);
         }

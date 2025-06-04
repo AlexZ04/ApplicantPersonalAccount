@@ -16,8 +16,11 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
     {
         private readonly IMessageProducer _messageProducer;
         private readonly JsonSerializerOptions _jsonOptions;
+        private readonly ILogger<AdminDirectoryServiceImpl> _logger;
 
-        public AdminManagerServiceImpl(IMessageProducer messageProducer)
+        public AdminManagerServiceImpl(
+            IMessageProducer messageProducer,
+            ILogger<AdminDirectoryServiceImpl> logger)
         {
             _jsonOptions = new JsonSerializerOptions
             {
@@ -26,10 +29,13 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             _messageProducer = messageProducer;
+            _logger = logger;
         }
 
         public async Task<List<ManagerDTO>> GetListOfManagers()
         {
+            _logger.LogInformation("Sending request to get list of managers");
+
             var rpcClient = new RpcClient();
             var request = new BrokerRequestDTO
             {
@@ -38,8 +44,11 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.GET_ALL_MANAGERS);
             if (result == null)
+            {
+                _logger.LogError("Response with list of managers did not come");
                 return new List<ManagerDTO>();
-
+            }
+                
             var userData = JsonSerializer.Deserialize<List<ManagerDTO>>(result, _jsonOptions)!;
 
             return userData;
@@ -47,6 +56,8 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 
         public async Task<ManagerProfileViewModel> GetManagerProfile(Guid id)
         {
+            _logger.LogInformation($"Sending request to get user profile. Id: {id}");
+
             var rpcClient = new RpcClient();
             var request = new GuidRequestDTO
             {
@@ -55,8 +66,11 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
             if (result == null)
+            {
+                _logger.LogError($"User with id {id} not found");
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
-
+            }
+            
             var userData = JsonSerializer.Deserialize<ManagerProfileDTO>(result, _jsonOptions)!;
 
             var managerModel = new ManagerProfileViewModel
@@ -77,6 +91,8 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 
         public void DeleteManager(Guid id)
         {
+            _logger.LogInformation($"Sending request to delete user with {id}");
+
             var request = new GuidRequestDTO
             {
                 Id = id
@@ -86,6 +102,8 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 
         public void EditManagerProfile(ManagerProfileViewModel model)
         {
+            _logger.LogInformation($"Sending request to update user with {model.Id}");
+
             var request = new ManagerUpdateDTO
             {
                 Id = model.Id,
@@ -101,6 +119,8 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 
         public async Task<bool> CreateManager(ManagerCreateModel model)
         {
+            _logger.LogInformation($"Sending request create manager {model.Email}");
+
             var rpcClient = new RpcClient();
 
             var request = new ManagerCreateDTO
@@ -115,9 +135,12 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
                 Password = model.Password
             };
 
-            var result = await rpcClient.CallAsync(request, RabbitQueues.CREATE_MANGER);
+            var result = await rpcClient.CallAsync(request, RabbitQueues.CREATE_MANAGER);
             if (result == string.Empty)
+            {
+                _logger.LogError($"Something went wrong with creating manager {model.Email}");
                 return false;
+            }
 
             return true;
         }
