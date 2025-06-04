@@ -21,9 +21,10 @@ namespace ApplicantPersonalAccount.Staff.Models
         [Phone]
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; } = String.Empty;
+        [Required]
         [Display(Name = "Birthday")]
         [DataType(DataType.Date)]
-        public DateTime? Birthday { get; set; } = DateTime.Now.ToUniversalTime();
+        public DateTime Birthday { get; set; } = DateTime.Now.ToUniversalTime();
         [Display(Name = "Gender")]
         public Gender Gender { get; set; } = Gender.Male;
         [Display(Name = "Password")]

@@ -15,7 +15,7 @@ namespace ApplicantPersonalAccount.Common.DTOs.Managers
         [Required]
         [Phone]
         public string Phone { get; set; } = String.Empty;
-        public DateTime? Birthday { get; set; } = DateTime.Now.ToUniversalTime();
+        public DateTime Birthday { get; set; } = DateTime.Now.ToUniversalTime();
         public Gender Gender { get; set; } = Gender.Male;
         [Required]
         public string Password { get; set; } = String.Empty;

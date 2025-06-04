@@ -23,7 +23,8 @@ namespace ApplicantPersonalAccount.Staff.Models
         public string Phone { get; set; } = String.Empty;
         [Display(Name = "Birthday")]
         [DataType(DataType.Date)]
-        public DateTime? Birthday { get; set; } = DateTime.Now.ToUniversalTime();
+        [Required]
+        public DateTime Birthday { get; set; } = DateTime.Now.ToUniversalTime();
         [Display(Name = "Gender")]
         public Gender Gender { get; set; } = Gender.Male;
 

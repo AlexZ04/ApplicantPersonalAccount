@@ -54,7 +54,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
 
             ModelState.AddModelError(string.Empty, ErrorMessages.CANT_REGISTER_USER);
 
-            return View(model);
+            return View("CreateManager", model);
         }
 
         [HttpPost]
