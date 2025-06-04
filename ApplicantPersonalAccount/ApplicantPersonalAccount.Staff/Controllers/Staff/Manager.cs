@@ -1,4 +1,5 @@
-﻿using ApplicantPersonalAccount.Infrastructure.Filters;
+﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Staff.Domain.Infrascructure;
 using ApplicantPersonalAccount.Staff.Domain.Services;
 using ApplicantPersonalAccount.Staff.Models;
@@ -41,20 +42,26 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
         }
 
         [HttpPost]
-        public IActionResult RegisterNewManager(ManagerCreateModel model)
+        public async Task<IActionResult> RegisterNewManagerAsync(ManagerCreateModel model)
         {
             if (!ModelState.IsValid)
                 return View("CreateManager", model);
 
-            //_serviceStorage.AdminManagerService.CreateManager(model);
-            return RedirectToAction("WorkWithManagers");
+            var isCreated = await _serviceStorage.AdminManagerService.CreateManager(model);
+
+            if (isCreated)
+                return RedirectToAction("WorkWithManagers");
+
+            ModelState.AddModelError(string.Empty, ErrorMessages.CANT_REGISTER_USER);
+
+            return View(model);
         }
 
         [HttpPost]
         public IActionResult EditManagerInfo(ManagerProfileViewModel model)
         {
             if (!ModelState.IsValid)
-                return View("ManagerInfo", model);
+                return View(model);
 
             _serviceStorage.AdminManagerService.EditManagerProfile(model);
             return RedirectToAction("WorkWithManagers");

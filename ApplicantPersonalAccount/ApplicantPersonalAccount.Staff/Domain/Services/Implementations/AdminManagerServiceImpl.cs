@@ -100,5 +100,10 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 
             _messageProducer.SendMessage(request, RabbitQueues.UPDATE_MANAGER);
         }
+
+        public async Task<bool> CreateManager(ManagerCreateModel model)
+        {
+            return false;
+        }
     }
 }
