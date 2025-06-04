@@ -1,4 +1,5 @@
 ﻿@model ApplicantPersonalAccount.Staff.Models.ManagerCreateModel
+@using ApplicantPersonalAccount.Common.Enums
 
 <div class="container">
 	<h2>Create Manager</h2>
@@ -8,37 +9,43 @@
 
         <div class="group-cont">
             <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
+            <input asp-for="Name" class="form-control" autocomplete="off"/>
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="group-cont">
+            <label asp-for="Role"></label>
+            <select asp-for="Role" asp-items="Html.GetEnumSelectList<ManagerRole>()" class="form-control"></select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+
+        <div class="group-cont">
             <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control" />
+            <input asp-for="Email" class="form-control" autocomplete="off" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="group-cont">
             <label asp-for="Phone"></label>
-            <input asp-for="Phone" class="form-control" />
+            <input asp-for="Phone" class="form-control" autocomplete="off" />
             <span asp-validation-for="Phone" class="text-danger"></span>
         </div>
 
         <div class="group-cont">
             <label asp-for="Birthday"></label>
-            <input asp-for="Birthday" type="date" class="form-control" />
+            <input asp-for="Birthday" type="date" class="form-control" autocomplete="off" />
             <span asp-validation-for="Birthday" class="text-danger"></span>
         </div>
 
         <div class="group-cont">
             <label asp-for="Gender"></label>
-            <input asp-for="Gender" class="form-control" />
+            <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
             <span asp-validation-for="Gender" class="text-danger"></span>
         </div>
 
         <div class="group-cont">
             <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control" />
+            <input asp-for="Password" class="form-control" autocomplete="off" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 

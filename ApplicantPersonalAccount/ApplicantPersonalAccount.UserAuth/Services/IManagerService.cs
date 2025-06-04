@@ -7,5 +7,6 @@ namespace ApplicantPersonalAccount.UserAuth.Services
         public Task<List<ManagerProfileDTO>> GetAllManagers();
         public Task DeleteManagerById(Guid id);
         public Task UpdateManager(ManagerUpdateDTO updateData);
+        public Task<bool> CreateManager(ManagerCreateDTO createManager);
     }
 }

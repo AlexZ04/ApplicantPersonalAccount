@@ -64,5 +64,10 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 
             await _userContext.SaveChangesAsync();
         }
+
+        public async Task<bool> CreateManager(ManagerCreateDTO createManager)
+        {
+            return false;
+        }
     }
 }

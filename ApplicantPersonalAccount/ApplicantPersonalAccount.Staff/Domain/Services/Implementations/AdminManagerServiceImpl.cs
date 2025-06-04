@@ -3,6 +3,7 @@ using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.DTOs.Managers;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models.Authorization;
 using ApplicantPersonalAccount.Common.Models.User;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
@@ -103,7 +104,25 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
 
         public async Task<bool> CreateManager(ManagerCreateModel model)
         {
-            return false;
+            var rpcClient = new RpcClient();
+
+            var request = new ManagerCreateDTO
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Email = model.Email,
+                Phone = model.Phone,
+                Birthday = model.Birthday,
+                Gender = model.Gender,
+                Role = model.Role,
+                Password = model.Password
+            };
+
+            var result = await rpcClient.CallAsync(request, RabbitQueues.CREATE_MANGER);
+            if (result == null)
+                return false;
+
+            return true;
         }
     }
 }
