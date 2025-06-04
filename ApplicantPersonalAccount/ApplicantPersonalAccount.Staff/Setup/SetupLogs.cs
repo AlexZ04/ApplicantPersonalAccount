@@ -6,7 +6,7 @@ namespace ApplicantPersonalAccount.Staff.Setup
     {
         public static void AddLogs(WebApplicationBuilder builder)
         {
-            var logDirectory = Path.Combine("../../Logs", DateTime.UtcNow.ToString("yyyy-MM-dd"));
+            var logDirectory = Path.Combine("../../Logs", DateTime.Now.ToString("yyyy-MM-dd"));
             Directory.CreateDirectory(logDirectory);
 
             builder.Host.UseSerilog((context, configuration) =>
