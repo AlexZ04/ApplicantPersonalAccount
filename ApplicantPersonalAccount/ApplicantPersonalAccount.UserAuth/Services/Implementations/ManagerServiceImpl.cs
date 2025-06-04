@@ -2,11 +2,14 @@
 using ApplicantPersonalAccount.Common.DTOs.Managers;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using ApplicantPersonalAccount.Notification.Models;
 
 namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 {
@@ -14,13 +17,16 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
     {
         private readonly UserDataContext _userContext;
         private readonly IUserRepository _userRepository;
+        private readonly IMessageProducer _messageProducer;
 
         public ManagerServiceImpl(
             UserDataContext userContext,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IMessageProducer messageProducer)
         {
             _userContext = userContext;
             _userRepository = userRepository;
+            _messageProducer = messageProducer;
         }
 
         public async Task<List<ManagerProfileDTO>> GetAllManagers()
@@ -100,7 +106,32 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 
             await _userRepository.SaveChanges();
 
+            //SendGreetingsEmail(newUser, createManager.Password);
             return true;
+        }
+
+        private void SendGreetingsEmail(UserEntity user, string password)
+        {
+            var notification = new NotificationModel
+            {
+                UserEmail = user.Email,
+                Title = "Welcome to team",
+                Text = FormGreetingsManagerText(user, password)
+            };
+
+            _messageProducer.SendMessage(notification, RabbitQueues.NOTIFICATION);
+        }
+
+        private string FormGreetingsManagerText(UserEntity user, string password)
+        {
+            var message = $"Hey, {user.Name}! Welcome to team. \n" +
+                $"Now you are the {user.Role} in ApplicantPersonalAccount company.\n\n" +
+                $"You credentials is: \n" +
+                $"Email: {user.Email}\n" +
+                $"Password: {password}\n\n" +
+                $"Don't show this email to anyone. Edit your password in security considerations";
+
+            return message;
         }
     }
 }
