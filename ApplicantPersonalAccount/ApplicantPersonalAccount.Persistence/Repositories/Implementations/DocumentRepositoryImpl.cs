@@ -8,6 +8,7 @@ using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
@@ -15,10 +16,14 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
     public class DocumentRepositoryImpl : IDocumentRepository
     {
         private readonly FileDataContext _fileDataContext;
+        private readonly ILogger<DocumentRepositoryImpl> _logger;
 
-        public DocumentRepositoryImpl(FileDataContext fileDataContext)
+        public DocumentRepositoryImpl(
+            FileDataContext fileDataContext,
+            ILogger<DocumentRepositoryImpl> logger)
         {
             _fileDataContext = fileDataContext;
+            _logger = logger;
         }
 
         public async Task AddFile(DocumentEntity file)
@@ -64,7 +69,10 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             var file = await _fileDataContext.Documents.FindAsync(id);
 
             if (file == null)
+            {
+                _logger.LogWarning($"Document {id} not found");
                 throw new NotFoundException(ErrorMessages.FILE_NOT_FOUND);
+            }
 
             if (file.DocumentType == FileDocumentType.Educational)
             {
@@ -98,6 +106,9 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
         {
             var file = await _fileDataContext.Documents.FindAsync(id);
 
+            if (file == null)
+                _logger.LogWarning($"File {id} not found");
+
             return file ?? throw new NotFoundException(ErrorMessages.FILE_NOT_FOUND);
         }
 
@@ -118,7 +129,10 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
                 .FirstOrDefaultAsync(p => p.UserId == userId);
 
             if (passport == null)
+            {
+                _logger.LogWarning($"User {userId} not found");
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+            }
 
             passport.Series = editedPassport.Series;
             passport.Number = editedPassport.Number;
@@ -138,7 +152,10 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
                 .FirstOrDefaultAsync(i => i.UserId == userId && i.Document.Id == documentId);
 
             if (education == null)
+            {
+                _logger.LogWarning($"User {userId} not found");
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+            }
 
             if (editedEducation.DocumentTypeId != null)
                 await GetDocumentTypeById((Guid)editedEducation.DocumentTypeId);
@@ -157,8 +174,12 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID);
-            if (result == null) throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
-
+            if (result == null)
+            {
+                _logger.LogWarning($"Document type {id} not found");
+                throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+            }
+                
             var documentType = JsonSerializer.Deserialize<DocumentType>(result)!;
 
             return documentType;

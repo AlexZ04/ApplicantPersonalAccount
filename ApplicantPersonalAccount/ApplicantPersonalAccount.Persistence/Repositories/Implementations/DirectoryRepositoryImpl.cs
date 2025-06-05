@@ -22,7 +22,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
                 if (foundRecord == null)
                     _directoryContext.EducationLevels.Add(level);
-
             }
 
             await _directoryContext.SaveChangesAsync();

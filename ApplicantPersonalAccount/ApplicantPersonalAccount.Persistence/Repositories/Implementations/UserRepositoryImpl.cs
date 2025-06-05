@@ -6,6 +6,7 @@ using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
@@ -13,10 +14,14 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
     public class UserRepositoryImpl : IUserRepository 
     {
         private readonly UserDataContext _userContext;
+        private readonly ILogger<UserRepositoryImpl> _logger;
 
-        public UserRepositoryImpl(UserDataContext userContext)
+        public UserRepositoryImpl(
+            UserDataContext userContext,
+            ILogger<UserRepositoryImpl> logger)
         {
             _userContext = userContext;
+            _logger = logger;
         }
 
         public void AddUser(UserEntity user)
@@ -71,17 +76,15 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             UserEntity? user = await _userContext.Users
                 .FindAsync(id);
 
+            if (user == null)
+                _logger.LogWarning($"User {id} not found");
+
             return user != null ? user : throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
         }
 
         public async Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId)
         {
-            var info = await _userContext.InfoForEvents
-                .Include(i => i.User)
-                .FirstOrDefaultAsync(i => i.User.Id == userId);
-
-            if (info == null)
-                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+            var info = await GetInfoForEvents(userId);
 
             info.EducationPlace = editedInfo.EducationPlace;
             info.SocialNetwork = editedInfo.SocialNetworks;
@@ -94,6 +97,9 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             var info = await _userContext.InfoForEvents
                 .Include(i => i.User)
                 .FirstOrDefaultAsync(i => i.User.Id == userId);
+
+            if (info == null)
+                _logger.LogWarning($"User {userId} not found");
 
             return info ?? throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
         }

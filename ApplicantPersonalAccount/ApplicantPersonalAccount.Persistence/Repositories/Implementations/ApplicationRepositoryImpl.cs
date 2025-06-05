@@ -12,10 +12,14 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
     public class ApplicationRepositoryImpl : IApplicationRepository
     {
         private readonly ApplicationDataContext _applicationContext;
+        private readonly ILogger<ApplicationRepositoryImpl> _logger;
 
-        public ApplicationRepositoryImpl(ApplicationDataContext applicationContext)
+        public ApplicationRepositoryImpl(
+            ApplicationDataContext applicationContext,
+            ILogger<ApplicationRepositoryImpl> logger)
         {
             _applicationContext = applicationContext;
+            _logger = logger;
         }
 
         public async Task<bool> IsUserSigned(Guid userId)
@@ -49,7 +53,10 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
                 .FirstOrDefaultAsync(p => p.ProgramId == programId && p.Enterance.ApplicantId == userId);
 
             if (record == null)
+            {
+                _logger.LogWarning($"Program {programId} not found");
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+            }
 
             record.Enterance.Programs.Remove(record);
             _applicationContext.Enterances.Remove(record.Enterance);
@@ -65,6 +72,9 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             if (enterance == null && createIfNecessary)
                 enterance = await CreateEnterance(userId);
+
+            if (enterance == null)
+                _logger.LogWarning($"User {userId} not found");
 
             return enterance ?? throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
         }
