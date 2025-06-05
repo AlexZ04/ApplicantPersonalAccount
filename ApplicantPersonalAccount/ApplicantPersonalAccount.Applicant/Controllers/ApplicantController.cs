@@ -67,11 +67,11 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
                 return BadRequest(new { Errors = validationErrors });
 
             return Ok(await _directoryHelperService.GetListOfPrograms(
-                faculty != null ? faculty : "",
-                educationForm != null ? educationForm : "",
-                language != null ? language : "",
-                code != null ? code : "",
-                name != null ? name : "",
+                faculty != null ? faculty.ToLower() : "",
+                educationForm != null ? educationForm.ToLower() : "",
+                language != null ? language.ToLower() : "",
+                code != null ? code.ToLower() : "",
+                name != null ? name.ToLower() : "",
                 page,
                 size));
         }

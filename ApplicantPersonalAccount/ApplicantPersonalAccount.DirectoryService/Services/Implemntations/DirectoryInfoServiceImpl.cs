@@ -47,16 +47,16 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
                 .Where(p => p.Name.Contains(name));
 
             if (faculty != null)
-                programs = programs.Where(p => p.Faculty.Name.Contains(faculty));
+                programs = programs.Where(p => p.Faculty.Name.ToLower().Contains(faculty));
 
             if (language != null)
-                programs = programs.Where(p => p.Language.Contains(language));
+                programs = programs.Where(p => p.Language.ToLower().Contains(language));
 
             if (code != null)
-                programs = programs.Where(p => p.Code.Contains(code));
+                programs = programs.Where(p => p.Code.ToLower().Contains(code));
 
             if (educationForm != null)
-                programs = programs.Where(p => p.EducationForm.Contains(educationForm));
+                programs = programs.Where(p => p.EducationForm.ToLower().Contains(educationForm));
 
             var totalCount = await programs.CountAsync();
 
