@@ -6,5 +6,6 @@ namespace ApplicantPersonalAccount.Applicant.Services
     {
         public Task<EnteranceModel> GetEnteranceByUserId(Guid userId);
         public Task<ApplicationModel> GetApplicationById(Guid id);
+        public Task DeleteApplicationById(Guid id);
     }
 }

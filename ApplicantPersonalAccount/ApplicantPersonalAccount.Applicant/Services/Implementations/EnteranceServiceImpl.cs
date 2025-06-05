@@ -172,5 +172,15 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             return applicationEntity ?? throw new NotFoundException(ErrorMessages.APPLICATION_NOT_FOUND);
         }
+
+        public async Task DeleteApplicationById(Guid id)
+        {
+            var application = await FindApplicationById(id);
+
+            _applicantContext.EnterancePrograms.Remove(application);
+            await _applicantContext.SaveChangesAsync();
+
+            _logger.LogInformation($"Application {id} deleted");
+        }
     }
 }

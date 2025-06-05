@@ -35,7 +35,7 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
         [CheckToken]
         public async Task<IActionResult> GetApplicationInfo([Required, FromRoute] Guid id)
         {
-            return Ok();
+            return Ok(await _enteranceService.GetApplicationById(id));
         }
 
         [HttpPost("application/{id}")]
@@ -51,6 +51,8 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
         [CheckToken]
         public async Task<IActionResult> DeleteApplication([Required, FromRoute] Guid id)
         {
+            await _enteranceService.DeleteApplicationById(id);
+
             return Ok();
         }
 
