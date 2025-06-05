@@ -36,5 +36,8 @@
             "You request will be done when service will return to work";
 
         public const string USER_CANT_EDIT_THIS_DATA = "User can't edit this data!";
+
+        public const string USER_IS_NOT_MANAGER = "User is not manager!";
+        public const string ENTERANCE_IS_NOT_ATTACHED_TO_ANYONE = "This enterance is not attached to anyone";
     }
 }

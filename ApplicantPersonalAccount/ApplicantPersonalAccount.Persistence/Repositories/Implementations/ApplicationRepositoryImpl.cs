@@ -4,6 +4,7 @@ using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 
 namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
@@ -64,7 +65,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             if (enterance == null && createIfNecessary)
                 enterance = await CreateEnterance(userId);
-
 
             return enterance ?? throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
         }
