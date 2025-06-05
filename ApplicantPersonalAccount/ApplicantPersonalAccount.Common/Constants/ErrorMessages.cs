@@ -39,5 +39,7 @@
 
         public const string USER_IS_NOT_MANAGER = "User is not manager!";
         public const string ENTERANCE_IS_NOT_ATTACHED_TO_ANYONE = "This enterance is not attached to anyone";
+
+        public const string ENTERANCE_NOT_FOUND = "Enterance not found";
     }
 }

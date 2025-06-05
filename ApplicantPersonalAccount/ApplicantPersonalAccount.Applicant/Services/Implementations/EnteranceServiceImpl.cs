@@ -1,0 +1,152 @@
+﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
+using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
+using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models.Enterance;
+using ApplicantPersonalAccount.Common.Models.User;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
+using ApplicantPersonalAccount.Persistence.Contextes;
+using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
+using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace ApplicantPersonalAccount.Applicant.Services.Implementations
+{
+    public class EnteranceServiceImpl : IEnteranceService
+    {
+        private readonly ILogger<EnteranceServiceImpl> _logger;
+        private readonly JsonSerializerOptions _jsonOptions;
+        private readonly ApplicationDataContext _applicantContext;
+
+        public EnteranceServiceImpl(
+            ILogger<EnteranceServiceImpl> logger,
+            ApplicationDataContext applicationContext)
+        {
+            _logger = logger;
+            _applicantContext = applicationContext;
+
+            _jsonOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            };
+        }
+
+        public async Task<EnteranceModel> GetEnteranceByUserId(Guid userId)
+        {
+            var enterance = await FindEnterance(userId);
+
+            var enteranceModel = await FormEnteranceModel(enterance);
+
+            return enteranceModel;
+        }
+
+        private async Task<EnteranceEntity> FindEnterance(Guid id)
+        {
+            var enterance = await _applicantContext.Enterances
+                .Include(e => e.Programs)
+                .FirstOrDefaultAsync(e => e.ApplicantId == id);
+
+            if (enterance == null)
+                _logger.LogWarning($"User {id} enterance not found");
+
+            return enterance ?? throw new NotFoundException(ErrorMessages.ENTERANCE_NOT_FOUND);
+        }
+
+        private async Task<EnteranceModel> FormEnteranceModel(EnteranceEntity enteranceEntity)
+        {
+            var applicantEntity = await GetUserById(enteranceEntity.ApplicantId);
+
+            var applicantModel = new UserProfileModel
+            {
+                Id = applicantEntity.Id,
+                Name = applicantEntity.Name,
+                Role = applicantEntity.Role,
+                Email = applicantEntity.Email,
+                Phone = applicantEntity.Phone,
+                Gender = applicantEntity.Gender,
+                Birthdate = applicantEntity.Birthdate,
+                Citizenship = applicantEntity.Citizenship,
+                Address = applicantEntity.Address
+            };
+
+            var managerEntity = enteranceEntity.ManagerId != null ?
+                await GetUserById((Guid)enteranceEntity.ManagerId) : null;
+
+            ManagerModel? managerModel = null;
+
+            if (managerEntity != null)
+            {
+                managerModel = new ManagerModel
+                {
+                    Name = managerEntity.Name,
+                    Phone = managerEntity.Phone,
+                    Email = managerEntity.Email,
+                };
+            }
+
+            return new EnteranceModel
+            {
+                Id = enteranceEntity.Id,
+                Applicant = applicantModel,
+                Manager = managerModel,
+                Status = enteranceEntity.Status,
+                UpdateTime = enteranceEntity.UpdateTime,
+                Programs = await GetListOfEnterancePrograms(enteranceEntity)
+            };
+        }
+
+        private async Task<UserEntity> GetUserById(Guid id)
+        {
+            var rpcClient = new RpcClient();
+            var request = new GuidRequestDTO
+            {
+                Id = id
+            };
+
+            var result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
+            if (result == null)
+                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+
+            var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;
+
+            return userData;
+        }
+
+        private async Task<List<ApplicationModel>> GetListOfEnterancePrograms(EnteranceEntity enteranceEntity)
+        {
+            var result = new List<ApplicationModel>();
+
+            foreach (var program in enteranceEntity.Programs)
+            {
+                var programModel = new ApplicationModel
+                {
+                    Priority = program.Priority,
+                    Program = await GetEducationProgramById(program.ProgramId)
+                };
+
+                result.Add(programModel);
+            }
+
+            return result;
+        }
+
+        private async Task<EducationProgramModel> GetEducationProgramById(Guid id)
+        {
+            var rpcClient = new RpcClient();
+            var request = new GuidRequestDTO
+            {
+                Id = id
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
+            if (result == null)
+                throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+
+            var educationProgram = JsonSerializer.Deserialize<EducationProgramModel>(result)!;
+            
+            return educationProgram;
+        }
+    }
+}

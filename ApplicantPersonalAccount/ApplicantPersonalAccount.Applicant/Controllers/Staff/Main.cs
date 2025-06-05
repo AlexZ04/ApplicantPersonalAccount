@@ -1,4 +1,6 @@
-﻿using ApplicantPersonalAccount.Infrastructure.Filters;
+﻿using ApplicantPersonalAccount.Applicant.Services;
+using ApplicantPersonalAccount.Infrastructure.Filters;
+using ApplicantPersonalAccount.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +12,22 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
     [ApiController]
     public partial class StaffController : ControllerBase
     {
-        [HttpGet("program/{id}")]
+        private readonly IEnteranceService _enteranceService;
+
+        public StaffController(
+            IEnteranceService enteranceService,
+            IStaffService staffService)
+        {
+            _enteranceService = enteranceService;
+            _staffService = staffService;
+        }
+
+        [HttpGet("program/{userId}")]
         [Authorize(Roles = "Manager,HeadManager,Admin")]
         [CheckToken]
-        public async Task<IActionResult> GetProgramInfo()
+        public async Task<IActionResult> GetProgramInfoByUserId([Required, FromRoute] Guid userId)
         {
-            return Ok();
+            return Ok(await _enteranceService.GetEnteranceByUserId(userId));
         }
 
         [HttpGet("application/{id}")]

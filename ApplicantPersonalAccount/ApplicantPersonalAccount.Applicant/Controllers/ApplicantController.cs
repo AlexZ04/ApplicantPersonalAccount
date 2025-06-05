@@ -15,15 +15,18 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
         private readonly IApplicantService _applicantService;
         private readonly IApplicationService _applicationService;
         private readonly IDirectoryHelperService _directoryHelperService;
+        private readonly IEnteranceService _enteranceService;
 
         public ApplicantController(
             IApplicantService applicantService,
             IApplicationService applicationService,
-            IDirectoryHelperService directoryHelperService)
+            IDirectoryHelperService directoryHelperService,
+            IEnteranceService enteranceService)
         {
             _applicantService = applicantService;
             _applicationService = applicationService;
             _directoryHelperService = directoryHelperService;
+            _enteranceService = enteranceService;
         }
 
         [HttpPost("notifications")]
@@ -46,7 +49,7 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
             return Ok();
         }
 
-        [HttpGet("programs")]
+        [HttpGet("education-programs")]
         [Authorize]
         [CheckToken]
         public async Task<IActionResult> GetListOfPrograms(
@@ -140,6 +143,14 @@ namespace ApplicantPersonalAccount.Applicant.Controllers
                 UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User));
 
             return Ok();
+        }
+
+        [HttpGet("program")]
+        [Authorize(Roles = "Applicant")]
+        [CheckToken]
+        public async Task<IActionResult> GetEnteranceInfo()
+        {
+            return Ok(await _enteranceService.GetEnteranceByUserId(UserDescriptor.GetUserId(User)));
         }
     }
 }

@@ -17,6 +17,7 @@ namespace ApplicantPersonalAccount.Applicant.Setup
             services.AddTransient<IApplicationService, ApplicationServiceImpl>();
             services.AddTransient<IDirectoryHelperService, DirectoryHelperServiceImpl>();
             services.AddTransient<IStaffService, StaffServiceImpl>();
+            services.AddTransient<IEnteranceService, EnteranceServiceImpl>();
 
             services.AddHostedService<CanEditListener>();
         }

@@ -39,7 +39,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             var rpcClient = new RpcClient();
             var request = new GuidRequestDTO
             {
-                Id = userId
+                Id = program.ProgramId
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
