@@ -115,7 +115,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             refreshToken.Expires = DateTime.Now.AddDays(GeneralSettings.REFRESH_TOKEN_LIFETIME)
                 .ToUniversalTime();
 
-            await _tokenService.HandleTokens(refreshToken.User.Id, Guid.Empty);
+            await _tokenService.HandleTokens(refreshToken.User.Id, refreshToken.Id);
 
             await _userRepository.SaveChanges();
 
