@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Applicant.Services;
+using ApplicantPersonalAccount.Applicant.Validators;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
@@ -46,8 +47,8 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
         }
 
         [HttpGet("applications")]
-        //[Authorize(Roles = "Manager,HeadManager,Admin")]
-        //[CheckToken]
+        [Authorize(Roles = "Manager,HeadManager,Admin")]
+        [CheckToken]
         public async Task<IActionResult> GetEnterances(
             [FromQuery] string? name,
             [FromQuery] string? program,
@@ -59,6 +60,11 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
             [FromQuery] int page = 1,
             [FromQuery] int size = 5)
         {
+            var validationErrors = PaginationValidator.ValidatePagination(page, size);
+
+            if (validationErrors.Count() > 0)
+                return BadRequest(new { Errors = validationErrors });
+
             return Ok(await _enteranceService.GetEnterances(
                 name,
                 program,

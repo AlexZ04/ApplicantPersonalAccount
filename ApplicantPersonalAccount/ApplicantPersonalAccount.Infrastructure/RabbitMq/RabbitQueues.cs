@@ -29,5 +29,8 @@
         public const string DELETE_MANAGER = "delete_manager_queue";
         public const string UPDATE_MANAGER = "update_manager_queue";
         public const string CREATE_MANAGER = "create_manager_queue";
+
+        public const string GET_FILTERED_NAMES = "filtered_name_queue";
+        public const string GET_FILTERED_PROGRAMS = "filtered_program_queue";
     }
 }

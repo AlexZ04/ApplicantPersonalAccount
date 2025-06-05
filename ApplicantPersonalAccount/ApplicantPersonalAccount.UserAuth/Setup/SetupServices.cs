@@ -14,6 +14,7 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
             services.AddTransient<ITokenService, TokenServiceImpl>();
             services.AddTransient<IUserService, UserServiceImpl>();
             services.AddTransient<IManagerService, ManagerServiceImpl>();
+            services.AddTransient<IFilterService, FilterServiceImpl>();
 
             services.AddHostedService<GetEventsInfoListener>();
             services.AddHostedService<GetUserByIdListener>();
@@ -25,6 +26,7 @@ namespace ApplicantPersonalAccount.UserAuth.Setup
             services.AddHostedService<DeleteManagerListener>();
             services.AddHostedService<UpdateManagerListener>();
             services.AddHostedService<CreateManagerListener>();
+            services.AddHostedService<FilterNameListener>();
 
             services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
             services.AddScoped<IMessageProducer, RabbitMqProducer>();

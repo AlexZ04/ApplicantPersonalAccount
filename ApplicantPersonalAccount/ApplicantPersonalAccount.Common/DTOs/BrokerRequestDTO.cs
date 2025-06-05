@@ -2,6 +2,6 @@
 {
     public class BrokerRequestDTO
     {
-        public string Request { get; set; }
+        public string? Request { get; set; }
     }
 }

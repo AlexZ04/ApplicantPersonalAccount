@@ -1,6 +1,7 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
 using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.DTOs;
+using ApplicantPersonalAccount.Common.DTOs.Filters;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models;
@@ -11,6 +12,7 @@ using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
+using ApplicantPersonalAccount.Persistence.Migrations.Application;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -283,7 +285,16 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
         private async Task<List<Guid>> FindFilteredNameList(string name)
         {
-            return new List<Guid>();
+            var rpcClient = new RpcClient();
+            var request = new BrokerRequestDTO
+            {
+                Request = name
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_FILTERED_NAMES);
+
+            var list = JsonSerializer.Deserialize<ListOfIdsDTO>(result)!;
+            return list.Ids;
         }
 
         private async Task<List<Guid>> FindFilteredPrograms(
