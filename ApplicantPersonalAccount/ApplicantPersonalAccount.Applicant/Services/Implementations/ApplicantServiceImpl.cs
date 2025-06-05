@@ -125,7 +125,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         {
             var status = await GetUserEnteranceStatus(userId);
 
-            if (status == EnteranceStatus.Closed)
+            if (status != EnteranceStatus.Closed)
                 return true;
             return false;
         }
