@@ -20,6 +20,7 @@ namespace ApplicantPersonalAccount.Applicant.Setup
             services.AddTransient<IEnteranceService, EnteranceServiceImpl>();
 
             services.AddHostedService<CanEditListener>();
+            services.AddHostedService<CreateEnteranceListener>();
         }
     }
 }

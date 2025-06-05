@@ -1,5 +1,4 @@
-﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
-using ApplicantPersonalAccount.Common.Constants;
+﻿using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.DTOs.Filters;
 using ApplicantPersonalAccount.Common.Enums;
@@ -12,13 +11,9 @@ using ApplicantPersonalAccount.Infrastructure.RabbitMq;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
-using ApplicantPersonalAccount.Persistence.Migrations.Application;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
 
 namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 {
@@ -312,6 +307,18 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             var list = JsonSerializer.Deserialize<ListOfIdsDTO>(result)!;
             return list.Ids;
+        }
+
+        public async Task CreateEnteranceForUser(Guid userId)
+        {
+            var newEnterance = new EnteranceEntity
+            {
+                ApplicantId = userId
+            };
+
+            _applicantContext.Enterances.Add(newEnterance);
+
+            await _applicantContext.SaveChangesAsync();
         }
     }
 }

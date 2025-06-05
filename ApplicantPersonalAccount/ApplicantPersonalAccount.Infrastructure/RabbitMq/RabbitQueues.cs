@@ -32,5 +32,7 @@
 
         public const string GET_FILTERED_NAMES = "filtered_name_queue";
         public const string GET_FILTERED_PROGRAMS = "filtered_program_queue";
+
+        public const string CREATE_ENTERANCE = "create_enterance_queue";
     }
 }

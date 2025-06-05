@@ -22,5 +22,7 @@ namespace ApplicantPersonalAccount.Applicant.Services
             Guid managerId,
             int page = 1,
             int size = 5);
+
+        public Task CreateEnteranceForUser(Guid userId);
     }
 }

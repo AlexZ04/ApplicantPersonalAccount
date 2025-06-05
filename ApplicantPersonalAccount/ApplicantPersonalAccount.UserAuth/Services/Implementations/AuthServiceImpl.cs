@@ -1,7 +1,10 @@
 ﻿using ApplicantPersonalAccount.Common.Constants;
+using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Authorization;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -14,15 +17,18 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private readonly ITokenRepository _tokenRepository;
+        private readonly IMessageProducer _messageProducer;
 
         public AuthServiceImpl(
             IUserRepository userRepository,
             ITokenService tokenService,
-            ITokenRepository tokenRepository)
+            ITokenRepository tokenRepository,
+            IMessageProducer messageProducer)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
             _tokenRepository = tokenRepository;
+            _messageProducer = messageProducer;
         }
 
         public async Task<TokenResponseModel> RegisterUser(UserRegisterModel user)
@@ -60,6 +66,11 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             await _tokenService.HandleTokens(newUser.Id, Guid.Empty);
 
             await _userRepository.SaveChanges();
+
+            _messageProducer.SendMessage(new GuidRequestDTO
+            {
+                Id = newUser.Id,
+            }, RabbitQueues.CREATE_ENTERANCE);
 
             return tokenResponseModel;
         }
