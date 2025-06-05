@@ -36,6 +36,14 @@ namespace ApplicantPersonalAccount.Staff.Setup
                     {
                         context.Token = context.Request.Cookies["AccessToken"];
                         return Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.Redirect("/Account/Login" +
+                                (context.Request.Path.HasValue ? $"?returnUrl={context.Request.Path}" : ""));
+
+                        return Task.CompletedTask;
                     }
                 };
             });
