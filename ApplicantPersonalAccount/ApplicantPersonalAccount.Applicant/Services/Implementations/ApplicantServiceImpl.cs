@@ -50,19 +50,14 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             var infoEventsData = JsonSerializer.Deserialize<InfoForEventsEntity>(result, _jsonOptions)!;
 
-            result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
-            ResponseProcessor.ProcessResponse(result);
-
-            var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;
-
             var userInfo = new ApplicantInfoForEventsModel
             {
                 EducationPlace = infoEventsData.EducationPlace,
                 SocialNetworks = infoEventsData.SocialNetwork,
-                Address = userData.Address
+                Address = infoEventsData.User.Address
             };
 
-            _logger.LogInformation($"Got info for ivents for applicant {userData.Email}");
+            _logger.LogInformation($"Got info for ivents for applicant {infoEventsData.User.Email}");
 
             return userInfo;
         }

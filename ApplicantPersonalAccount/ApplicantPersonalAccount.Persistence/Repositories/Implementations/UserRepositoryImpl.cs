@@ -79,7 +79,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             if (user == null)
                 _logger.LogWarning($"User {id} not found");
 
-            return user != null ? user : throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+            return user ?? throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
         }
 
         public async Task EditInfoForEvents(EditApplicantInfoForEventsModel editedInfo, Guid userId)
