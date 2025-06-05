@@ -12,11 +12,6 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
     {
         private readonly IStaffService _staffService;
 
-        public StaffController(IStaffService staffService)
-        {
-            _staffService = staffService;
-        }
-
         [HttpPost("take-application/{id}")]
         [Authorize(Roles = "Manager,HeadManager,Admin")]
         [CheckToken]
@@ -51,20 +46,30 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
         }
 
         [HttpGet("applications")]
-        [Authorize(Roles = "Manager,HeadManager,Admin")]
-        [CheckToken]
-        public async Task<IActionResult> GetPrograms(
-            [FromQuery] string name,
-            [FromQuery] string program,
-            [FromQuery] List<string> faculty,
-            [FromQuery] EnteranceStatus status,
+        //[Authorize(Roles = "Manager,HeadManager,Admin")]
+        //[CheckToken]
+        public async Task<IActionResult> GetEnterances(
+            [FromQuery] string? name,
+            [FromQuery] string? program,
+            [FromQuery] List<string>? faculties,
+            [FromQuery] EnteranceStatus? status,
             [FromQuery] bool hasManagerOnly,
             [FromQuery] bool attachedToManager,
-            [FromQuery] SortingType sortedByUpdateDate,
+            [FromQuery] SortingType? sortedByUpdateDate,
             [FromQuery] int page = 1,
             [FromQuery] int size = 5)
         {
-            return Ok();
+            return Ok(await _enteranceService.GetEnterances(
+                name,
+                program,
+                faculties,
+                status,
+                hasManagerOnly,
+                attachedToManager,
+                sortedByUpdateDate,
+                UserDescriptor.GetUserId(User),
+                page,
+                size));
         }
     }
 }

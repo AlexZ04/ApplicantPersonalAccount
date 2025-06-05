@@ -3,6 +3,7 @@ using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models;
 using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Common.Models.Enterance;
 using ApplicantPersonalAccount.Common.Models.User;
@@ -11,6 +12,8 @@ using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -207,6 +210,63 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             await _applicantContext.SaveChangesAsync();
 
             _logger.LogInformation($"Application {id} has been updated by {actingUser}");
+        }
+
+        public async Task<EnterancePagedListModel> GetEnterances(
+            string? name,
+            string? program,
+            List<string>? faculties,
+            EnteranceStatus? status,
+            bool hasManagerOnly,
+            bool attachedToManager,
+            SortingType? sortedByUpdateDate,
+            Guid managerId,
+            int page = 1,
+            int size = 5)
+        {
+            IQueryable<EnteranceEntity> result = _applicantContext.Enterances;
+
+            if (status != null)
+                result = result.Where(e => e.Status == status);
+
+            if (hasManagerOnly)
+                result = result.Where(e => e.ManagerId != null);
+
+            if (attachedToManager)
+                result = result.Where(e => e.ManagerId == managerId);
+
+            if (sortedByUpdateDate == SortingType.Ascending)
+                result = result.OrderBy(e => e.UpdateTime);
+
+            if (sortedByUpdateDate == SortingType.Descending)
+                result = result.OrderByDescending(e => e.UpdateTime);
+
+            var totalCount = await result.CountAsync();
+
+            result = result
+                .Skip((page - 1) * size)
+                .Take(size);
+
+            var foundEnterances = await result.ToListAsync();
+
+            List<EnteranceModel> enterancesModels = new List<EnteranceModel>();
+
+            foreach (var enterance in foundEnterances)
+            {
+                enterancesModels.Add(await FormEnteranceModel(enterance));
+            }
+
+            return new EnterancePagedListModel
+            {
+                Enterances = enterancesModels,
+
+                Pagination = new PageInfoModel
+                {
+                    Current = page,
+                    Size = size,
+                    Count = (totalCount / size) + (totalCount % size > 0 ? 1 : 0)
+                }
+            };
         }
     }
 }

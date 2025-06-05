@@ -11,5 +11,16 @@ namespace ApplicantPersonalAccount.Applicant.Services
         public Task UpdateEnteranceStatus(Guid userId, EnteranceStatus newStatus);
         public Task DeleteApplicationById(Guid id);
         public Task EditAppicationById(Guid id, EducationProgramApplicationModel applicationModel, string actingUser);
+        public Task<EnterancePagedListModel> GetEnterances(
+            string? name,
+            string? program,
+            List<string>? faculties,
+            EnteranceStatus? status,
+            bool hasManagerOnly,
+            bool attachedToManager,
+            SortingType? sortedByUpdateDate,
+            Guid managerId,
+            int page = 1,
+            int size = 5);
     }
 }
