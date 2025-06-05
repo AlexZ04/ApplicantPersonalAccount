@@ -1,7 +1,6 @@
 ﻿using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 

@@ -38,7 +38,6 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
         [Authorize(Roles = "Manager,HeadManager,Admin")]
         [CheckToken]
         public async Task<IActionResult> DeleteApplication([Required, FromRoute] Guid id)
-        public async Task<IActionResult> DeleteApplication([Required, FromRoute] Guid id)
         {
             return Ok();
         }

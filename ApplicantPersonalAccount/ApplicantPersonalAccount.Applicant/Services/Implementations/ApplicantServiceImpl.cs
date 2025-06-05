@@ -9,6 +9,7 @@ using ApplicantPersonalAccount.Infrastructure.Utilities;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -19,10 +20,12 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         private readonly IMessageProducer _messageProducer;
         private readonly JsonSerializerOptions _jsonOptions;
         private readonly IApplicationRepository _applicationRepository;
+        private readonly ILogger<ApplicantServiceImpl> _logger;
 
         public ApplicantServiceImpl(
             IApplicationRepository applicationRepository,
-            IMessageProducer messageProducer)
+            IMessageProducer messageProducer,
+            ILogger<ApplicantServiceImpl> logger)
         {
             _messageProducer = messageProducer;
             _jsonOptions = new JsonSerializerOptions
@@ -31,6 +34,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             _applicationRepository = applicationRepository;
+            _logger = logger;
         }
 
         public async Task<ApplicantInfoForEventsModel> GetInfoForEvents(Guid userId)
@@ -58,6 +62,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 Address = userData.Address
             };
 
+            _logger.LogInformation($"Got info for ivents for applicant {userData.Email}");
+
             return userInfo;
         }
 
@@ -70,6 +76,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             _messageProducer.SendMessage(request, RabbitQueues.EDIT_INFO_FOR_EVENTS);
+
+            _logger.LogInformation($"Sended request to edit {userId} user info for events");
         }
 
         public async Task SignToNotifications(string userEmail)
@@ -84,7 +92,12 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             string result = await rpcClient.CallAsync(request, RabbitQueues.SUBS);
 
             if (result != BrokerMessages.USER_IS_SUCCESSFULY_SIGNED)
+            {
+                _logger.LogWarning($"Tried to sign {userEmail} to notifications, but this user is already signed");
                 throw new InvalidActionException(ErrorMessages.USER_IS_SIGNED);
+            }
+
+            _logger.LogInformation($"{userEmail} is now signed to notifications");
         }
 
         public async Task UnsignFromNotifications(string userEmail)
@@ -99,7 +112,13 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             string result = await rpcClient.CallAsync(request, RabbitQueues.SUBS);
 
             if (result != BrokerMessages.USER_IS_SUCCESSFULY_UNSIGNED)
+            {
+                _logger.LogWarning($"Tried to unsign {userEmail} from notifications," +
+                    $" but this user is already unsigned");
                 throw new InvalidActionException(ErrorMessages.USER_IS_UNSIGNED);
+            }
+
+            _logger.LogInformation($"{userEmail} is now unsigned from notifications");
         }
 
         public async Task<bool> CanUserEdit(Guid userId)
