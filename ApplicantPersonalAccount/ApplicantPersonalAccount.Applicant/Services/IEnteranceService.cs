@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Common.Enums;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Common.Models.Enterance;
 
 namespace ApplicantPersonalAccount.Applicant.Services
@@ -9,5 +10,6 @@ namespace ApplicantPersonalAccount.Applicant.Services
         public Task<ApplicationModel> GetApplicationById(Guid id);
         public Task UpdateEnteranceStatus(Guid userId, EnteranceStatus newStatus);
         public Task DeleteApplicationById(Guid id);
+        public Task EditAppicationById(Guid id, EducationProgramApplicationModel applicationModel, string actingUser);
     }
 }

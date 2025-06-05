@@ -3,6 +3,7 @@ using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Common.Models.Enterance;
 using ApplicantPersonalAccount.Common.Models.User;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
@@ -192,6 +193,20 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             await _applicantContext.SaveChangesAsync();
 
             _logger.LogInformation($"User {userId} enterance status now is {newStatus}");
+        }
+
+        public async Task EditAppicationById(Guid id, 
+            EducationProgramApplicationModel applicationModel,
+            string actingUser)
+        {
+            var application = await FindApplicationById(id);
+
+            application.Priority = applicationModel.Priority;
+            application.ProgramId = applicationModel.ProgramId;
+
+            await _applicantContext.SaveChangesAsync();
+
+            _logger.LogInformation($"Application {id} has been updated by {actingUser}");
         }
     }
 }

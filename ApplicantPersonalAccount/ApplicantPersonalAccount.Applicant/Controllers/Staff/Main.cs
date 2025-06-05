@@ -1,5 +1,6 @@
 ﻿using ApplicantPersonalAccount.Applicant.Services;
 using ApplicantPersonalAccount.Common.Enums;
+using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -42,8 +43,11 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
         [HttpPost("application/{id}")]
         [Authorize(Roles = "Manager,HeadManager,Admin")]
         [CheckToken]
-        public async Task<IActionResult> EditApplicationInfo([Required, FromRoute] Guid id)
+        public async Task<IActionResult> EditApplicationInfo([Required, FromRoute] Guid id,
+            [FromBody] EducationProgramApplicationModel programModel)
         {
+            await _enteranceService.EditAppicationById(id, programModel, UserDescriptor.GetUserEmail(User));
+
             return Ok();
         }
 
