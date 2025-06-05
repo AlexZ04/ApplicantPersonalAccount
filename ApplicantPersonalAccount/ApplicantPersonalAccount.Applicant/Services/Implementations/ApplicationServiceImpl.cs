@@ -138,7 +138,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                     availableLevels.Add(educationLevel.Id);
             }
 
-            if (!availableLevels.Contains(selectedEducationLevelId))
+            if (!availableLevels.Contains(selectedEducationLevelId) && documents.Count > 0)
                 throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
         }
 
