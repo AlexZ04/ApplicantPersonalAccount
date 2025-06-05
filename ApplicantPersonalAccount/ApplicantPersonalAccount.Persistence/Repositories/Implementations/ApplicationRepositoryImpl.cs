@@ -50,7 +50,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
         {
             var record = await _applicationContext.EnterancePrograms
                 .Include(p => p.Enterance)
-                .FirstOrDefaultAsync(p => p.ProgramId == programId && p.Enterance.ApplicantId == userId);
+                .FirstOrDefaultAsync(p => p.Id == programId && p.Enterance.ApplicantId == userId);
 
             if (record == null)
             {
@@ -59,7 +59,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             }
 
             record.Enterance.Programs.Remove(record);
-            _applicationContext.Enterances.Remove(record.Enterance);
+            _applicationContext.EnterancePrograms.Remove(record);
 
             await _applicationContext.SaveChangesAsync();
         }
