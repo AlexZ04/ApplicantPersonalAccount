@@ -118,7 +118,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 
             await _userRepository.SaveChanges();
 
-            //SendGreetingsEmail(newUser, createManager.Password);
+            SendGreetingsEmail(newUser, createManager.Password);
             return true;
         }
 

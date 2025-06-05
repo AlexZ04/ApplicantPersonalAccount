@@ -45,7 +45,7 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
             [FromQuery, Required] Guid userId
             )
         {
-            await _staffService.AttachEnteranceToManager(userId, managerId);
+            await _staffService.AttachEnteranceToManager(userId, managerId, true);
 
             return Ok();
         }

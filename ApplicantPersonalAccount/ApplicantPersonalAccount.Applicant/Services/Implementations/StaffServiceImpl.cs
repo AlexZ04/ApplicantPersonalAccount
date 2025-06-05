@@ -4,6 +4,8 @@ using ApplicantPersonalAccount.Common.DTOs;
 using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
+using ApplicantPersonalAccount.Notification.Models;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
@@ -17,13 +19,15 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
     {
         private readonly ApplicationDataContext _applicationContext;
         private readonly IApplicationRepository _applicationRepository;
+        private readonly IMessageProducer _messageProducer;
         private readonly ILogger<StaffServiceImpl> _logger;
         private readonly JsonSerializerOptions _jsonOptions;
 
         public StaffServiceImpl(
             ApplicationDataContext applicationContext, 
             IApplicationRepository applicationRepository,
-            ILogger<StaffServiceImpl> logger)
+            ILogger<StaffServiceImpl> logger,
+            IMessageProducer messageProducer)
         {
             _applicationContext = applicationContext;
             _applicationRepository = applicationRepository;
@@ -33,9 +37,10 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             {
                 ReferenceHandler = ReferenceHandler.IgnoreCycles
             };
+            _messageProducer = messageProducer;
         }
 
-        public async Task AttachEnteranceToManager(Guid userId, Guid managerId)
+        public async Task AttachEnteranceToManager(Guid userId, Guid managerId, bool sendEmail = true)
         {
             var enterance = await _applicationRepository.GetUserEnterance(userId);
 
@@ -48,7 +53,12 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             await _applicationContext.SaveChangesAsync();
 
-            _logger.LogInformation($"User {userId} enterance is now attached to {manager.Email}");
+            var user = await GetUserById(managerId);
+
+            _logger.LogInformation($"User {user.Email} enterance is now attached to {manager.Email}");
+
+            if (sendEmail)
+                SendInfoEmail(user.Email, manager.Email);
         }
 
         public async Task UnattachEnteranceFromManager(Guid userId)
@@ -79,6 +89,26 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;
 
             return userData;
+        }
+
+        private void SendInfoEmail(string userEmail, string managerEmail)
+        {
+            var notificationToUser = new NotificationModel
+            {
+                UserEmail = userEmail,
+                Title = "Enterance update",
+                Text = $"The manager {managerEmail} has been assigned to your enterance"
+            };
+
+            var notificationToManager = new NotificationModel
+            {
+                UserEmail = userEmail,
+                Title = "New enterance",
+                Text = $"You has been assigned to {userEmail} enterance"
+            };
+
+            _messageProducer.SendMessage(notificationToUser, RabbitQueues.NOTIFICATION);
+            _messageProducer.SendMessage(notificationToManager, RabbitQueues.NOTIFICATION);
         }
     }
 }
