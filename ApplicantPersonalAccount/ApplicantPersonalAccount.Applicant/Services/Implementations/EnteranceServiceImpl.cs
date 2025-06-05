@@ -109,7 +109,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
-            if (result == null)
+            if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
             var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;
@@ -145,7 +145,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
-            if (result == null)
+            if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
 
             var educationProgram = JsonSerializer.Deserialize<EducationProgramModel>(result)!;

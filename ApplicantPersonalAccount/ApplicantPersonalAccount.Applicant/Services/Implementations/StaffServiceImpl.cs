@@ -83,7 +83,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
-            if (result == null)
+            if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
             var userData = JsonSerializer.Deserialize<UserEntity>(result, _jsonOptions)!;

@@ -43,7 +43,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.GET_ALL_MANAGERS);
-            if (result == null)
+            if (result == null || result == "null")
             {
                 _logger.LogError("Response with list of managers did not come");
                 return new List<ManagerDTO>();
@@ -65,7 +65,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
-            if (result == null)
+            if (result == null || result == "null")
             {
                 _logger.LogError($"User with id {id} not found");
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);

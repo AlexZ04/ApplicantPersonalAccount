@@ -58,7 +58,7 @@ namespace ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageListener
                 var res = await ProcessMessage(deserialized!, eventArgs, scope.ServiceProvider);
 
                 if (res != null &&
-                    (eventArgs.BasicProperties.ReplyTo != null && eventArgs.BasicProperties.ReplyTo!= ""))
+                    (eventArgs.BasicProperties.ReplyTo != null && eventArgs.BasicProperties.ReplyTo != ""))
                 {
                     var replyProps = _channel.CreateBasicProperties();
                     replyProps.CorrelationId = eventArgs.BasicProperties.CorrelationId;

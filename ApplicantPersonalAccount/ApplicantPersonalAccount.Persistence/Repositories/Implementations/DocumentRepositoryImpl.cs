@@ -174,7 +174,7 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID);
-            if (result == null)
+            if (result == null || result == "null")
             {
                 _logger.LogWarning($"Document type {id} not found");
                 throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);

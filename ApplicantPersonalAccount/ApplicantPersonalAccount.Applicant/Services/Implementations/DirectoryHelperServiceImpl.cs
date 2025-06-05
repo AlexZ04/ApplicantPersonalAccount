@@ -25,7 +25,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE);
-            if (result == null)
+            if (result == null || result == "null")
             {
                 _logger.LogWarning("Response with document types did not come");
                 return new List<DocumentType>();

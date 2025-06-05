@@ -200,7 +200,7 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.CAN_EDIT_LISTENER);
-            if (result == null || result == "false")
+            if (result == null || result == "null" || result == "false")
                 throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
         }
     }

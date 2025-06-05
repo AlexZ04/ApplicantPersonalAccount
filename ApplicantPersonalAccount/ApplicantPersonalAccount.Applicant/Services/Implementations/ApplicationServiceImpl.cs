@@ -43,7 +43,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
-            if (result == null)
+            if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
 
             var educationProgram = JsonSerializer.Deserialize<EducationProgram>(result)!;
@@ -56,6 +56,10 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             if (enterance.Programs.Count() > 0)
                 await CheckEducationLevel(enterance, selectedEducationLevelId);
 
+            request = new GuidRequestDTO
+            {
+                Id = userId
+            };
             result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_DOCUMENTS);
 
             var userDocuments = JsonSerializer.Deserialize<List<DocumentEntity>>(result)!;
@@ -108,7 +112,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
-            if (result == null)
+            if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
 
             var selectedProgram = JsonSerializer.Deserialize<EducationProgram>(result)!;
@@ -154,7 +158,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID);
-            if (result == null) throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
+            if (result == null || result == "null")
+                throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
 
             var documentType = JsonSerializer.Deserialize<DocumentType>(result)!;
 
