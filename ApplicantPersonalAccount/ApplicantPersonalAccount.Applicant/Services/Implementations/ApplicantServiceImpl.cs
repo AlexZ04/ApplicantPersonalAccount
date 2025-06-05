@@ -46,6 +46,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_INFO_FOR_EVENTS);
+            rpcClient.Dispose();
             ResponseProcessor.ProcessResponse(result);
 
             var infoEventsData = JsonSerializer.Deserialize<InfoForEventsEntity>(result, _jsonOptions)!;
@@ -86,6 +87,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.SUBS);
 
+            rpcClient.Dispose();
+
             if (result != BrokerMessages.USER_IS_SUCCESSFULY_SIGNED)
             {
                 _logger.LogWarning($"Tried to sign {userEmail} to notifications, but this user is already signed");
@@ -105,6 +108,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.SUBS);
+
+            rpcClient.Dispose();
 
             if (result != BrokerMessages.USER_IS_SUCCESSFULY_UNSIGNED)
             {

@@ -43,6 +43,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
+            rpcClient.Dispose();
             if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
 
@@ -112,6 +113,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
+            rpcClient.Dispose();
             if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
 
@@ -137,6 +139,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 foreach (var educationLevel in currentDocument.NextEducationLevels) 
                     availableLevels.Add(educationLevel.Id);
             }
+
+            rpcClient.Dispose();
 
             if (!availableLevels.Contains(selectedEducationLevelId) && documents.Count > 0)
                 throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);

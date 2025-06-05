@@ -102,6 +102,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.CAN_EDIT_LISTENER);
+            rpcClient.Dispose();
             if (result == null || result == "null" || result == "false")
                 throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
         }

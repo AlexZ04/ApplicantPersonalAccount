@@ -83,6 +83,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
+            rpcClient.Dispose();
             if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 

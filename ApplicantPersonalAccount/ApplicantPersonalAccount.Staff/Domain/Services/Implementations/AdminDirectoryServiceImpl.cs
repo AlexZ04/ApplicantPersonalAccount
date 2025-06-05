@@ -33,7 +33,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.IMPORT_STATUS);
-
+            rpcClient.Dispose();
             if (result == "")
             {
                 _logger.LogError("Error with getting import status");

@@ -50,8 +50,6 @@ namespace ApplicantPersonalAccount.Infrastructure.RabbitMq
             var body = eventArgs.Body.ToArray();
             var response = Encoding.UTF8.GetString(body);
             taskSourse.SetResult(response);
-
-            //_channel.QueueDelete(_replyQueue);
         }
 
         public Task<string> CallAsync(object message, string requestQueue)

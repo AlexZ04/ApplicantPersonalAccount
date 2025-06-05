@@ -43,6 +43,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.GET_ALL_MANAGERS);
+            rpcClient.Dispose();
             if (result == null || result == "null")
             {
                 _logger.LogError("Response with list of managers did not come");
@@ -65,6 +66,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
+            rpcClient.Dispose();
             if (result == null || result == "null")
             {
                 _logger.LogError($"User with id {id} not found");
@@ -136,6 +138,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.CREATE_MANAGER);
+            rpcClient.Dispose();
             if (result == string.Empty)
             {
                 _logger.LogError($"Something went wrong with creating manager {model.Email}");

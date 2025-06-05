@@ -63,6 +63,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.LOGIN);
+            rpcClient.Dispose();
 
             if (result == "")
                 return false;
@@ -88,6 +89,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.REFRESH_LOGIN);
+            rpcClient.Dispose();
 
             if (result == "")
                 return false;

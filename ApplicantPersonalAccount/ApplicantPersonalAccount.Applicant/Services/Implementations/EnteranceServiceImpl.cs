@@ -109,6 +109,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             var result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_BY_ID);
+
+            rpcClient.Dispose();
             if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
@@ -145,6 +147,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
+
+            rpcClient.Dispose();
             if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
 
@@ -288,6 +292,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_FILTERED_NAMES);
+            rpcClient.Dispose();
 
             var list = JsonSerializer.Deserialize<ListOfIdsDTO>(result)!;
             return list.Ids;
@@ -304,6 +309,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_FILTERED_PROGRAMS);
+            rpcClient.Dispose();
 
             var list = JsonSerializer.Deserialize<ListOfIdsDTO>(result)!;
             return list.Ids;

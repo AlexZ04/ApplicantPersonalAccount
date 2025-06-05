@@ -25,6 +25,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE);
+            rpcClient.Dispose();
             if (result == null || result == "null")
             {
                 _logger.LogWarning("Response with document types did not come");
@@ -60,6 +61,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DIRECTORY_PROGRAMS);
+            rpcClient.Dispose();
             if (result == "")
             {
                 _logger.LogWarning("Response with list of programs did not come");
