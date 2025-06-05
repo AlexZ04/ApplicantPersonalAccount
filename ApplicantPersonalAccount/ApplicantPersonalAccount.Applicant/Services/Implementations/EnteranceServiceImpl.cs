@@ -122,6 +122,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             {
                 var programModel = new ApplicationModel
                 {
+                    Id = program.Id,
                     Priority = program.Priority,
                     Program = await GetEducationProgramById(program.ProgramId)
                 };
@@ -147,6 +148,29 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             var educationProgram = JsonSerializer.Deserialize<EducationProgramModel>(result)!;
             
             return educationProgram;
+        }
+
+        public async Task<ApplicationModel> GetApplicationById(Guid id)
+        {
+            var application = await FindApplicationById(id);
+
+            return new ApplicationModel
+            {
+                Id = application.Id,
+                Priority = application.Priority,
+                Program = await GetEducationProgramById(application.ProgramId)
+            };
+        }
+
+        private async Task<EnteranceProgramEntity> FindApplicationById(Guid id)
+        {
+            var applicationEntity = await _applicantContext.EnterancePrograms
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (applicationEntity == null)
+                _logger.LogWarning($"Application with id {id} not found");
+
+            return applicationEntity ?? throw new NotFoundException(ErrorMessages.APPLICATION_NOT_FOUND);
         }
     }
 }

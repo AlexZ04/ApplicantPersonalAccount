@@ -41,5 +41,6 @@
         public const string ENTERANCE_IS_NOT_ATTACHED_TO_ANYONE = "This enterance is not attached to anyone";
 
         public const string ENTERANCE_NOT_FOUND = "Enterance not found";
+        public const string APPLICATION_NOT_FOUND = "Application not found";
     }
 }
