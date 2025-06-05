@@ -15,7 +15,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
         public async Task<List<Guid>> GetFilteredIds(string name)
         {
             var ids = await _userDataContext.Users
-                .Where(u => u.Name.Contains(name))
+                .Where(u => u.Name.ToLower().Contains(name.ToLower()))
                 .Select(u => u.Id)
                 .ToListAsync();
 

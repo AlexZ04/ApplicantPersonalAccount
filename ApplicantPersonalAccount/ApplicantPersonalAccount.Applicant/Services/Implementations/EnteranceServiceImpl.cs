@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 {
@@ -236,7 +237,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             if (program != null || faculties != null)
             {
-                var programIds = await FindFilteredPrograms(program!, faculties!);
+                var programIds = await FindFilteredPrograms(program, faculties);
                 result = result.Where(e => e.Programs.Any(p => programIds.Contains(p.Id)));
             }
 
@@ -298,9 +299,19 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         }
 
         private async Task<List<Guid>> FindFilteredPrograms(
-            string program, List<string> faculties)
+            string? program, List<string>? faculties)
         {
-            return new List<Guid>();
+            var rpcClient = new RpcClient();
+            var request = new FilterByProgramDTO
+            {
+                Program = program == null ? String.Empty : program,
+                Faculties = faculties == null ? new List<string>() : faculties
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_FILTERED_PROGRAMS);
+
+            var list = JsonSerializer.Deserialize<ListOfIdsDTO>(result)!;
+            return list.Ids;
         }
     }
 }

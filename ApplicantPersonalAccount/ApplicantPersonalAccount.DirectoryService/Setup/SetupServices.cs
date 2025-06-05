@@ -11,6 +11,7 @@ namespace ApplicantPersonalAccount.DirectoryService.Setup
             services.AddHttpClient<IDirectoryService, DirectoryServiceImpl>();
             services.AddTransient<IDirectoryLoadingService, DirectoryLoadingServiceImpl>();
             services.AddTransient<IDirectoryInfoService, DirectoryInfoServiceImpl>();
+            services.AddTransient<IFilterService, FilterServiceImpl>();
 
             services.AddHostedService<DocumentTypeListener>();
             services.AddHostedService<ProgramListener>();
@@ -18,6 +19,7 @@ namespace ApplicantPersonalAccount.DirectoryService.Setup
             services.AddHostedService<DocumentTypeByIdListener>();
             services.AddHostedService<GetImportStatusListener>();
             services.AddHostedService<RequestImportListener>();
+            services.AddHostedService<FilterProgramListener>();
         }
     }
 }
