@@ -226,6 +226,18 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         {
             IQueryable<EnteranceEntity> result = _applicantContext.Enterances;
 
+            if (name != null)
+            {
+                var nameIds = await FindFilteredNameList(name);
+                result = result.Where(e => nameIds.Contains(e.ApplicantId));
+            } 
+
+            if (program != null || faculties != null)
+            {
+                var programIds = await FindFilteredPrograms(program!, faculties!);
+                result = result.Where(e => e.Programs.Any(p => programIds.Contains(p.Id)));
+            }
+
             if (status != null)
                 result = result.Where(e => e.Status == status);
 
@@ -267,6 +279,17 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                     Count = (totalCount / size) + (totalCount % size > 0 ? 1 : 0)
                 }
             };
+        }
+
+        private async Task<List<Guid>> FindFilteredNameList(string name)
+        {
+            return new List<Guid>();
+        }
+
+        private async Task<List<Guid>> FindFilteredPrograms(
+            string program, List<string> faculties)
+        {
+            return new List<Guid>();
         }
     }
 }
