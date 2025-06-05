@@ -1,4 +1,5 @@
 ﻿using ApplicantPersonalAccount.Applicant.Services;
+using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Infrastructure.Filters;
 using ApplicantPersonalAccount.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -56,11 +57,14 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
             return Ok();
         }
 
-        [HttpPatch("application/{id}")]
+        [HttpPatch("application/{userId}")]
         [Authorize(Roles = "Manager,HeadManager,Admin")]
         [CheckToken]
-        public async Task<IActionResult> UpdateApplicationStatus([Required, FromRoute] Guid id)
+        public async Task<IActionResult> UpdateApplicationStatus(
+            [Required, FromRoute] Guid userId, EnteranceStatus newStatus)
         {
+            await _enteranceService.UpdateEnteranceStatus(userId, newStatus);
+
             return Ok();
         }
     }

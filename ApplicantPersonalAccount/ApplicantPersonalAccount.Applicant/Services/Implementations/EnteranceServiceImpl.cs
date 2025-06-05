@@ -1,6 +1,7 @@
 ﻿using ApplicantPersonalAccount.Application.OuterServices.DTO;
 using ApplicantPersonalAccount.Common.Constants;
 using ApplicantPersonalAccount.Common.DTOs;
+using ApplicantPersonalAccount.Common.Enums;
 using ApplicantPersonalAccount.Common.Exceptions;
 using ApplicantPersonalAccount.Common.Models.Enterance;
 using ApplicantPersonalAccount.Common.Models.User;
@@ -181,6 +182,16 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             await _applicantContext.SaveChangesAsync();
 
             _logger.LogInformation($"Application {id} deleted");
+        }
+
+        public async Task UpdateEnteranceStatus(Guid userId, EnteranceStatus newStatus)
+        {
+            var enterance = await FindEnterance(userId);
+
+            enterance.Status = newStatus;
+            await _applicantContext.SaveChangesAsync();
+
+            _logger.LogInformation($"User {userId} enterance status now is {newStatus}");
         }
     }
 }
