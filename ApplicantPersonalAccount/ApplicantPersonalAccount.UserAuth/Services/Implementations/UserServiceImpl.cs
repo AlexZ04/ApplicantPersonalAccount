@@ -80,9 +80,12 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
             if (userRole == "Applicant")
                 await CheckEditable(userId);
 
-            foundUser.Name = userNewInfo.Name;
-            foundUser.Email = userNewInfo.Email;
-            foundUser.Phone = userNewInfo.Phone;
+            if (!string.IsNullOrEmpty(userNewInfo.Name))
+                foundUser.Name = userNewInfo.Name;
+            if (!string.IsNullOrEmpty(userNewInfo.Email))
+                foundUser.Email = userNewInfo.Email;
+            if (!string.IsNullOrEmpty(userNewInfo.Phone))
+                foundUser.Phone = userNewInfo.Phone;
             foundUser.Gender = userNewInfo.Gender;
             foundUser.Birthdate = userNewInfo.Birthdate;
             foundUser.Citizenship = userNewInfo.Citizenship;
