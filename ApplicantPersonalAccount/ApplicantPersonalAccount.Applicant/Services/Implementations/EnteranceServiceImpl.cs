@@ -182,6 +182,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         private async Task<EnteranceProgramEntity> FindApplicationById(Guid id)
         {
             var applicationEntity = await _applicantContext.EnterancePrograms
+                .Include(p => p.Enterance)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (applicationEntity == null)
@@ -222,9 +223,13 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
         public async Task EditAppicationById(Guid id, 
             EducationProgramApplicationModel applicationModel,
-            string actingUser)
+            string actingUser, string userRole, Guid userId)
         {
             var application = await FindApplicationById(id);
+
+            if (userRole == "Manager" &&
+                (application.Enterance.ManagerId == null && application.Enterance.ManagerId != userId))
+                throw new UnaccessableAction(ErrorMessages.MANAGER_CANNOT_EDIT_ENTERANCE);
 
             var rpcClient = new RpcClient();
             var request = new GuidRequestDTO

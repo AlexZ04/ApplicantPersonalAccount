@@ -46,7 +46,8 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
         public async Task<IActionResult> EditApplicationInfo([Required, FromRoute] Guid id,
             [FromBody] EducationProgramApplicationModel programModel)
         {
-            await _enteranceService.EditAppicationById(id, programModel, UserDescriptor.GetUserEmail(User));
+            await _enteranceService.EditAppicationById(id, programModel, 
+                UserDescriptor.GetUserEmail(User), UserDescriptor.GetUserRole(User), UserDescriptor.GetUserId(User));
 
             return Ok();
         }

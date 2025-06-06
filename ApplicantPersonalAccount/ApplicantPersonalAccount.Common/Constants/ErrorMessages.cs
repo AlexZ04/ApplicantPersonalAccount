@@ -48,5 +48,7 @@
 
         public const string PROGRAM_IS_USED = "This program or program with this priority is already selected";
         public const string ENTERANCE_IS_ENGADED = "Enterance is engaged";
+
+        public const string MANAGER_CANNOT_EDIT_ENTERANCE = "Manager is not attached after this enterance";
     }
 }
