@@ -67,6 +67,15 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             await CheckDocumentsCompatibility(userDocuments, selectedEducationLevelId);
 
+            var usedProgramData = await _applicationDataContext.EnterancePrograms
+                .Include(p => p.Enterance)
+                .Where(p => p.Enterance.ApplicantId == userId && 
+                    (p.Priority == program.Priority || p.ProgramId == program.ProgramId))
+                .CountAsync();
+
+            if (usedProgramData > 0)
+                throw new InvalidActionException(ErrorMessages.PROGRAM_IS_USED);
+
             var newProgram = new EnteranceProgramEntity
             {
                 Id = Guid.NewGuid(),
@@ -90,6 +99,14 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             if (foundProgram == null)
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+
+            var usedProgramData = await _applicationDataContext.EnterancePrograms
+                .Include(p => p.Enterance)
+                .Where(p => p.Enterance.ApplicantId == userId && p.Priority == program.Priority)
+                .CountAsync();
+
+            if (usedProgramData > 0)
+                throw new InvalidActionException(ErrorMessages.PROGRAM_IS_USED);
 
             foundProgram.Priority = program.Priority;
 

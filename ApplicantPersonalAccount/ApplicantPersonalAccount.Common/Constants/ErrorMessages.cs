@@ -45,5 +45,7 @@
 
         public const string EDUCATION_INFO_NOT_FOUND = "Education info not found";
         public const string CANT_WORK_WITH_THIS_FILE = "User don't have permission to work with this file";
+
+        public const string PROGRAM_IS_USED = "This program or program with this priority is already selected";
     }
 }
