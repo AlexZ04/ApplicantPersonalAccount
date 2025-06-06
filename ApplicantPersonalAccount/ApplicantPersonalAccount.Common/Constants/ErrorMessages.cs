@@ -42,5 +42,7 @@
 
         public const string ENTERANCE_NOT_FOUND = "Enterance not found";
         public const string APPLICATION_NOT_FOUND = "Application not found";
+
+        public const string EDUCATION_INFO_NOT_FOUND = "Education info not found";
     }
 }

@@ -43,7 +43,6 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
-            rpcClient.Dispose();
             if (result == null || result == "null")
                 throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
 
@@ -64,6 +63,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             result = await rpcClient.CallAsync(request, RabbitQueues.GET_USER_DOCUMENTS);
 
             var userDocuments = JsonSerializer.Deserialize<List<DocumentEntity>>(result)!;
+            rpcClient.Dispose();
 
             await CheckDocumentsCompatibility(userDocuments, selectedEducationLevelId);
 
@@ -132,17 +132,24 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             foreach (var document in documents)
             {
-                var currentDocument = await GetDocumentTypeById(document.Id, rpcClient);
+                var currentEducationInfo = await GetEducatonInfo(document.Id, rpcClient);
 
-                availableLevels.Add(currentDocument.EducationLevel.Id);
+                if (currentEducationInfo.DocumentTypeId != null)
+                {
+                    var currentDocument = await GetDocumentTypeById((Guid)currentEducationInfo.DocumentTypeId,
+                        rpcClient);
 
-                foreach (var educationLevel in currentDocument.NextEducationLevels) 
-                    availableLevels.Add(educationLevel.Id);
+                    availableLevels.Add(currentDocument.EducationLevel.Id);
+
+                    foreach (var educationLevel in currentDocument.NextEducationLevels)
+                        availableLevels.Add(educationLevel.Id);
+                }
             }
 
             rpcClient.Dispose();
 
-            if (!availableLevels.Contains(selectedEducationLevelId) && documents.Count > 0)
+            if (!availableLevels.Contains(selectedEducationLevelId) && documents.Count > 0
+                && availableLevels.Count > 0)
                 throw new InvalidActionException(ErrorMessages.CANT_HAVE_THIS_EDUCATION_LEVEL);
         }
 
@@ -154,6 +161,22 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 throw new InvalidActionException(ErrorMessages.USER_CANT_EDIT_THIS_DATA);
         }
 
+        private async Task<EducationInfoEntity> GetEducatonInfo(Guid id, RpcClient rpcClient)
+        {
+            var request = new GuidRequestDTO
+            {
+                Id = id
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_INFO);
+            if (result == null || result == "null" || result == "")
+                throw new NotFoundException(ErrorMessages.EDUCATION_INFO_NOT_FOUND);
+
+            var educationInfo = JsonSerializer.Deserialize<EducationInfoEntity>(result)!;
+
+            return educationInfo;
+        }
+
         private async Task<DocumentType> GetDocumentTypeById(Guid id, RpcClient rpcClient)
         {
             var request = new GuidRequestDTO
@@ -162,7 +185,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             };
 
             string result = await rpcClient.CallAsync(request, RabbitQueues.GET_DOCUMENT_TYPE_BY_ID);
-            if (result == null || result == "null")
+            if (result == null || result == "null" || result == "")
                 throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
 
             var documentType = JsonSerializer.Deserialize<DocumentType>(result)!;

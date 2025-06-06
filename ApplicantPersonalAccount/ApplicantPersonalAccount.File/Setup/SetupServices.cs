@@ -15,6 +15,7 @@ namespace ApplicantPersonalAccount.Document.Setup
             services.AddScoped<IMessageProducer, RabbitMqProducer>();
 
             services.AddHostedService<GetUserDocumentsListener>();
+            services.AddHostedService<EducationInfoListener>();
         }
     }
 }

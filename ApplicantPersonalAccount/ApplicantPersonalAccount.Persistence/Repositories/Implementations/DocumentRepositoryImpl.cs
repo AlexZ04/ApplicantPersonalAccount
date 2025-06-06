@@ -185,5 +185,17 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
 
             return documentType;
         }
+
+        public async Task<EducationInfoEntity> GetEducationInfoById(Guid id)
+        {
+            var educationInfo = await _fileDataContext.EducationInfos
+                .Include(i => i.Document)
+                .FirstOrDefaultAsync(i => i.Document.Id == id);
+
+            if (educationInfo == null)
+                _logger.LogWarning($"Education info with id {id} not found");
+
+            return educationInfo ?? throw new NotFoundException(ErrorMessages.EDUCATION_INFO_NOT_FOUND);
+        }
     }
 }

@@ -16,5 +16,6 @@ namespace ApplicantPersonalAccount.Persistence.Repositories
         public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId);
         public Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId, Guid userId);
         public Task<DocumentType> GetDocumentTypeById(Guid id);
+        public Task<EducationInfoEntity> GetEducationInfoById(Guid id);
     }
 }

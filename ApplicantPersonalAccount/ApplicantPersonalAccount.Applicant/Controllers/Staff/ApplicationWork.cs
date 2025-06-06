@@ -33,7 +33,7 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
             return Ok();
         }
 
-        [HttpPost("managers")]
+        [HttpPost("managers/attach")]
         [Authorize(Roles = "HeadManager,Admin")]
         [CheckToken]
         public async Task<IActionResult> AttachManager(
