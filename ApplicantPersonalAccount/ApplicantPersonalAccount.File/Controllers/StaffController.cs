@@ -92,5 +92,21 @@ namespace ApplicantPersonalAccount.Document.Controllers
 
             return Ok();
         }
+
+        [HttpGet("education/{id}")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> GetEducationFileInfo([FromRoute] Guid id)
+        {
+            return Ok(await _fileService.GetEducationDocumentInfo(id));
+        }
+
+        [HttpGet("passport/{userId}")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> GetUserPassportInfo([FromRoute] Guid userId)
+        {
+            return Ok(await _fileService.GetPassportInfo(userId));
+        }
     }
 }
