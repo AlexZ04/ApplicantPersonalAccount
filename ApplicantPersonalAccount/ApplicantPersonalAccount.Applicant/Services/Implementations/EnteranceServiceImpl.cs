@@ -8,6 +8,8 @@ using ApplicantPersonalAccount.Common.Models.Applicant;
 using ApplicantPersonalAccount.Common.Models.Enterance;
 using ApplicantPersonalAccount.Common.Models.User;
 using ApplicantPersonalAccount.Infrastructure.RabbitMq;
+using ApplicantPersonalAccount.Infrastructure.RabbitMq.MessageProducer;
+using ApplicantPersonalAccount.Notification.Models;
 using ApplicantPersonalAccount.Persistence.Contextes;
 using ApplicantPersonalAccount.Persistence.Entities.ApplicationDb;
 using ApplicantPersonalAccount.Persistence.Entities.UsersDb;
@@ -22,10 +24,12 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         private readonly ILogger<EnteranceServiceImpl> _logger;
         private readonly JsonSerializerOptions _jsonOptions;
         private readonly ApplicationDataContext _applicantContext;
+        private readonly IMessageProducer _messageProducer;
 
         public EnteranceServiceImpl(
             ILogger<EnteranceServiceImpl> logger,
-            ApplicationDataContext applicationContext)
+            ApplicationDataContext applicationContext,
+            IMessageProducer messageProducer)
         {
             _logger = logger;
             _applicantContext = applicationContext;
@@ -34,6 +38,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             {
                 ReferenceHandler = ReferenceHandler.IgnoreCycles
             };
+
+            _messageProducer = messageProducer;
         }
 
         public async Task<EnteranceModel> GetEnteranceByUserId(Guid userId)
@@ -202,6 +208,16 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             await _applicantContext.SaveChangesAsync();
 
             _logger.LogInformation($"User {userId} enterance status now is {newStatus}");
+
+            var user = await GetUserById(userId);
+
+            var notification = new NotificationModel
+            {
+                UserEmail = user.Email,
+                Title = "Enterance update",
+                Text = $"Your enterance status was updated! New status: {newStatus}"
+            };
+            _messageProducer.SendMessage(notification, RabbitQueues.NOTIFICATION);
         }
 
         public async Task EditAppicationById(Guid id, 
