@@ -1,4 +1,6 @@
-﻿namespace ApplicantPersonalAccount.Staff.Setup
+﻿using ApplicantPersonalAccount.Staff.Domain.Infrascructure;
+
+namespace ApplicantPersonalAccount.Staff.Setup
 {
     public class SetupMVC
     {
@@ -20,6 +22,8 @@
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseMiddleware<UpdateTokenMiddleware>();
         }
     }
 }
