@@ -20,7 +20,7 @@ namespace ApplicantPersonalAccount.Staff.Domain.Infrascructure
 
             if (string.IsNullOrEmpty(accessToken) && !string.IsNullOrEmpty(refreshToken))
             {
-                if (await _authService.RefreshToken())
+                if (await _authService.RefreshToken() != null)
                     return;
 
                 context.Result = new RedirectToActionResult("Login", "Account", null);

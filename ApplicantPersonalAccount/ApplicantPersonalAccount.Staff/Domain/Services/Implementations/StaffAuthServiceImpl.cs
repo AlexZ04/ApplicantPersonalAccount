@@ -74,13 +74,13 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             return true;
         }
 
-        public async Task<bool> RefreshToken()
+        public async Task<TokenResponseModel?> RefreshToken()
         {
             var context = _httpContextAccessor.HttpContext;
-            if (context == null) return false;
+            if (context == null) return null;
 
             var refreshToken = context.Request.Cookies["RefreshToken"];
-            if (string.IsNullOrEmpty(refreshToken)) return false;
+            if (string.IsNullOrEmpty(refreshToken)) return null;
 
             var rpcClient = new RpcClient();
             var request = new RefreshTokenModel
@@ -92,12 +92,12 @@ namespace ApplicantPersonalAccount.Staff.Domain.Services.Implementations
             rpcClient.Dispose();
 
             if (result == "")
-                return false;
+                return null;
 
             var tokenData = JsonSerializer.Deserialize<TokenResponseModel>(result)!;
             SetAuthCookies(tokenData);
 
-            return true;
+            return tokenData;
         }
 
         private void SetAuthCookies(TokenResponseModel tokenData)

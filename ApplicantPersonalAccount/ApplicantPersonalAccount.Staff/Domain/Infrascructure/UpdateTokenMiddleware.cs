@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ApplicantPersonalAccount.Staff.Domain.Services.Interfaces;
+using ApplicantPersonalAccount.Common.Constants;
 
 namespace ApplicantPersonalAccount.Staff.Domain.Infrascructure
 {
@@ -24,14 +25,27 @@ namespace ApplicantPersonalAccount.Staff.Domain.Infrascructure
                 using var scope = _serviceProvider.CreateScope();
                 var authService = scope.ServiceProvider.GetRequiredService<IStaffAuthService>();
 
-                if (await authService.RefreshToken())
+                var tokens = await authService.RefreshToken();
+
+                if (tokens != null)
                 {
-                    // Get the new access token and set it in the current request
-                    var newAccessToken = context.Request.Cookies["AccessToken"];
-                    if (!string.IsNullOrEmpty(newAccessToken))
+                    context.Response.Cookies.Append("AccessToken", tokens.AccessToken, new CookieOptions
                     {
-                        context.Request.Headers["Authorization"] = $"Bearer {newAccessToken}";
-                    }
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.Strict,
+                        Expires = tokens.AccessExpireTime
+                    });
+
+                    context.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.Strict,
+                        Expires = DateTime.Now.AddDays(GeneralSettings.REFRESH_TOKEN_LIFETIME)
+                    });
+
+                    context.Request.Headers["Authorization"] = $"Bearer {tokens.AccessToken}";
                 }
             }
 
