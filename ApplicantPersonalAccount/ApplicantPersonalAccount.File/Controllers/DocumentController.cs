@@ -61,6 +61,14 @@ namespace ApplicantPersonalAccount.Document.Controllers
             return Ok(await _fileService.GetDocumentInfo(id));
         }
 
+        [HttpGet("passport")]
+        [Authorize]
+        [CheckToken]
+        public async Task<IActionResult> GetPassportInfo()
+        {
+            return Ok(await _fileService.GetPassportInfo(UserDescriptor.GetUserId(User)));
+        }
+
         [HttpGet("education/{id}")]
         [Authorize]
         [CheckToken]
@@ -72,7 +80,7 @@ namespace ApplicantPersonalAccount.Document.Controllers
         [HttpGet("download/{id}")]
         [Authorize]
         [CheckToken]
-        public async Task<IActionResult> DownloadFile([FromRoute] Guid id)
+        public async Task<IActionResult> DownloadFile([FromRoute, Required] Guid id)
         {
             var fileInfo = await _fileService.GetFile(id);
 
@@ -95,7 +103,7 @@ namespace ApplicantPersonalAccount.Document.Controllers
         [Authorize]
         [CheckToken]
         public async Task<IActionResult> EditEducationInfo([FromBody] EducationInfoEditModel education,
-            [FromQuery] Guid documentId)
+            [FromQuery, Required] Guid documentId)
         {
             await _fileService.EditEducational(education, documentId,
                 UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User));

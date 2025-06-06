@@ -95,6 +95,8 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
         public async Task<DocumentType> GetDocumentTypeById(Guid id)
         {
             var documentType = await _directoryContext.DocumentTypes
+                .Include(t => t.EducationLevel)
+                .Include(t => t.NextEducationLevels)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             return documentType ?? throw new NotFoundException(ErrorMessages.DOCUMENT_TYPE_NOT_FOUND);
