@@ -48,7 +48,7 @@ namespace ApplicantPersonalAccount.Document.Controllers
         [CheckToken]
         public async Task<IActionResult> DeleteFile([FromRoute] Guid id)
         {
-            await _fileService.DeleteFile(id, UserDescriptor.GetUserId(User));
+            await _fileService.DeleteFile(id, UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User));
 
             return Ok();
         }

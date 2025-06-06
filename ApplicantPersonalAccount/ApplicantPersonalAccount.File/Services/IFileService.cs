@@ -9,7 +9,7 @@ namespace ApplicantPersonalAccount.Document.Services
     public interface IFileService
     {
         public Task UploadFile(FileDocumentType documentType, IFormFile file, Guid userId);
-        public Task DeleteFile(Guid id, Guid userId);
+        public Task DeleteFile(Guid id, Guid userId, string userRole);
         public Task<DocumentModel> GetDocumentInfo(Guid id);
         public Task<FileContentResult> GetFile(Guid id);
         public Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType,

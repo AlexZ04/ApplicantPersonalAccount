@@ -64,13 +64,13 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             await _documentRepository.AddFile(newDocument);
         }
 
-        public async Task DeleteFile(Guid id, Guid userId)
+        public async Task DeleteFile(Guid id, Guid userId, string userRole)
         {
             _logger.LogInformation($"Deleting {id} document from user with id {userId}");
 
             var document = await _documentRepository.GetDocumentInfoById(id);
 
-            if (document.OwnerId != userId)
+            if (document.OwnerId != userId && userRole == "Applicant")
                 throw new UnaccessableAction(ErrorMessages.CANT_DELETE_THIS_FILE);
 
             var pathToFile = Path.Combine(_pathToStorage, document.Filename);
