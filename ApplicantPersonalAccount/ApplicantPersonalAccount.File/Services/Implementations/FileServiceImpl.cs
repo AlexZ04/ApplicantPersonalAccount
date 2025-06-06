@@ -12,6 +12,7 @@ using ApplicantPersonalAccount.Persistence.Entities.DocumentDb;
 using ApplicantPersonalAccount.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Xml.Linq;
 
@@ -94,11 +95,14 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             };
         }
 
-        public async Task<FileContentResult> GetFile(Guid id)
+        public async Task<FileContentResult> GetFile(Guid id, Guid userId, string userRole)
         {
             _logger.LogInformation($"Asking to download file {id}");
 
             var document = await _documentRepository.GetDocumentInfoById(id);
+
+            if (document.OwnerId != userId && userRole == "Applicant")
+                throw new UnaccessableAction(ErrorMessages.CANT_WORK_WITH_THIS_FILE);
 
             if (!File.Exists(document.Path))
                 throw new NotFoundException(ErrorMessages.FILE_IS_NOT_ON_DISK);
@@ -156,7 +160,7 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
             await _documentRepository.EditEducational(editedEducation, documentId, userId);
         }
 
-        public async Task<DocumentType> GetEducationDocumentInfo(Guid documentId)
+        public async Task<DocumentType> GetEducationDocumentInfo(Guid documentId, Guid userId, string userRole)
         {
             var info = await _fileContext.EducationInfos
                 .Include(i => i.Document)
@@ -167,6 +171,9 @@ namespace ApplicantPersonalAccount.Document.Services.Implementations
 
             if (info.DocumentTypeId == null)
                 throw new NotFoundException(ErrorMessages.THERE_IS_NO_INFO_FOR_THIS_FILE);
+
+            if (info.Document.OwnerId != userId && userRole == "Applicant")
+                throw new UnaccessableAction(ErrorMessages.CANT_WORK_WITH_THIS_FILE);
 
             var documentType = await _documentRepository.GetDocumentTypeById((Guid)info.DocumentTypeId);
 

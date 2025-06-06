@@ -11,14 +11,14 @@ namespace ApplicantPersonalAccount.Document.Services
         public Task UploadFile(FileDocumentType documentType, IFormFile file, Guid userId);
         public Task DeleteFile(Guid id, Guid userId, string userRole);
         public Task<DocumentModel> GetDocumentInfo(Guid id);
-        public Task<FileContentResult> GetFile(Guid id);
+        public Task<FileContentResult> GetFile(Guid id, Guid userId, string userRole);
         public Task<List<DocumentModel>> GetUserDocuments(FileDocumentType documentType,
             Guid userId,
             bool importingAll = false);
         public Task EditPassport(PassportInfoEditModel editedPassport, Guid userId, string userRole);
         public Task EditEducational(EducationInfoEditModel editedEducation, Guid documentId,
             Guid userId, string userRole);
-        public Task<DocumentType> GetEducationDocumentInfo(Guid documentId);
+        public Task<DocumentType> GetEducationDocumentInfo(Guid documentId, Guid userId, string userRole);
         public Task<PassportInfoModel> GetPassportInfo(Guid userId);
     }
 }

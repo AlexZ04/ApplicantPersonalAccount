@@ -74,7 +74,8 @@ namespace ApplicantPersonalAccount.Document.Controllers
         [CheckToken]
         public async Task<IActionResult> GetEducationFileInfo([FromRoute] Guid id)
         {
-            return Ok(await _fileService.GetEducationDocumentInfo(id));
+            return Ok(await _fileService.GetEducationDocumentInfo(id,
+                UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User)));
         }
 
         [HttpGet("download/{id}")]
@@ -82,7 +83,8 @@ namespace ApplicantPersonalAccount.Document.Controllers
         [CheckToken]
         public async Task<IActionResult> DownloadFile([FromRoute, Required] Guid id)
         {
-            var fileInfo = await _fileService.GetFile(id);
+            var fileInfo = await _fileService.GetFile(id, 
+                UserDescriptor.GetUserId(User), UserDescriptor.GetUserRole(User));
 
             return File(fileInfo.FileContents, fileInfo.ContentType, fileInfo.FileDownloadName);
         }
