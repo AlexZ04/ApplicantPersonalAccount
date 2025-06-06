@@ -67,7 +67,7 @@ namespace ApplicantPersonalAccount.Staff.Controllers.Staff
         [HttpPost]
         public async Task<IActionResult> RegisterNewManager(ManagerCreateModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || model.Birthday > DateTime.Now.ToUniversalTime())
                 return View("CreateManager", model);
 
             try

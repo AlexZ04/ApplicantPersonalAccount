@@ -45,6 +45,11 @@ namespace ApplicantPersonalAccount.UserAuth.Controllers
         [CheckToken]
         public async Task<IActionResult> EditProfile([FromBody] UserEditModel userNewInfo)
         {
+            var validationErrors = UserAuthValidator.ValidateUserEdit(userNewInfo);
+
+            if (validationErrors.Count() > 0)
+                return BadRequest(new { Errors = validationErrors });
+
             await _userService.EditProfile(userNewInfo, UserDescriptor.GetUserId(User),
                 UserDescriptor.GetUserRole(User));
 
