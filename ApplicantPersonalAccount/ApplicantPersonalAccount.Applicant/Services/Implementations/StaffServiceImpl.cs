@@ -53,7 +53,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             await _applicationContext.SaveChangesAsync();
 
-            var user = await GetUserById(managerId);
+            var user = await GetUserById(userId);
 
             _logger.LogInformation($"User {user.Email} enterance is now attached to {manager.Email}");
 
@@ -103,7 +103,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             var notificationToManager = new NotificationModel
             {
-                UserEmail = userEmail,
+                UserEmail = managerEmail,
                 Title = "New enterance",
                 Text = $"You has been assigned to {userEmail} enterance"
             };
