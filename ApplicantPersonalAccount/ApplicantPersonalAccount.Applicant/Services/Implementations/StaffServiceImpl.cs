@@ -49,6 +49,9 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             if (manager.Role == Role.Applicant)
                 throw new InvalidActionException(ErrorMessages.USER_IS_NOT_MANAGER);
 
+            if (enterance.ManagerId != null)
+                throw new InvalidActionException(ErrorMessages.ENTERANCE_IS_ENGADED);
+
             enterance.ManagerId = managerId;
 
             await _applicationContext.SaveChangesAsync();
@@ -59,6 +62,17 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             if (sendEmail)
                 SendInfoEmail(user.Email, manager.Email);
+        }
+
+        public async Task UnttachManagers(Guid userId)
+        {
+            var enterance = await _applicationRepository.GetUserEnterance(userId);
+
+            if (enterance.ManagerId != null)
+                throw new InvalidActionException(ErrorMessages.ENTERANCE_IS_NOT_ATTACHED_TO_ANYONE);
+
+            enterance.ManagerId = null;
+            await _applicationContext.SaveChangesAsync();
         }
 
         public async Task UnattachEnteranceFromManager(Guid userId)

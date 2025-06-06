@@ -46,6 +46,18 @@ namespace ApplicantPersonalAccount.Applicant.Controllers.Staff
             return Ok();
         }
 
+        [HttpDelete("managers/attach")]
+        [Authorize(Roles = "HeadManager,Admin")]
+        [CheckToken]
+        public async Task<IActionResult> UnattachManager(
+            [FromQuery, Required] Guid userId
+            )
+        {
+            await _staffService.UnttachManagers(userId);
+
+            return Ok();
+        }
+
         [HttpGet("applications")]
         [Authorize(Roles = "Manager,HeadManager,Admin")]
         [CheckToken]
