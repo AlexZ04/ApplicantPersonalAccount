@@ -10,7 +10,7 @@ namespace ApplicantPersonalAccount.Applicant.Validators
             var errors = new List<string?>();
             var results = new List<ValidationResult>();
 
-            if (priority <= 0)
+            if (priority <= 0 || priority > GeneralSettings.MAX_CHOSEN_PROGRAMS)
                 errors.Add(ErrorMessages.INVALID_PRIORITY);
 
             return errors;
