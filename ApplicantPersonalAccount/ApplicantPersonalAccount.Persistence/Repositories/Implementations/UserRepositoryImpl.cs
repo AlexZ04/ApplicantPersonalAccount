@@ -30,10 +30,15 @@ namespace ApplicantPersonalAccount.Persistence.Repositories.Implementations
             _userContext.InfoForEvents.Add(user.InfoForEvents);
         }
 
-        public async Task<bool> EmailIsAvailable(string email)
+        public async Task<bool> EmailAndPhoneIsAvailable(string email, string phone)
         {
             UserEntity? user = await _userContext.Users
-                .FirstOrDefaultAsync(x => x.Email == email);
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null) return true;
+
+            user = await _userContext.Users
+                .FirstOrDefaultAsync(u => u.Phone == phone);
 
             return user == null;
         }

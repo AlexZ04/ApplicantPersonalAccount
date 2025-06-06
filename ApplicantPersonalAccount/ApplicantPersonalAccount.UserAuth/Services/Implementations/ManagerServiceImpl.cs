@@ -87,7 +87,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 
         public async Task<bool> CreateManager(ManagerCreateDTO createManager)
         {
-            var canBeCreated = await _userRepository.EmailIsAvailable(createManager.Email);
+            var canBeCreated = await _userRepository.EmailAndPhoneIsAvailable(createManager.Email, createManager.Phone);
 
             if (!canBeCreated)
                 return false;

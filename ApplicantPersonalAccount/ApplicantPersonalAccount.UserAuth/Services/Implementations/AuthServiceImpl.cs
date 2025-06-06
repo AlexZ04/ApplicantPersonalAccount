@@ -33,7 +33,7 @@ namespace ApplicantPersonalAccount.UserAuth.Services.Implementations
 
         public async Task<TokenResponseModel> RegisterUser(UserRegisterModel user)
         {
-            if (!await _userRepository.EmailIsAvailable(user.Email))
+            if (!await _userRepository.EmailAndPhoneIsAvailable(user.Email, user.Phone))
                 throw new ImpossibleActionException(ErrorMessages.CANT_REGISTER_USER);
 
             UserEntity newUser = new UserEntity
