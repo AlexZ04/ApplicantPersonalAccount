@@ -24,7 +24,15 @@ namespace ApplicantPersonalAccount.Staff.Domain.Infrascructure
                 using var scope = _serviceProvider.CreateScope();
                 var authService = scope.ServiceProvider.GetRequiredService<IStaffAuthService>();
 
-                await authService.RefreshToken();
+                if (await authService.RefreshToken())
+                {
+                    // Get the new access token and set it in the current request
+                    var newAccessToken = context.Request.Cookies["AccessToken"];
+                    if (!string.IsNullOrEmpty(newAccessToken))
+                    {
+                        context.Request.Headers["Authorization"] = $"Bearer {newAccessToken}";
+                    }
+                }
             }
 
             await _next(context);

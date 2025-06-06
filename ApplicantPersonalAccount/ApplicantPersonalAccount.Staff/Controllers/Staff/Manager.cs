@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicantPersonalAccount.Staff.Controllers.Staff
 {
-    [TokenAuthFilter]
+    //[TokenAuthFilter]
     [Authorize(Roles = "Admin")]
     [CheckToken]
     public partial class StaffController : Controller

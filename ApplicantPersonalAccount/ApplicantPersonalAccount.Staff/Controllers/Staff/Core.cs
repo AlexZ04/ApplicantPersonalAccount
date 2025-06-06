@@ -8,7 +8,7 @@ using ApplicantPersonalAccount.Common.Enums;
 
 namespace ApplicantPersonalAccount.Staff.Controllers.Admin
 {
-    [TokenAuthFilter]
+    //[TokenAuthFilter]
     [Authorize(Roles = "Admin")]
     [CheckToken]
     public partial class StaffController : Controller

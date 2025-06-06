@@ -18,12 +18,12 @@ namespace ApplicantPersonalAccount.Staff.Setup
                 app.UseHsts();
             }
 
+            app.UseMiddleware<UpdateTokenMiddleware>();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseMiddleware<UpdateTokenMiddleware>();
         }
     }
 }
