@@ -206,6 +206,16 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
         {
             var application = await FindApplicationById(id);
 
+            var rpcClient = new RpcClient();
+            var request = new GuidRequestDTO
+            {
+                Id = applicationModel.ProgramId
+            };
+
+            string result = await rpcClient.CallAsync(request, RabbitQueues.GET_EDUCATION_PROGRAM_BY_ID);
+            if (result == null || result == "null")
+                throw new NotFoundException(ErrorMessages.PROGRAM_IS_NOT_FOUND);
+
             application.Priority = applicationModel.Priority;
             application.ProgramId = applicationModel.ProgramId;
 
