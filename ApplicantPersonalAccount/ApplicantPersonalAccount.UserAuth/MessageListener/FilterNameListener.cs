@@ -22,7 +22,12 @@ namespace ApplicantPersonalAccount.UserAuth.MessageListener
 
             var ids = await filterService.GetFilteredIds(message.Request!);
 
-            return JsonSerializer.Serialize(ids);
+            var data = new ListOfIdsDTO
+            {
+                Ids = ids
+            };
+
+            return JsonSerializer.Serialize(data);
         }
     }
 }

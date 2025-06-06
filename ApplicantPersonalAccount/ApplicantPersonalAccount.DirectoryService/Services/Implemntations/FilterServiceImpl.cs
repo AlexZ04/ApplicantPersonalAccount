@@ -14,10 +14,14 @@ namespace ApplicantPersonalAccount.DirectoryService.Services.Implemntations
 
         public async Task<List<Guid>> GetFilteredPrograms(string program, List<string> faculties)
         {
-            var ids = await _directoryContext.EducationPrograms
+            var idQuery = _directoryContext.EducationPrograms
                 .Include(p => p.Faculty)
-                .Where(p => p.Name.ToLower().Contains(program.ToLower()))
-                .Where(p => faculties.Any(f => p.Faculty.Name.ToLower().Contains(f.ToLower())))
+                .Where(p => p.Name.ToLower().Contains(program.ToLower()));
+
+            if (faculties.Count > 0)
+                idQuery = idQuery.Where(p => faculties.Any(f => p.Faculty.Name.ToLower().Contains(f.ToLower())));
+
+            var ids = await idQuery
                 .Select(p => p.Id)
                 .ToListAsync();
 

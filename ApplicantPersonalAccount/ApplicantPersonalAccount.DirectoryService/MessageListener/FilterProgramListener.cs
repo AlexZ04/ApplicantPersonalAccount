@@ -22,7 +22,12 @@ namespace ApplicantPersonalAccount.DirectoryService.MessageListener
 
             var ids = await filterService.GetFilteredPrograms(message.Program!, message.Faculties!);
 
-            return JsonSerializer.Serialize(ids);
+            var data = new ListOfIdsDTO
+            {
+                Ids = ids
+            };
+
+            return JsonSerializer.Serialize(data);
         }
     }
 }

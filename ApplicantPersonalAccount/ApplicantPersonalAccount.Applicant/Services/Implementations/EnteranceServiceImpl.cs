@@ -89,6 +89,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 };
             }
 
+            var enteranceProgramModels = await GetListOfEnterancePrograms(enteranceEntity);
+
             return new EnteranceModel
             {
                 Id = enteranceEntity.Id,
@@ -96,7 +98,7 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 Manager = managerModel,
                 Status = enteranceEntity.Status,
                 UpdateTime = enteranceEntity.UpdateTime,
-                Programs = await GetListOfEnterancePrograms(enteranceEntity)
+                Programs = enteranceProgramModels
             };
         }
 
@@ -125,11 +127,13 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
 
             foreach (var program in enteranceEntity.Programs)
             {
+                var applicationProgramModel = await GetEducationProgramById(program.ProgramId);
+
                 var programModel = new ApplicationModel
                 {
                     Id = program.Id,
                     Priority = program.Priority,
-                    Program = await GetEducationProgramById(program.ProgramId)
+                    Program = applicationProgramModel
                 };
 
                 result.Add(programModel);
@@ -236,7 +240,8 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
             int page = 1,
             int size = 5)
         {
-            IQueryable<EnteranceEntity> result = _applicantContext.Enterances;
+            IQueryable<EnteranceEntity> result = _applicantContext.Enterances
+                .Include(e => e.Programs);
 
             if (name != null)
             {
@@ -244,10 +249,10 @@ namespace ApplicantPersonalAccount.Applicant.Services.Implementations
                 result = result.Where(e => nameIds.Contains(e.ApplicantId));
             } 
 
-            if (program != null || faculties != null)
+            if (program != null || (faculties != null && faculties.Count > 0))
             {
                 var programIds = await FindFilteredPrograms(program, faculties);
-                result = result.Where(e => e.Programs.Any(p => programIds.Contains(p.Id)));
+                result = result.Where(e => e.Programs.Any(p => programIds.Contains(p.ProgramId)));
             }
 
             if (status != null)
