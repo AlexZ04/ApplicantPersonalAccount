@@ -1,0 +1,49 @@
+rules:
+    - id: json-serializer-data
+      patterns:
+          - pattern: JsonSerializer.Serialize(data)
+      message: "Data is not encrypted during serialization, data interception is possible"
+      languages: [csharp]
+      severity: INFO
+
+    - id: missing-https
+      pattern: |
+          public static void $ACTION(WebApplication $APP) {
+            $BODY...
+          }
+      pattern-not-inside:
+          - pattern: $APP.UseHttpsRedirection()
+      message: "Missing https redirection"
+      languages: [csharp]
+      severity: WARNING
+
+    - id: mvc-missing-csrf
+      pattern: |
+          [HttpPost]
+          public IActionResult $ACTION(...){...}
+      pattern-not-inside:
+          - pattern: [ValidateAntiForgeryToken]
+      message: "There is no defence from CSRF"
+      languages: [csharp]
+      severity: ERROR
+      metadata:
+          scopes: [controller]
+
+    - id: mvc-viewdata-xss
+      pattern-either:
+          - pattern: ViewData["$KEY"] = $USER_INPUT
+          - pattern: ViewBag.$KEY = $USER_INPUT
+      message: "Possible XSS attack through viewbag and viewdata"
+      languages: [csharp]
+      severity: WARNING
+      metadata:
+          scopes: [controller]
+
+    - id: hardcoded-secrets
+      pattern-either:
+          - pattern: $X = "*password=*"
+          - pattern: $X = "*key=*"
+          - pattern: $X = "*secret=*"
+      message: "Hardcoded secrets in code"
+      languages: [csharp]
+      severity: ERROR
